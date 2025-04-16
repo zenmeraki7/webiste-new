@@ -1,0 +1,277 @@
+import React, { useEffect, useRef } from 'react';
+import {
+    AppBar, Toolbar, Typography, Button, Container, Grid, Box,
+    Card, CardContent, List, ListItem, ListItemIcon, ListItemText,
+    Avatar, AvatarGroup, Divider, useTheme, Paper
+} from '@mui/material';
+import { motion } from 'framer-motion';
+
+// Animated Particles Background Component
+const AnimatedBackground = () => {
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+
+        // Make canvas full screen
+        const handleResize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        // Particle settings
+        const particlesArray = [];
+        const numberOfParticles = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.color = `rgba(150, 120, 110, ${Math.random() * 0.1 + 0.05})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Bounce off walls
+                if (this.x > canvas.width || this.x < 0) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.speedY = -this.speedY;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const init = () => {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        };
+
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw particles
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+
+            // Optional: Connect particles with lines
+            connectParticles();
+
+            animationFrameId = requestAnimationFrame(animate);
+        };
+
+        const connectParticles = () => {
+            const maxDistance = 150;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    const dx = particlesArray[a].x - particlesArray[b].x;
+                    const dy = particlesArray[a].y - particlesArray[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(150, 120, 110, ${0.05 - (distance / maxDistance) * 0.05})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        };
+
+        init();
+        animate();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, []);
+
+    return (
+        <canvas
+            ref={canvasRef}
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 0,
+                pointerEvents: 'none'
+            }}
+        />
+    );
+};
+
+const Landing = () => {
+    const theme = useTheme();
+
+    // Animation variants
+    const fadeIn = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.8 } }
+    };
+
+    const slideUp = {
+        hidden: { y: 30, opacity: 0 },
+        visible: { y: 0, opacity: 1, transition: { duration: 0.6 } }
+    };
+
+    // Chart data for the middle card
+    const chartData = [3, 5, 2, 6, 4, 7, 3, 8, 5, 6, 7, 9];
+
+
+
+    return (
+        <Box sx={{
+           height:'600px',
+            bgcolor: '#EFF9F9', // Light skin color background
+            color: '#0A2725',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative', // For absolute positioning of background
+            overflow: 'hidden' // To ensure background doesn't cause scrollbars
+        }}>
+            {/* Animated Background */}
+            <AnimatedBackground />
+
+            {/* Hero Section */}
+            <Container
+                component={motion.div}
+                initial="hidden"
+                animate="visible"
+                maxWidth="lg"
+                sx={{
+                    my: 8,
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    position: 'relative', // To ensure content stays above animated background
+                    zIndex: 1
+                }}
+            >
+                {/* Tag Line */}
+                <Box component={motion.div} variants={fadeIn} sx={{ mb: 2 }}>
+                    <Typography variant="overline" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Box component="span" sx={{ mr: 1 }}>◆</Box> INNOVATIVE AND TRANSFORMATIVE
+                    </Typography>
+                </Box>
+
+                {/* Main Heading */}
+                <Box component={motion.div} variants={slideUp} sx={{ mb: 4 }}>
+                    <Typography variant="h2" component="h1" sx={{ fontWeight: 'bold', lineHeight: 1.2 }}>
+                        Innovating Beyond<br />Boundaries
+                    </Typography>
+                </Box>
+
+                {/* Description */}
+                <Box component={motion.div} variants={slideUp} sx={{ mb: 1, maxWidth: 'md' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'normal' }}>
+                        We specialize in transforming ideas into impactful solutions.
+                        From cutting-edge applications to intuitive designs, our work reflects a commitment to excellence and a passion for innovation.
+                        Every project we undertake is a testament to our expertise and dedication to empowering businesses for success.
+                    </Typography>
+                </Box>
+                <Box component={motion.div} variants={slideUp} sx={{ mb: 1, maxWidth: 'md' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'normal' }}>
+                        Explore our portfolio and discover how we can bring your vision to life.
+                    </Typography>
+                </Box>
+
+                <Box
+                    component={motion.div}
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.8 }}
+                    sx={{ width: '100%', mt: 4 }}
+                >
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: 3,
+                        flexWrap: 'wrap'
+                    }}>
+                        {/* Middle - CTA buttons side by side */}
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'row', // Changed from 'column' to 'row'
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: 2
+                        }}>
+                            <Button
+                                component={motion.button}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                variant="contained"
+                                sx={{
+                                    bgcolor: '#0A2725',
+                                    color: 'white',
+                                    borderRadius: 5,
+                                    px: 3,
+                                    py: 1,
+                                    textTransform: 'none',
+                                    fontWeight: 'medium',
+                                    boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    '&:hover': {
+                                        bgcolor: '#0D302E',
+                                    }
+                                }}
+                            >
+                                Learn More
+                            </Button>
+                            <Button
+                                component={motion.button}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                variant="contained"
+                                sx={{
+                                    bgcolor: '#0A2725',
+                                    color: 'white',
+                                    borderRadius: 5,
+                                    px: 3,
+                                    py: 1,
+                                    textTransform: 'none',
+                                    fontWeight: 'medium',
+                                    boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    '&:hover': {
+                                        bgcolor: '#0D302E',
+                                    }
+                                }}
+                            >
+                                Our Projects
+                            </Button>
+                        </Box>
+                    </Box>
+                </Box>
+            </Container>
+        </Box>
+    );
+};
+
+export default Landing;
