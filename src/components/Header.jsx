@@ -54,14 +54,16 @@ const customTheme = createTheme({
         root: {
           borderRadius: 4,
         },
-        containedPrimary: {
-          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-          '&:hover': {
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-          },
-        },
       },
     },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none', // Remove shadow from AppBar
+          borderBottom: 'none' // Remove border
+        }
+      }
+    }
   },
 });
 
@@ -136,7 +138,7 @@ const GrowioHeader = () => {
   };
 
   return (
-    <AppBar position="sticky" color="default" elevation={1} sx={{ bgcolor: '#EFF9F9' }}>
+    <AppBar position="sticky" color="default" elevation={0} sx={{ bgcolor: '#EFF9F9' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
           {/* Logo */}

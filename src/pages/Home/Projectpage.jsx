@@ -363,9 +363,9 @@ const ProjectsPage = () => {
         <Box 
           sx={{ 
             position: 'relative',
-            bgcolor: 'rgba(216, 248, 248, 0.7)',
-            pt: 12,
-            pb: 8,
+            bgcolor: 'rgb(255, 255, 255)',
+            pt: 2,
+            pb: 2,
             zIndex: 1,
           }}
         >

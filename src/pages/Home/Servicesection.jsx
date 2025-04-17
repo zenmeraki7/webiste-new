@@ -5,6 +5,7 @@ import {
     Card,
     CardActions,
     CardContent,
+    CardMedia,
     Chip,
     Container,
     Paper,
@@ -24,7 +25,8 @@ import {
     AccessTime,
     Dashboard
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 // Animated Particles Background Component
 const AnimatedBackground = () => {
@@ -149,437 +151,719 @@ const AnimatedBackground = () => {
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#0A2725', // Deep teal color
+            main: '#38B2AC', // Teal accent color
         },
         secondary: {
             main: '#EFF9F9', // Light teal background
         },
         text: {
-            primary: '#0A2725',
-            secondary: '#555555',
+            primary: '#2D3748',
+            secondary: '#4A5568',
         },
+        background: {
+            default: '#f5f7fa',
+            paper: '#ffffff'
+        }
     },
     typography: {
-        fontFamily: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily: '"Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         h1: {
-            fontWeight: 700,
-            fontSize: '3rem',
-            '@media (min-width:600px)': {
-                fontSize: '3.5rem',
-            },
+            fontWeight: 600,
+            fontSize: '2.5rem',
+            color: '#2D3748'
         },
         h2: {
-            fontWeight: 700,
-            fontSize: '2.2rem',
+            fontWeight: 600,
+            fontSize: '2rem',
+            color: '#2D3748'
         },
         h3: {
             fontWeight: 600,
-            fontSize: '1.5rem',
+            fontSize: '1.3rem',
+            color: '#2D3748',
+            lineHeight: 1.3
         },
+        body1: {
+            fontSize: '0.95rem',
+            color: '#4A5568'
+        }
     },
     components: {
         MuiButton: {
             styleOverrides: {
                 root: {
-                    borderRadius: 8,
                     textTransform: 'none',
-                    padding: '8px 16px',
-                },
-                containedPrimary: {
-                    '&:hover': {
-                        backgroundColor: '#0D3635',
-                    },
-                },
-            },
+                    fontWeight: 500
+                }
+            }
         },
         MuiCard: {
             styleOverrides: {
                 root: {
                     borderRadius: 8,
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-                    transition: 'box-shadow 0.3s ease',
-                    '&:hover': {
-                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
-                    },
-                },
-            },
-        },
-    },
+                    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)',
+                    overflow: 'hidden'
+                }
+            }
+        }
+    }
 });
 
+// Animation component with unique effects
+const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
+    const controls = useAnimation();
+    const [ref, inView] = useInView({
+        triggerOnce: true,
+        threshold: 0.1,
+    });
+
+    // Different animation types
+    const animations = {
+        fadeUp: {
+            hidden: { y: 50, opacity: 0 },
+            visible: { 
+                y: 0, 
+                opacity: 1, 
+                transition: { 
+                    duration: duration,
+                    delay: delay,
+                    ease: "easeOut"
+                } 
+            }
+        },
+        slideRight: {
+            hidden: { x: -70, opacity: 0 },
+            visible: { 
+                x: 0, 
+                opacity: 1, 
+                transition: { 
+                    duration: duration,
+                    delay: delay,
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 12
+                } 
+            }
+        },
+        slideLeft: {
+            hidden: { x: 70, opacity: 0 },
+            visible: { 
+                x: 0, 
+                opacity: 1, 
+                transition: { 
+                    duration: duration,
+                    delay: delay,
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 12
+                } 
+            }
+        },
+        zoomIn: {
+            hidden: { scale: 0.8, opacity: 0 },
+            visible: { 
+                scale: 1, 
+                opacity: 1, 
+                transition: { 
+                    duration: duration,
+                    delay: delay,
+                    type: "spring",
+                    stiffness: 200
+                } 
+            }
+        },
+        flip: {
+            hidden: { rotateY: 90, opacity: 0 },
+            visible: { 
+                rotateY: 0, 
+                opacity: 1, 
+                transition: { 
+                    duration: duration,
+                    delay: delay
+                } 
+            }
+        },
+        rise: {
+            hidden: { y: 100, opacity: 0 },
+            visible: { 
+                y: 0, 
+                opacity: 1, 
+                transition: { 
+                    duration: duration,
+                    delay: delay,
+                    type: "spring",
+                    stiffness: 50,
+                    damping: 15
+                } 
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (inView) {
+            controls.start("visible");
+        }
+    }, [controls, inView]);
+
+    return (
+        <motion.div
+            ref={ref}
+            initial="hidden"
+            animate={controls}
+            variants={animations[animationType]}
+            style={{ height: '100%', display: 'flex' }}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
 const ServicesPage = () => {
-    // Animation variants
-    const fadeIn = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { duration: 0.8 } }
-    };
-
-    const slideUp = {
-        hidden: { y: 30, opacity: 0 },
-        visible: { y: 0, opacity: 1, transition: { duration: 0.6 } }
-    };
-
-    const staggeredCards = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-                delayChildren: 0.3
-            }
-        }
-    };
-
-    const cardAnimation = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1,
-            transition: {
-                type: "spring",
-                stiffness: 100,
-                damping: 12
-            }
-        }
-    };
-
-    // Services data with icons
+    // Services data with icons and placeholder images
     const services = [
         {
             id: 1,
             title: "Shopify App Development",
             description: "Custom Shopify applications that extend your store's functionality and improve customer experience.",
             icon: <ShoppingBag sx={{ color: '#fff', fontSize: 36 }} />,
+            image: "/api/placeholder/500/320",
+            animation: "fadeUp"
         },
         {
             id: 2,
             title: "Custom Shopify App Development",
             description: "Tailored applications built specifically for your unique business needs and workflows.",
             icon: <Code sx={{ color: '#fff', fontSize: 36 }} />,
+            image: "/api/placeholder/400/250",
+            animation: "slideRight"
         },
         {
             id: 3,
             title: "Custom App Development",
             description: "Powerful, scalable applications designed and built from the ground up for web, mobile or desktop.",
             icon: <Settings sx={{ color: '#fff', fontSize: 36 }} />,
+            image: "/api/placeholder/250/140",
+            animation: "zoomIn"
         },
         {
             id: 4,
             title: "Website Development",
             description: "Responsive, user-friendly websites optimized for performance, SEO, and conversion.",
             icon: <Language sx={{ color: '#fff', fontSize: 36 }} />,
+            image: "/api/placeholder/250/140",
+            animation: "flip"
         },
         {
             id: 5,
             title: "Digital Marketing",
             description: "Strategic marketing campaigns to drive traffic, increase engagement, and boost conversions.",
             icon: <Wifi sx={{ color: '#fff', fontSize: 36 }} />,
+            image: "/api/placeholder/180/180",
+            animation: "slideLeft"
         },
         {
             id: 6,
             title: "E-Commerce Account Management",
             description: "End-to-end management of your e-commerce operations, inventory, and customer relationships.",
             icon: <BarChart sx={{ color: '#fff', fontSize: 36 }} />,
-        },
+            image: "/api/placeholder/180/180",
+            animation: "rise"
+        }
     ];
 
-    // Why Choose Us data
-    const benefits = [
-        {
-            id: 1,
-            title: "Shopify Expertise",
-            description: "Specialized knowledge and extensive experience in developing high-quality Shopify applications and stores.",
-            icon: <ShoppingBag sx={{ color: '#fff', fontSize: 24 }} />,
-            animation: "fade-right"
-        },
-        {
-            id: 2,
-            title: "Passion-Driven Solutions",
-            description: "We approach every project with enthusiasm and dedication, ensuring creative solutions that exceed expectations.",
-            icon: <BoltOutlined sx={{ color: '#fff', fontSize: 24 }} />,
-            animation: "zoom"
-        },
-        {
-            id: 3,
-            title: "Growth-Oriented",
-            description: "Our strategies and solutions are designed with scalability in mind, helping your business achieve sustainable growth.",
-            icon: <BarChart sx={{ color: '#fff', fontSize: 24 }} />,
-            animation: "fade-left"
-        },
-    ];
+    // Header animations
+    const headerControls = useAnimation();
+    const [headerRef, headerInView] = useInView({
+        triggerOnce: true,
+        threshold: 0.1,
+    });
+
+    useEffect(() => {
+        if (headerInView) {
+            headerControls.start("visible");
+        }
+    }, [headerControls, headerInView]);
+
+    const headerVariants = {
+        hidden: { opacity: 0 },
+        visible: { 
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.3
+            }
+        }
+    };
+
+    const headerItemVariants = {
+        hidden: { y: -20, opacity: 0 },
+        visible: { 
+            y: 0, 
+            opacity: 1,
+            transition: {
+                duration: 0.6
+            }
+        }
+    };
 
     return (
         <ThemeProvider theme={theme}>
-            <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
+            <Box sx={{
+                bgcolor: 'background.default',
+                minHeight: '100vh',
+                position: 'relative',
+                pt: 8,
+                pb: 12
+            }}>
                 <AnimatedBackground />
-
-                {/* Hero Section */}
-                <Container
-                    maxWidth="lg"
-                    sx={{
-                        textAlign: 'center',
-                        pt: 10,
-                        pb: 8,
-                        position: 'relative',
-                        zIndex: 1
-                    }}
-                >
+                
+                <Container maxWidth="lg">
+                    {/* Header Section with staggered animation */}
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <Chip
-                            label="SMART + FAST"
-                            color="primary"
-                            variant="outlined"
-                            sx={{
-                                mb: 3,
-                                px: 1.5,
-                                bgcolor: 'rgba(10, 39, 37, 0.08)',
-                                fontWeight: 600,
-                                borderColor: 'transparent'
-                            }}
-                        />
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.3 }}
-                    >
-                        <Typography variant="h1" component="h1" color="text.primary" sx={{ mb: 3, maxWidth: 700, mx: 'auto' }}>
-                            Welcome to Our Services
-                        </Typography>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.6 }}
-                    >
-                        <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            sx={{
-                                mb: 6,
-                                maxWidth: 550,
-                                mx: 'auto',
-                                fontSize: '1.125rem'
-                            }}
-                        >
-                            Explore our expertise in web development, offering cutting-edge solutions to bring your ideas to life.            </Typography>
-                    </motion.div>
-                </Container>
-
-                {/* Services Section */}
-                <Container maxWidth="lg" sx={{ mb: 8, position: 'relative', zIndex: 1 }}>
-                    <motion.div
-                        variants={staggeredCards}
+                        ref={headerRef}
                         initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.1 }}
+                        animate={headerControls}
+                        variants={headerVariants}
+                        style={{ marginBottom: '3rem', textAlign: 'center' }}
                     >
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                            <Box sx={{ display: 'flex', gap: 3, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
-                                {services.slice(0, 3).map((service, index) => (
-                                    <motion.div
-                                        key={service.id}
-                                        initial={{ y: 50, opacity: 0 }}
-                                        whileInView={{
-                                            y: 0,
-                                            opacity: 1,
-                                            transition: {
-                                                type: "spring",
-                                                stiffness: 80,
-                                                damping: 12,
-                                                delay: index * 0.2
-                                            }
-                                        }}
-                                        viewport={{ once: true, amount: 0.1 }}
-                                        style={{ flex: '1 1 calc(33.33% - 16px)', width: '100%', display: 'flex' }}
-                                    >
-                                        <Card
-                                            sx={{
-                                                bgcolor: '#0A2725',
-                                                color: 'white',
-                                                minHeight: 280,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                width: '100%'
-                                            }}
-                                        >
-                                            <CardContent sx={{ p: 4, flexGrow: 1 }}>
-                                                <Box sx={{ mb: 2 }}>
-                                                    {service.icon}
-                                                </Box>
-                                                <Typography variant="h3" component="h3" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>
-                                                    {service.title}
-                                                </Typography>
-                                                <Typography variant="body1" sx={{ mb: 2, color: 'rgba(255, 255, 255, 0.85)' }}>
-                                                    {service.description}
-                                                </Typography>
-                                            </CardContent>
-                                            <CardActions sx={{ px: 4, pb: 3 }}>
-                                                <Button
-                                                    endIcon={<ArrowForward />}
-                                                    sx={{
-                                                        color: 'white',
-                                                        p: 0,
-                                                        '&:hover': {
-                                                            bgcolor: 'transparent',
-                                                            '& .MuiSvgIcon-root': {
-                                                                transform: 'translateX(4px)',
-                                                            },
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            transition: 'transform 0.2s',
-                                                        },
-                                                    }}
-                                                >
-                                                    Explore
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </motion.div>
-                                ))}
-                            </Box>
-
-                            <Box sx={{ display: 'flex', gap: 3, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
-                                {services.slice(3, 6).map((service, index) => (
-                                    <motion.div
-                                        key={service.id}
-                                        initial={{ y: 50, opacity: 0 }}
-                                        whileInView={{
-                                            y: 0,
-                                            opacity: 1,
-                                            transition: {
-                                                type: "spring",
-                                                stiffness: 80,
-                                                damping: 12,
-                                                delay: index * 0.2
-                                            }
-                                        }}
-                                        viewport={{ once: true, amount: 0.1 }}
-                                        style={{ flex: '1 1 calc(33.33% - 16px)', width: '100%', display: 'flex' }}
-                                    >
-                                        <Card
-                                            sx={{
-                                                bgcolor: '#0A2725',
-                                                color: 'white',
-                                                minHeight: 280,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                width: '100%'
-                                            }}
-                                        >
-                                            <CardContent sx={{ p: 4, flexGrow: 1 }}>
-                                                <Box sx={{ mb: 2 }}>
-                                                    {service.icon}
-                                                </Box>
-                                                <Typography variant="h3" component="h3" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>
-                                                    {service.title}
-                                                </Typography>
-                                                <Typography variant="body1" sx={{ mb: 2, color: 'rgba(255, 255, 255, 0.85)' }}>
-                                                    {service.description}
-                                                </Typography>
-                                            </CardContent>
-                                            <CardActions sx={{ px: 4, pb: 3 }}>
-                                                <Button
-                                                    endIcon={<ArrowForward />}
-                                                    sx={{
-                                                        color: 'white',
-                                                        p: 0,
-                                                        '&:hover': {
-                                                            bgcolor: 'transparent',
-                                                            '& .MuiSvgIcon-root': {
-                                                                transform: 'translateX(4px)',
-                                                            },
-                                                        },
-                                                        '& .MuiSvgIcon-root': {
-                                                            transition: 'transform 0.2s',
-                                                        },
-                                                    }}
-                                                >
-                                                    Explore
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </motion.div>
-                                ))}
-                            </Box>
-                        </Box>
-                    </motion.div>
-                </Container>
-
-                {/* Why Choose Us Section */}
-                <Box sx={{ bgcolor: 'white', py: 8, position: 'relative', zIndex: 1 }}>
-                    <Container maxWidth="lg">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            viewport={{ once: true, amount: 0.1 }}
-                        >
-                            <Typography variant="h2" component="h2" align="center" color="text.primary" sx={{ mb: 6 }}>
-                                Why Choose Us
+                        <motion.div variants={headerItemVariants}>
+                            <Typography
+                                variant="subtitle1"
+                                component="div"
+                                sx={{
+                                    color: '#38B2AC',
+                                    fontWeight: 600,
+                                    mb: 1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Box
+                                    component="span"
+                                    sx={{
+                                        width: 16,
+                                        height: 16,
+                                        bgcolor: '#38B2AC',
+                                        borderRadius: '50%',
+                                        mr: 1,
+                                        display: 'inline-block'
+                                    }}
+                                />
+                                SMART + FAST
                             </Typography>
                         </motion.div>
 
-                        <motion.div
-                            variants={staggeredCards}
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true, amount: 0.1 }}
-                        >
-                            <Box sx={{ display: 'flex', gap: 3, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
-                                {benefits.map((benefit, index) => (
-                                    <motion.div
-                                        key={benefit.id}
-                                        variants={cardAnimation}
-                                        custom={index}
-                                        style={{ flex: '1 1 calc(33.33% - 16px)', width: '100%', display: 'flex' }}
-                                    >
-                                        <Paper
-                                            elevation={2}
+                        <motion.div variants={headerItemVariants}>
+                            <Typography variant="h1" component="h1" sx={{ mb: 2 }}>
+                                Welcome to Our Services
+                            </Typography>
+                        </motion.div>
+
+                        <motion.div variants={headerItemVariants}>
+                            <Typography variant="body1" sx={{ color: '#718096', maxWidth: 600, mx: 'auto' }}>
+                                Explore our expertise in web development, offering cutting-edge solutions to bring your ideas to life.
+                            </Typography>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Services Cards Grid with unique animations */}
+                    <Box
+                        sx={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(12, 1fr)',
+                            gridTemplateRows: 'auto auto',
+                            gap: 3,
+                            mb: 6
+                        }}
+                    >
+                        {/* First Row - Left side large card */}
+                        <Box sx={{ gridColumn: 'span 6', gridRow: 'span 2' }}>
+                            <AnimatedCard delay={0.3} animationType={services[0].animation}>
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'translateY(-4px)',
+                                            boxShadow: '0 10px 20px rgba(0,0,0,0.08)'
+                                        },
+                                        width: '100%'
+                                    }}
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        sx={{ height: 320 }}
+                                        image="https://www.strivemindz.com/images/offerings/mobile/shopify-app-development.jpg"
+                                        alt={services[0].title}
+                                    />
+                                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                                        <Typography
+                                            variant="h3"
+                                            component="h2"
+                                            sx={{ mb: 1.5 }}
+                                        >
+                                            {services[0].title}
+                                        </Typography>
+                                        <Typography
+                                            variant="body1"
+                                            color="text.secondary"
+                                            sx={{ mb: 2 }}
+                                        >
+                                            {services[0].description}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions sx={{ px: 3, pb: 3 }}>
+                                        <Button
+                                            size="small"
+                                            color="primary"
+                                            endIcon={<ArrowForward sx={{ fontSize: 16 }} />}
                                             sx={{
-                                                p: 3,
-                                                borderRadius: 2,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                minHeight: 220,
-                                                width: '100%'
+                                                fontWeight: 500,
+                                                color: '#38B2AC',
+                                                fontSize: '0.875rem',
+                                                padding: 0,
+                                                '&:hover': {
+                                                    background: 'transparent',
+                                                    color: '#2C7A7B'
+                                                }
                                             }}
                                         >
-                                            <Box
+                                            Read more
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </AnimatedCard>
+                        </Box>
+
+                        {/* First Row - Right side small card */}
+                        <Box sx={{ gridColumn: 'span 6', gridRow: 'span 1' }}>
+                            <AnimatedCard delay={0.6} animationType={services[1].animation}>
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'translateY(-4px)',
+                                            boxShadow: '0 10px 20px rgba(0,0,0,0.08)'
+                                        },
+                                        width: '100%'
+                                    }}
+                                >
+                                    <Box sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        width: '60%',
+                                        p: 3
+                                    }}>
+                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
+                                            <Typography
+                                                variant="h3"
+                                                component="h2"
+                                                sx={{ mb: 1.5 }}
+                                            >
+                                                {services[1].title}
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
+                                                color="text.secondary"
+                                                sx={{ mb: 2 }}
+                                            >
+                                                {services[1].description.split('.')[0] + '.'}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions sx={{ p: 0 }}>
+                                            <Button
+                                                size="small"
+                                                color="primary"
+                                                endIcon={<ArrowForward sx={{ fontSize: 16 }} />}
                                                 sx={{
-                                                    bgcolor: 'primary.main',
-                                                    borderRadius: '50%',
-                                                    width: 48,
-                                                    height: 48,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    mb: 2
+                                                    fontWeight: 500,
+                                                    color: '#38B2AC',
+                                                    fontSize: '0.875rem',
+                                                    padding: 0,
+                                                    '&:hover': {
+                                                        background: 'transparent',
+                                                        color: '#2C7A7B'
+                                                    }
                                                 }}
                                             >
-                                                {benefit.icon}
-                                            </Box>
-                                            <Typography variant="h3" component="h3" color="text.primary" gutterBottom>
-                                                {benefit.title}
-                                            </Typography>
-                                            <Typography variant="body1" color="text.secondary">
-                                                {benefit.description}
-                                            </Typography>
-                                        </Paper>
-                                    </motion.div>
-                                ))}
-                            </Box>
-                        </motion.div>
-                    </Container>
-                </Box>
+                                                Read more
+                                            </Button>
+                                        </CardActions>
+                                    </Box>
+                                    <CardMedia
+                                        component="img"
+                                        sx={{ width: '40%' }}
+                                        image="https://ecommerce.folio3.com/blog/wp-content/uploads/2023/05/Shopify-Custom-Apps-vs-Private-Apps.jpg"
+                                        alt={services[1].title}
+                                    />
+                                </Card>
+                            </AnimatedCard>
+                        </Box>
 
+                        {/* Second Row - Right side small cards */}
+                        <Box sx={{ gridColumn: 'span 3', gridRow: 'span 1' }}>
+                            <AnimatedCard delay={0.9} animationType={services[2].animation}>
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'translateY(-4px)',
+                                            boxShadow: '0 10px 20px rgba(0,0,0,0.08)'
+                                        },
+                                        width: '100%'
+                                    }}
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        sx={{ height: 140 }}
+                                        image="https://www.growingprotechnologies.com/wp-content/uploads/2024/11/Elevate-Your-Business-with-Custom-App-Development-Services.webp"
+                                        alt={services[2].title}
+                                    />
+                                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                                        <Typography
+                                            variant="h3"
+                                            component="h2"
+                                            sx={{ mb: 1.5, fontSize: '1.1rem' }}
+                                        >
+                                            {services[2].title}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions sx={{ px: 3, pb: 3 }}>
+                                        <Button
+                                            size="small"
+                                            color="primary"
+                                            endIcon={<ArrowForward sx={{ fontSize: 16 }} />}
+                                            sx={{
+                                                fontWeight: 500,
+                                                color: '#38B2AC',
+                                                fontSize: '0.875rem',
+                                                padding: 0,
+                                                '&:hover': {
+                                                    background: 'transparent',
+                                                    color: '#2C7A7B'
+                                                }
+                                            }}
+                                        >
+                                            Read more
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </AnimatedCard>
+                        </Box>
 
+                        <Box sx={{ gridColumn: 'span 3', gridRow: 'span 1' }}>
+                            <AnimatedCard delay={1.2} animationType={services[3].animation}>
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'translateY(-4px)',
+                                            boxShadow: '0 10px 20px rgba(0,0,0,0.08)'
+                                        },
+                                        width: '100%'
+                                    }}
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        sx={{ height: 140 }}
+                                        image="https://cdn.prod.website-files.com/678a08d17a6b88bae4e2d8ee/67931a0a99bf4f590dda2519_66b0929089fba41bd4d247e5_Different-Approaches-to-Website-Development-Costs.png"
+                                        alt={services[3].title}
+                                    />
+                                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                                        <Typography
+                                            variant="h3"
+                                            component="h2"
+                                            sx={{ mb: 1.5, fontSize: '1.1rem' }}
+                                        >
+                                            {services[3].title}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions sx={{ px: 3, pb: 3 }}>
+                                        <Button
+                                            size="small"
+                                            color="primary"
+                                            endIcon={<ArrowForward sx={{ fontSize: 16 }} />}
+                                            sx={{
+                                                fontWeight: 500,
+                                                color: '#38B2AC',
+                                                fontSize: '0.875rem',
+                                                padding: 0,
+                                                '&:hover': {
+                                                    background: 'transparent',
+                                                    color: '#2C7A7B'
+                                                }
+                                            }}
+                                        >
+                                            Read more
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </AnimatedCard>
+                        </Box>
+                    </Box>
+
+                    {/* Additional Row for 2 More Cards */}
+                    <Box
+                        sx={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(12, 1fr)',
+                            gap: 3
+                        }}
+                    >
+                        {/* Left side card - Horizontal layout */}
+                        <Box sx={{ gridColumn: { xs: 'span 12', md: 'span 6' } }}>
+                            <AnimatedCard delay={1.5} animationType={services[4].animation}>
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'translateY(-4px)',
+                                            boxShadow: '0 10px 20px rgba(0,0,0,0.08)'
+                                        },
+                                        width: '100%'
+                                    }}
+                                >
+                                    <Box sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        width: { xs: '100%', sm: '60%' },
+                                        p: 3
+                                    }}>
+                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
+                                            <Typography
+                                                variant="h3"
+                                                component="h2"
+                                                sx={{ mb: 1.5 }}
+                                            >
+                                                {services[4].title}
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
+                                                color="text.secondary"
+                                                sx={{ mb: 2 }}
+                                            >
+                                                {services[4].description.split('.')[0] + '.'}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions sx={{ p: 0 }}>
+                                            <Button
+                                                size="small"
+                                                color="primary"
+                                                endIcon={<ArrowForward sx={{ fontSize: 16 }} />}
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    color: '#38B2AC',
+                                                    fontSize: '0.875rem',
+                                                    padding: 0,
+                                                    '&:hover': {
+                                                        background: 'transparent',
+                                                        color: '#2C7A7B'
+                                                    }
+                                                }}
+                                            >
+                                                Read more
+                                            </Button>
+                                        </CardActions>
+                                    </Box>
+                                    <CardMedia
+                                        component="img"
+                                        sx={{
+                                            width: { xs: '100%', sm: '40%' },
+                                            height: { xs: 200, sm: 'auto' }
+                                        }}
+                                        image="https://hetic.in/wp-content/uploads/2019/10/Digital-Marketing-1.jpg"
+                                        alt={services[4].title}
+                                    />
+                                </Card>
+                            </AnimatedCard>
+                        </Box>
+                        
+                        {/* Right side card - Horizontal layout */}
+                        <Box sx={{ gridColumn: { xs: 'span 12', md: 'span 6' } }}>
+                            <AnimatedCard delay={1.8} animationType={services[5].animation}>
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'translateY(-4px)',
+                                            boxShadow: '0 10px 20px rgba(0,0,0,0.08)'
+                                        },
+                                        width: '100%'
+                                    }}
+                                >
+                                    <Box sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        width: { xs: '100%', sm: '60%' },
+                                        p: 3
+                                    }}>
+                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
+                                            <Typography
+                                                variant="h3"
+                                                component="h2"
+                                                sx={{ mb: 1.5 }}
+                                            >
+                                                {services[5].title}
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
+                                                color="text.secondary"
+                                                sx={{ mb: 2 }}
+                                            >
+                                                {services[5].description.split('.')[0] + '.'}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions sx={{ p: 0 }}>
+                                            <Button
+                                                size="small"
+                                                color="primary"
+                                                endIcon={<ArrowForward sx={{ fontSize: 16 }} />}
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    color: '#38B2AC',
+                                                    fontSize: '0.875rem',
+                                                    padding: 0,
+                                                    '&:hover': {
+                                                        background: 'transparent',
+                                                        color: '#2C7A7B'
+                                                    }
+                                                }}
+                                            >
+                                                Read more
+                                            </Button>
+                                        </CardActions>
+                                    </Box>
+                                    <CardMedia
+                                        component="img"
+                                        sx={{
+                                            width: { xs: '100%', sm: '40%' },
+                                            height: { xs: 200, sm: 'auto' }
+                                        }}
+                                        image="https://www.gonukkad.com/wp-content/uploads/2023/12/Ecommerce-Account-Management-Services.webp"
+                                        alt={services[5].title}
+                                    />
+                                </Card>
+                            </AnimatedCard>
+                        </Box>
+                    </Box>
+                </Container>
             </Box>
         </ThemeProvider>
     );

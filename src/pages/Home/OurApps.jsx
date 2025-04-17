@@ -322,7 +322,7 @@ const OurAppsPage = () => {
         </Box>
         
         {/* Apps Grid */}
-        <Container maxWidth="lg" sx={{ mt: 3, mb: 10, position: 'relative', zIndex: 1 }}>
+        <Container maxWidth="lg" sx={{ mt: 3, mb: 12, position: 'relative', zIndex: 1 }}>
           <Box 
             sx={{ 
               display: 'flex',
@@ -422,6 +422,60 @@ const OurAppsPage = () => {
               </motion.div>
             ))}
           </Box>
+
+          <Grid container spacing={6} alignItems="center" sx={{pt:8}}>
+                <Grid item xs={12} md={6}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.7 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                  >
+                    <Box
+                      sx={{
+                        bgcolor: '#0A2725',
+                        p: 6,
+                        borderRadius: 4,
+                        color: 'white',
+                        position: 'relative',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Typography variant="h3" component="h3" sx={{ mb: 3, position: 'relative', zIndex: 2 }}>
+                        Our team of passionate experts combines cutting-edge technology with creative thinking
+                      </Typography>
+                      <Typography variant="body1" sx={{ mb: 4, opacity: 0.9, position: 'relative', zIndex: 2 }}>
+                        We develop products that matter. Let's create something extraordinary together.
+                      </Typography>
+
+                      {/* Abstract decoration */}
+                      <Box sx={{
+                        position: 'absolute',
+                        width: 200,
+                        height: 200,
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+                        bottom: -80,
+                        right: -80,
+                        zIndex: 1,
+                      }} />
+
+                      <Box sx={{
+                        position: 'absolute',
+                        width: 100,
+                        height: 100,
+                        borderRadius: '50%',
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        top: 20,
+                        left: -30,
+                        zIndex: 1,
+                      }} />
+                    </Box>
+                  </motion.div>
+                </Grid>
+
+
+              </Grid>
         </Container>
         
        

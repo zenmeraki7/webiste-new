@@ -1,17 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import { 
-  Box, 
-  Button, 
-  Card, 
-  CardContent, 
-  Container, 
-  Typography, 
-  ThemeProvider, 
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Typography,
+  ThemeProvider,
   createTheme,
   Grid,
   Divider
 } from '@mui/material';
-import { 
+import {
   Lightbulb,
   Rocket,
   TrendingUp,
@@ -50,7 +50,7 @@ const AnimatedBackground = () => {
         this.size = Math.random() * 3 + 1;
         this.speedX = Math.random() * 0.5 - 0.25;
         this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = `rgba(10, 39, 37, ${Math.random() * 0.1 + 0.05})`;
+        this.color = `rgba(230, 255, 223, ${Math.random() * 0.1 + 0.05})`;
       }
 
       update() {
@@ -105,7 +105,7 @@ const AnimatedBackground = () => {
 
           if (distance < maxDistance) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(10, 39, 37, ${0.05 - (distance / maxDistance) * 0.05})`;
+            ctx.strokeStyle = `rgba(230, 255, 223, ${0.05 - (distance / maxDistance) * 0.05})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
             ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
@@ -140,48 +140,48 @@ const AnimatedBackground = () => {
   );
 };
 
-// Create custom theme
+// Create custom theme - dark design to match image
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#0A2725',
+      main: '#00332D', // Dark teal
     },
     secondary: {
-      main: '#EFF9F9',
+      main: '#E6FFDF', // Light mint green
     },
     background: {
-      default: '#F5F7F9',
-      paper: '#FFFFFF',
+      default: '#00332D', // Dark teal background
+      paper: '#023B34', // Slightly lighter teal for cards
     },
     text: {
-      primary: '#0A2725',
-      secondary: '#555555',
+      primary: '#FFFFFF',
+      secondary: '#E6FFDF',
     },
   },
   typography: {
-    fontFamily: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    fontFamily: '"Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     h1: {
       fontWeight: 700,
-      fontSize: '3.5rem',
+      fontSize: '2.8rem',
       lineHeight: 1.2,
     },
     h2: {
-      fontWeight: 700,
-      fontSize: '2.5rem',
+      fontWeight: 600,
+      fontSize: '2rem',
       lineHeight: 1.3,
     },
     h3: {
       fontWeight: 600,
-      fontSize: '1.75rem',
-      lineHeight: 1.4,
-    },
-    h4: {
-      fontWeight: 600,
       fontSize: '1.5rem',
       lineHeight: 1.4,
     },
+    h4: {
+      fontWeight: 500,
+      fontSize: '1.2rem',
+      lineHeight: 1.4,
+    },
     subtitle1: {
-      fontSize: '1.25rem',
+      fontSize: '1.1rem',
       lineHeight: 1.5,
     },
     body1: {
@@ -193,16 +193,16 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 20,
           textTransform: 'none',
-          padding: '10px 24px',
-          fontWeight: 600,
+          padding: '8px 20px',
+          fontWeight: 500,
         },
         containedPrimary: {
-          boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.15)',
+          backgroundColor: '#014A42',
+          color: '#FFFFFF',
           '&:hover': {
-            backgroundColor: '#0D3635',
-            boxShadow: '0px 6px 16px rgba(10, 39, 37, 0.2)',
+            backgroundColor: '#015D53',
           },
         },
       },
@@ -211,16 +211,76 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: '0 8px 40px rgba(0, 0, 0, 0.06)',
-          overflow: 'hidden',
+          backgroundColor: '#023B34',
+          boxShadow: 'none',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
         },
       },
     },
   },
 });
 
+// Animation variants for elements
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
+};
+
+// Staggered icon animation
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100
+    }
+  }
+};
+
+// Card container animation
+const cardsContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 70
+    }
+  }
+};
+
 const VisionPage = () => {
-  // Core values data
+  // Core values data - keeping original content
   const coreValues = [
     {
       id: 1,
@@ -245,261 +305,225 @@ const VisionPage = () => {
     },
   ];
 
-  // Key capabilities data
-  const capabilities = [
-    {
-      id: 1,
-      title: "Technology Expertise",
-      description: "Our team masters the latest technologies to build robust, scalable, and future-proof solutions.",
-      icon: <Code sx={{ fontSize: 40 }} />,
-    },
-    {
-      id: 2,
-      title: "Human-Centered Design",
-      description: "We create intuitive experiences that delight users by putting people at the center of every design decision.",
-      icon: <Psychology sx={{ fontSize: 40 }} />,
-    },
-    {
-      id: 3,
-      title: "Collaborative Approach",
-      description: "We work closely with our clients, forming partnerships that transform ideas into impactful realities.",
-      icon: <People sx={{ fontSize: 40 }} />,
-    },
-  ];
+
+
+  // Sample icons for the main feature card
+  const integrationIcons = Array(7).fill(null).map((_, index) => ({
+    id: index,
+    icon: ['⚛️', '💻', '🚀', '🔍', '📊', '🌐', '📈'][index] || '✨'
+  }));
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ 
-        bgcolor: 'background.default', 
-        minHeight: '100vh', 
+      <Box sx={{
+        bgcolor: 'background.default',
+        height:'900px',
         position: 'relative',
         overflow: 'hidden',
       }}>
         <AnimatedBackground />
-        
-        {/* Hero Section */}
-        <Box 
-          sx={{ 
+
+        {/* Hero Section - with animations */}
+        <Box
+          sx={{
             position: 'relative',
-            bgcolor: 'rgba(239, 249, 249, 0.7)',
-            pt: 12,
-            pb: 10,
+            bgcolor: 'transparent',
+            pt: 8,
+            pb: 6,
             zIndex: 1,
           }}
         >
           <Container maxWidth="lg">
-            <Grid container spacing={3} alignItems="center">
-              <Grid item xs={12} md={7}>
-                <Box>
-                  <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7 }}
-                  >
-                    <Typography 
-                      variant="h4" 
-                      component="div" 
-                      sx={{ 
-                        color: '#0A2725', 
-                        mb: 1,
-                        fontWeight: 600,
-                      }}
-                    >
-                      Creative – Innovative – Driven
-                    </Typography>
-                  </motion.div>
-                  
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.2 }}
-                  >
-                    <Typography 
-                      variant="h1" 
-                      component="h1" 
-                      sx={{ 
-                        mb: 3,
-                        backgroundImage: 'linear-gradient(135deg, #0A2725 0%, #245F5C 100%)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        color: '#0A2725',
-                      }}
-                    >
-                      Building the Future with Passion and Vision
-                    </Typography>
-                  </motion.div>
-                  
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                  >
-                    <Typography 
-                      variant="subtitle1" 
-                      color="text.secondary" 
-                      sx={{ mb: 4, maxWidth: 600 }}
-                    >
-                      Our startup thrives on creativity and dedication. Through innovative technology and human-centered design, we transform complex challenges into elegant solutions.
-                    </Typography>
-                  </motion.div>
-                  
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
-                  >
-                    <Button 
-                      variant="contained" 
-                      color="primary"
-                      size="large"
-                      component={motion.button}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Let's Create Together
-                    </Button>
-                  </motion.div>
-                </Box>
-              </Grid>
-              
-    
-            </Grid>
-          </Container>
-        </Box>
-        
-        {/* Core Values Section */}
-        <Container maxWidth="lg" sx={{ mt: 2, mb: 12, position: 'relative', zIndex: 1 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            <Typography variant="h2" component="h2" align="center" sx={{ mb: 2 }}>
-              Our Core Values
-            </Typography>
-            <Typography 
-              variant="subtitle1" 
-              color="text.secondary" 
-              align="center" 
-              sx={{ mb: 6, maxWidth: 700, mx: 'auto' }}
-            >
-              These principles guide everything we do, from product development to client interactions.
-            </Typography>
-          </motion.div>
-          
-          <Box sx={{ display: 'flex', gap: 4, flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
-            {coreValues.map((value, index) => (
+            {/* Title Section - sequentially animated */}
+            <Box sx={{ textAlign: 'center', mb: 5 }}>
               <motion.div
-                key={value.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 0.7, 
-                  delay: index * 0.2,
-                  type: "spring",
-                  stiffness: 50,
-                  damping: 10
-                }}
-                viewport={{ once: true, amount: 0.2 }}
-                style={{ flex: '1 1 calc(33.33% - 16px)', width: '100%', display: 'flex' }}
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
+                transition={{ duration: 0.7 }}
               >
-                <Card sx={{ width: '100%' }}>
-                  <Box sx={{ bgcolor: value.color, p: 4 }}>
-                    <Box 
-                      sx={{ 
-                        width: 70, 
-                        height: 70, 
-                        borderRadius: '50%', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        bgcolor: 'rgba(255, 255, 255, 0.15)',
-                      }}
-                    >
-                      {value.icon}
-                    </Box>
-                  </Box>
-                  <CardContent sx={{ p: 4 }}>
-                    <Typography variant="h3" component="h3" gutterBottom>
-                      {value.title}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {value.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </Box>
-        </Container>
-        
-        {/* About Section */}
-        <Box sx={{ 
-          bgcolor: 'background.paper',
-          py: 10, 
-          position: 'relative',
-          zIndex: 1,
-        }}>
-          <Container maxWidth="lg">
-            <Grid container spacing={6} alignItems="center">
-              <Grid item xs={12} md={6}>
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.7 }}
-                  viewport={{ once: true, amount: 0.3 }}
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.6)',
+                    textTransform: 'uppercase',
+                    letterSpacing: 1,
+                    fontSize: '0.8rem',
+                    mb: 1
+                  }}
                 >
-                  <Box 
-                    sx={{ 
-                      bgcolor: '#0A2725',
-                      p: 6,
-                      borderRadius: 4,
-                      color: 'white',
-                      position: 'relative',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <Typography variant="h3" component="h3" sx={{ mb: 3, position: 'relative', zIndex: 2 }}>
-                      Our team of passionate experts combines cutting-edge technology with creative thinking
-                    </Typography>
-                    <Typography variant="body1" sx={{ mb: 4, opacity: 0.9, position: 'relative', zIndex: 2 }}>
-                      We develop products that matter. Let's create something extraordinary together.
-                    </Typography>
-                    
-                    {/* Abstract decoration */}
-                    <Box sx={{
-                      position: 'absolute',
-                      width: 200,
-                      height: 200,
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                      bottom: -80,
-                      right: -80,
-                      zIndex: 1,
-                    }} />
-                    
-                    <Box sx={{
-                      position: 'absolute',
-                      width: 100,
-                      height: 100,
-                      borderRadius: '50%',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      top: 20,
-                      left: -30,
-                      zIndex: 1,
-                    }} />
+                  # Creative – Innovative – Driven
+                </Typography>
+              </motion.div>
+
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
+                transition={{ duration: 0.7, delay: 0.3 }}
+              >
+                <Typography
+                  variant="h1"
+                  component="h1"
+                  sx={{
+                    mb: 2,
+                    color: '#FFFFFF',
+                  }}
+                >
+                  Building the Future with Passion and Vision
+                </Typography>
+              </motion.div>
+
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
+                transition={{ duration: 0.7, delay: 0.6 }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    maxWidth: 800,
+                    mx: 'auto',
+                    fontSize: '1rem'
+                  }}
+                >
+                  Our startup thrives on creativity and dedication. Through innovative technology and human-centered design, we transform complex challenges into elegant solutions.
+                </Typography>
+              </motion.div>
+            </Box>
+
+            {/* Main Feature Card - with animation */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeInUp}
+              transition={{ duration: 0.8, delay: 0.9 }}
+            >
+              <Card sx={{
+                bgcolor: 'rgba(230, 255, 223, 0.9)', // Light mint green with opacity
+                color: '#000',
+                p: 4,
+                mb: 5,
+                border: 'none'
+              }}>
+                <Typography variant="h3" component="h3" sx={{ color: '#00332D', mb: 1 }}>
+                  Our Core Values
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#00332D', fontSize: '0.95rem', mb: 3 }}>
+                  These principles guide everything we do, from product development to client interactions.
+                </Typography>
+
+                {/* Integration icons with staggered animation */}
+                <motion.div
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+                    {integrationIcons.map((icon) => (
+                      <motion.div key={icon.id} variants={itemVariants}>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            p: 1.5,
+                            bgcolor: 'white',
+                            borderRadius: 2,
+                            width: 40,
+                            height: 40
+                          }}
+                        >
+                          <Typography sx={{ fontSize: '18px' }}>
+                            {icon.icon}
+                          </Typography>
+                        </Box>
+                      </motion.div>
+                    ))}
                   </Box>
                 </motion.div>
-              </Grid>
-              
-              
-            </Grid>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 2.2, duration: 0.5 }}
+                >
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      color: '#00332D',
+                      borderColor: '#00332D',
+                      borderRadius: 10,
+                      px: 2,
+                      py: 0.5,
+                      fontSize: '0.85rem'
+                    }}
+                  >
+                    Let's Create Together
+                  </Button>
+                </motion.div>
+              </Card>
+            </motion.div>
+
+            {/* Three core values in a single row - with staggered animation */}
+            <motion.div
+              variants={cardsContainerVariants}
+              initial="hidden"
+              animate="visible"
+              style={{ width: '100%' }}
+            >
+              <Box 
+                sx={{ 
+                  display: 'flex', 
+                  flexDirection: { xs: 'column', md: 'row' }, 
+                  gap: 3, 
+                  mt: 2 
+                }}
+              >
+                {coreValues.map((value, index) => (
+                  <motion.div 
+                    key={value.id} 
+                    variants={cardVariants} 
+                    custom={index}
+                    style={{ flex: '1 1 0', minWidth: '30%' }}
+                  >
+                    <Card sx={{ 
+                      height: '100%',
+                      p: 3,
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          p: 1,
+                          bgcolor: 'rgba(255, 255, 255, 0.06)',
+                          borderRadius: 2,
+                          width: 40,
+                          height: 40,
+                          mb: 2
+                        }}
+                      >
+                        {value.icon}
+                      </Box>
+                      <Typography variant="h4" component="h4" sx={{ mb: 1, fontWeight: 500 }}>
+                        {value.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
+                        {value.description}
+                      </Typography>
+                    </Card>
+                  </motion.div>
+                ))}
+              </Box>
+            </motion.div>
           </Container>
         </Box>
-        
-        
       </Box>
     </ThemeProvider>
   );

@@ -12,13 +12,29 @@ export default function Home() {
   return (
     <div>
       <Header />
+      <section id="landing">
+        <Landing />
+      </section>
 
-      <Landing />
-      <ServicesPage />
-      <VisionPage />
-      <OurAppsPage />
-      <ProjectsPage />
-      <ContactFormSection />
+      <section id="services">
+        <ServicesPage />
+      </section>
+
+      <section id="vision">
+        <VisionPage />
+      </section>
+
+      <section id="apps">
+        <OurAppsPage />
+      </section>
+
+      <section>
+        <ProjectsPage />
+      </section>
+
+      <section>
+        <ContactFormSection />
+      </section>
 
 
       <Footer />
