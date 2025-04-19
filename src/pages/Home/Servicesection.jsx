@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import {
     Box,
@@ -6,9 +7,7 @@ import {
     CardActions,
     CardContent,
     CardMedia,
-    Chip,
     Container,
-    Paper,
     Typography,
     ThemeProvider,
     createTheme
@@ -20,10 +19,7 @@ import {
     Language,
     Wifi,
     BarChart,
-    ArrowForward,
-    BoltOutlined,
-    AccessTime,
-    Dashboard
+    ArrowForward
 } from '@mui/icons-material';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -37,7 +33,6 @@ const AnimatedBackground = () => {
         const ctx = canvas.getContext('2d');
         let animationFrameId;
 
-        // Make canvas full screen
         const handleResize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -46,15 +41,14 @@ const AnimatedBackground = () => {
         window.addEventListener('resize', handleResize);
         handleResize();
 
-        // Particle settings
         const particlesArray = [];
-        const numberOfParticles = 100;
+        const numberOfParticles = window.innerWidth < 600 ? 50 : 100; // Fewer particles on mobile
 
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
+                this.size = Math.random() * (window.innerWidth < 600 ? 2 : 3) + 1;
                 this.speedX = Math.random() * 0.5 - 0.25;
                 this.speedY = Math.random() * 0.5 - 0.25;
                 this.color = `rgba(10, 39, 37, ${Math.random() * 0.1 + 0.05})`;
@@ -63,14 +57,8 @@ const AnimatedBackground = () => {
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-
-                // Bounce off walls
-                if (this.x > canvas.width || this.x < 0) {
-                    this.speedX = -this.speedX;
-                }
-                if (this.y > canvas.height || this.y < 0) {
-                    this.speedY = -this.speedY;
-                }
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
             }
 
             draw() {
@@ -89,27 +77,21 @@ const AnimatedBackground = () => {
 
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw particles
             for (let i = 0; i < particlesArray.length; i++) {
                 particlesArray[i].update();
                 particlesArray[i].draw();
             }
-
-            // Connect particles with lines
             connectParticles();
-
             animationFrameId = requestAnimationFrame(animate);
         };
 
         const connectParticles = () => {
-            const maxDistance = 150;
+            const maxDistance = window.innerWidth < 600 ? 100 : 150;
             for (let a = 0; a < particlesArray.length; a++) {
                 for (let b = a; b < particlesArray.length; b++) {
                     const dx = particlesArray[a].x - particlesArray[b].x;
                     const dy = particlesArray[a].y - particlesArray[b].y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-
                     if (distance < maxDistance) {
                         ctx.beginPath();
                         ctx.strokeStyle = `rgba(10, 39, 37, ${0.05 - (distance / maxDistance) * 0.05})`;
@@ -147,44 +129,34 @@ const AnimatedBackground = () => {
     );
 };
 
-// Create custom theme
+// Create custom theme with responsive typography
 const theme = createTheme({
     palette: {
-        primary: {
-            main: '#38B2AC', // Teal accent color
-        },
-        secondary: {
-            main: '#EFF9F9', // Light teal background
-        },
-        text: {
-            primary: '#2D3748',
-            secondary: '#4A5568',
-        },
-        background: {
-            default: '#f5f7fa',
-            paper: '#ffffff'
-        }
+        primary: { main: '#38B2AC' },
+        secondary: { main: '#EFF9F9' },
+        text: { primary: '#2D3748', secondary: '#4A5568' },
+        background: { default: '#f5f7fa', paper: '#ffffff' }
     },
     typography: {
         fontFamily: '"Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         h1: {
             fontWeight: 600,
-            fontSize: '2.5rem',
+            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
             color: '#2D3748'
         },
         h2: {
             fontWeight: 600,
-            fontSize: '2rem',
+            fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2rem' },
             color: '#2D3748'
         },
         h3: {
             fontWeight: 600,
-            fontSize: '1.3rem',
+            fontSize: { xs: '1rem', sm: '1.2rem', md: '1.3rem' },
             color: '#2D3748',
             lineHeight: 1.3
         },
         body1: {
-            fontSize: '0.95rem',
+            fontSize: { xs: '0.85rem', sm: '0.9rem', md: '0.95rem' },
             color: '#4A5568'
         }
     },
@@ -217,18 +189,13 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
         threshold: 0.1,
     });
 
-    // Different animation types
     const animations = {
         fadeUp: {
             hidden: { y: 50, opacity: 0 },
             visible: { 
                 y: 0, 
                 opacity: 1, 
-                transition: { 
-                    duration: duration,
-                    delay: delay,
-                    ease: "easeOut"
-                } 
+                transition: { duration, delay, ease: "easeOut" } 
             }
         },
         slideRight: {
@@ -236,13 +203,7 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
             visible: { 
                 x: 0, 
                 opacity: 1, 
-                transition: { 
-                    duration: duration,
-                    delay: delay,
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 12
-                } 
+                transition: { duration, delay, type: "spring", stiffness: 100, damping: 12 } 
             }
         },
         slideLeft: {
@@ -250,13 +211,7 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
             visible: { 
                 x: 0, 
                 opacity: 1, 
-                transition: { 
-                    duration: duration,
-                    delay: delay,
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 12
-                } 
+                transition: { duration, delay, type: "spring", stiffness: 100, damping: 12 } 
             }
         },
         zoomIn: {
@@ -264,12 +219,7 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
             visible: { 
                 scale: 1, 
                 opacity: 1, 
-                transition: { 
-                    duration: duration,
-                    delay: delay,
-                    type: "spring",
-                    stiffness: 200
-                } 
+                transition: { duration, delay, type: "spring", stiffness: 200 } 
             }
         },
         flip: {
@@ -277,10 +227,7 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
             visible: { 
                 rotateY: 0, 
                 opacity: 1, 
-                transition: { 
-                    duration: duration,
-                    delay: delay
-                } 
+                transition: { duration, delay } 
             }
         },
         rise: {
@@ -288,13 +235,7 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
             visible: { 
                 y: 0, 
                 opacity: 1, 
-                transition: { 
-                    duration: duration,
-                    delay: delay,
-                    type: "spring",
-                    stiffness: 50,
-                    damping: 15
-                } 
+                transition: { duration, delay, type: "spring", stiffness: 50, damping: 15 } 
             }
         }
     };
@@ -319,14 +260,13 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
 };
 
 const ServicesPage = () => {
-    // Services data with icons and placeholder images
     const services = [
         {
             id: 1,
             title: "Shopify App Development",
             description: "Custom Shopify applications that extend your store's functionality and improve customer experience.",
             icon: <ShoppingBag sx={{ color: '#fff', fontSize: 36 }} />,
-            image: "/api/placeholder/500/320",
+            image: "https://www.strivemindz.com/images/offerings/mobile/shopify-app-development.jpg",
             animation: "fadeUp"
         },
         {
@@ -334,7 +274,7 @@ const ServicesPage = () => {
             title: "Custom Shopify App Development",
             description: "Tailored applications built specifically for your unique business needs and workflows.",
             icon: <Code sx={{ color: '#fff', fontSize: 36 }} />,
-            image: "/api/placeholder/400/250",
+            image: "https://ecommerce.folio3.com/blog/wp-content/uploads/2023/05/Shopify-Custom-Apps-vs-Private-Apps.jpg",
             animation: "slideRight"
         },
         {
@@ -342,7 +282,7 @@ const ServicesPage = () => {
             title: "Custom App Development",
             description: "Powerful, scalable applications designed and built from the ground up for web, mobile or desktop.",
             icon: <Settings sx={{ color: '#fff', fontSize: 36 }} />,
-            image: "/api/placeholder/250/140",
+            image: "https://www.growingprotechnologies.com/wp-content/uploads/2024/11/Elevate-Your-Business-with-Custom-App-Development-Services.webp",
             animation: "zoomIn"
         },
         {
@@ -350,7 +290,7 @@ const ServicesPage = () => {
             title: "Website Development",
             description: "Responsive, user-friendly websites optimized for performance, SEO, and conversion.",
             icon: <Language sx={{ color: '#fff', fontSize: 36 }} />,
-            image: "/api/placeholder/250/140",
+            image: "https://cdn.prod.website-files.com/678a08d17a6b88bae4e2d8ee/67931a0a99bf4f590dda2519_66b0929089fba41bd4d247e5_Different-Approaches-to-Website-Development-Costs.png",
             animation: "flip"
         },
         {
@@ -358,7 +298,7 @@ const ServicesPage = () => {
             title: "Digital Marketing",
             description: "Strategic marketing campaigns to drive traffic, increase engagement, and boost conversions.",
             icon: <Wifi sx={{ color: '#fff', fontSize: 36 }} />,
-            image: "/api/placeholder/180/180",
+            image: "https://hetic.in/wp-content/uploads/2019/10/Digital-Marketing-1.jpg",
             animation: "slideLeft"
         },
         {
@@ -366,12 +306,11 @@ const ServicesPage = () => {
             title: "E-Commerce Account Management",
             description: "End-to-end management of your e-commerce operations, inventory, and customer relationships.",
             icon: <BarChart sx={{ color: '#fff', fontSize: 36 }} />,
-            image: "/api/placeholder/180/180",
+            image: "https://www.gonukkad.com/wp-content/uploads/2023/12/Ecommerce-Account-Management-Services.webp",
             animation: "rise"
         }
     ];
 
-    // Header animations
     const headerControls = useAnimation();
     const [headerRef, headerInView] = useInView({
         triggerOnce: true,
@@ -388,9 +327,7 @@ const ServicesPage = () => {
         hidden: { opacity: 0 },
         visible: { 
             opacity: 1,
-            transition: {
-                staggerChildren: 0.3
-            }
+            transition: { staggerChildren: 0.3 }
         }
     };
 
@@ -399,9 +336,7 @@ const ServicesPage = () => {
         visible: { 
             y: 0, 
             opacity: 1,
-            transition: {
-                duration: 0.6
-            }
+            transition: { duration: 0.6 }
         }
     };
 
@@ -411,19 +346,19 @@ const ServicesPage = () => {
                 bgcolor: 'background.default',
                 minHeight: '100vh',
                 position: 'relative',
-                pt: 8,
-                pb: 12
+                pt: { xs: 4, sm: 6, md: 8 },
+                pb: { xs: 6, sm: 8, md: 12 }
             }}>
                 <AnimatedBackground />
                 
                 <Container maxWidth="lg">
-                    {/* Header Section with staggered animation */}
+                    {/* Header Section */}
                     <motion.div
                         ref={headerRef}
                         initial="hidden"
                         animate={headerControls}
                         variants={headerVariants}
-                        style={{ marginBottom: '3rem', textAlign: 'center' }}
+                        style={{ marginBottom: { xs: '2rem', md: '3rem' }, textAlign: 'center' }}
                     >
                         <motion.div variants={headerItemVariants}>
                             <Typography
@@ -441,8 +376,8 @@ const ServicesPage = () => {
                                 <Box
                                     component="span"
                                     sx={{
-                                        width: 16,
-                                        height: 16,
+                                        width: { xs: 12, md: 16 },
+                                        height: { xs: 12, md: 16 },
                                         bgcolor: '#38B2AC',
                                         borderRadius: '50%',
                                         mr: 1,
@@ -460,24 +395,24 @@ const ServicesPage = () => {
                         </motion.div>
 
                         <motion.div variants={headerItemVariants}>
-                            <Typography variant="body1" sx={{ color: '#718096', maxWidth: 600, mx: 'auto' }}>
+                            <Typography variant="body1" sx={{ color: '#718096', maxWidth: { xs: 400, sm: 600 }, mx: 'auto' }}>
                                 Explore our expertise in web development, offering cutting-edge solutions to bring your ideas to life.
                             </Typography>
                         </motion.div>
                     </motion.div>
 
-                    {/* Services Cards Grid with unique animations */}
+                    {/* Services Cards Grid */}
                     <Box
                         sx={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(12, 1fr)',
-                            gridTemplateRows: 'auto auto',
-                            gap: 3,
-                            mb: 6
+                            gridTemplateColumns: { xs: '1fr', md: 'repeat(12, 1fr)' },
+                            gridTemplateRows: { xs: 'auto', md: 'auto auto' },
+                            gap: { xs: 2, md: 3 },
+                            mb: { xs: 4, md: 6 }
                         }}
                     >
                         {/* First Row - Left side large card */}
-                        <Box sx={{ gridColumn: 'span 6', gridRow: 'span 2' }}>
+                        <Box sx={{ gridColumn: { xs: 'span 1', md: 'span 6' }, gridRow: { xs: 'auto', md: 'span 2' } }}>
                             <AnimatedCard delay={0.3} animationType={services[0].animation}>
                                 <Card
                                     sx={{
@@ -494,11 +429,11 @@ const ServicesPage = () => {
                                 >
                                     <CardMedia
                                         component="img"
-                                        sx={{ height: 320 }}
-                                        image="https://www.strivemindz.com/images/offerings/mobile/shopify-app-development.jpg"
+                                        sx={{ height: { xs: 200, sm: 250, md: 320 }, objectFit: 'cover' }}
+                                        image={services[0].image}
                                         alt={services[0].title}
                                     />
-                                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                                    <CardContent sx={{ flexGrow: 1, p: { xs: 2, md: 3 } }}>
                                         <Typography
                                             variant="h3"
                                             component="h2"
@@ -514,7 +449,7 @@ const ServicesPage = () => {
                                             {services[0].description}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions sx={{ px: 3, pb: 3 }}>
+                                    <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
                                         <Button
                                             size="small"
                                             color="primary"
@@ -538,13 +473,13 @@ const ServicesPage = () => {
                         </Box>
 
                         {/* First Row - Right side small card */}
-                        <Box sx={{ gridColumn: 'span 6', gridRow: 'span 1' }}>
+                        <Box sx={{ gridColumn: { xs: 'span 1', md: 'span 6' }, gridRow: { xs: 'auto', md: 'span 1' } }}>
                             <AnimatedCard delay={0.6} animationType={services[1].animation}>
                                 <Card
                                     sx={{
                                         height: '100%',
                                         display: 'flex',
-                                        flexDirection: 'row',
+                                        flexDirection: { xs: 'column', sm: 'row' },
                                         transition: 'transform 0.3s, box-shadow 0.3s',
                                         '&:hover': {
                                             transform: 'translateY(-4px)',
@@ -556,8 +491,8 @@ const ServicesPage = () => {
                                     <Box sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        width: '60%',
-                                        p: 3
+                                        width: { xs: '100%', sm: '60%' },
+                                        p: { xs: 2, md: 3 }
                                     }}>
                                         <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
                                             <Typography
@@ -588,17 +523,21 @@ const ServicesPage = () => {
                                                     '&:hover': {
                                                         background: 'transparent',
                                                         color: '#2C7A7B'
-                                                    }
-                                                }}
-                                            >
-                                                Read more
-                                            </Button>
+                                                }
+                                            }}
+                                        >
+                                            Read more
+                                        </Button>
                                         </CardActions>
                                     </Box>
                                     <CardMedia
                                         component="img"
-                                        sx={{ width: '40%' }}
-                                        image="https://ecommerce.folio3.com/blog/wp-content/uploads/2023/05/Shopify-Custom-Apps-vs-Private-Apps.jpg"
+                                        sx={{
+                                            width: { xs: '100%', sm: '40%' },
+                                            height: { xs: 150, sm: 'auto' },
+                                            objectFit: 'cover'
+                                        }}
+                                        image={services[1].image}
                                         alt={services[1].title}
                                     />
                                 </Card>
@@ -606,7 +545,7 @@ const ServicesPage = () => {
                         </Box>
 
                         {/* Second Row - Right side small cards */}
-                        <Box sx={{ gridColumn: 'span 3', gridRow: 'span 1' }}>
+                        <Box sx={{ gridColumn: { xs: 'span 1', sm: 'span 1/2', md: 'span 3' }, gridRow: { xs: 'auto', md: 'span 1' } }}>
                             <AnimatedCard delay={0.9} animationType={services[2].animation}>
                                 <Card
                                     sx={{
@@ -623,20 +562,20 @@ const ServicesPage = () => {
                                 >
                                     <CardMedia
                                         component="img"
-                                        sx={{ height: 140 }}
-                                        image="https://www.growingprotechnologies.com/wp-content/uploads/2024/11/Elevate-Your-Business-with-Custom-App-Development-Services.webp"
+                                        sx={{ height: { xs: 120, sm: 140 }, objectFit: 'cover' }}
+                                        image={services[2].image}
                                         alt={services[2].title}
                                     />
-                                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                                    <CardContent sx={{ flexGrow: 1, p: { xs: 2, md: 3 } }}>
                                         <Typography
                                             variant="h3"
                                             component="h2"
-                                            sx={{ mb: 1.5, fontSize: '1.1rem' }}
+                                            sx={{ mb: 1.5, fontSize: { xs: '1rem', sm: '1.1rem', md: '1.1rem' } }}
                                         >
                                             {services[2].title}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions sx={{ px: 3, pb: 3 }}>
+                                    <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
                                         <Button
                                             size="small"
                                             color="primary"
@@ -659,7 +598,7 @@ const ServicesPage = () => {
                             </AnimatedCard>
                         </Box>
 
-                        <Box sx={{ gridColumn: 'span 3', gridRow: 'span 1' }}>
+                        <Box sx={{ gridColumn: { xs: 'span 1', sm: 'span 1/2', md: 'span 3' }, gridRow: { xs: 'auto', md: 'span 1' } }}>
                             <AnimatedCard delay={1.2} animationType={services[3].animation}>
                                 <Card
                                     sx={{
@@ -676,20 +615,20 @@ const ServicesPage = () => {
                                 >
                                     <CardMedia
                                         component="img"
-                                        sx={{ height: 140 }}
-                                        image="https://cdn.prod.website-files.com/678a08d17a6b88bae4e2d8ee/67931a0a99bf4f590dda2519_66b0929089fba41bd4d247e5_Different-Approaches-to-Website-Development-Costs.png"
+                                        sx={{ height: { xs: 120, sm: 140 }, objectFit: 'cover' }}
+                                        image={services[3].image}
                                         alt={services[3].title}
                                     />
-                                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                                    <CardContent sx={{ flexGrow: 1, p: { xs: 2, md: 3 } }}>
                                         <Typography
                                             variant="h3"
                                             component="h2"
-                                            sx={{ mb: 1.5, fontSize: '1.1rem' }}
+                                            sx={{ mb: 1.5, fontSize: { xs: '1rem', sm: '1.1rem', md: '1.1rem' } }}
                                         >
                                             {services[3].title}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions sx={{ px: 3, pb: 3 }}>
+                                    <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
                                         <Button
                                             size="small"
                                             color="primary"
@@ -717,12 +656,12 @@ const ServicesPage = () => {
                     <Box
                         sx={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(12, 1fr)',
-                            gap: 3
+                            gridTemplateColumns: { xs: '1fr', md: 'repeat(12, 1fr)' },
+                            gap: { xs: 2, md: 3 }
                         }}
                     >
                         {/* Left side card - Horizontal layout */}
-                        <Box sx={{ gridColumn: { xs: 'span 12', md: 'span 6' } }}>
+                        <Box sx={{ gridColumn: { xs: 'span 1', md: 'span 6' } }}>
                             <AnimatedCard delay={1.5} animationType={services[4].animation}>
                                 <Card
                                     sx={{
@@ -741,7 +680,7 @@ const ServicesPage = () => {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         width: { xs: '100%', sm: '60%' },
-                                        p: 3
+                                        p: { xs: 2, md: 3 }
                                     }}>
                                         <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
                                             <Typography
@@ -772,20 +711,22 @@ const ServicesPage = () => {
                                                     '&:hover': {
                                                         background: 'transparent',
                                                         color: '#2C7A7B'
-                                                    }
-                                                }}
-                                            >
-                                                Read more
-                                            </Button>
+                                                }
+                                            }}
+                                        >
+                                            Read more
+                                        </Button>
                                         </CardActions>
                                     </Box>
                                     <CardMedia
+                                        Referral
                                         component="img"
                                         sx={{
                                             width: { xs: '100%', sm: '40%' },
-                                            height: { xs: 200, sm: 'auto' }
+                                            height: { xs: 150, sm: 'auto' },
+                                            objectFit: 'cover'
                                         }}
-                                        image="https://hetic.in/wp-content/uploads/2019/10/Digital-Marketing-1.jpg"
+                                        image={services[4].image}
                                         alt={services[4].title}
                                     />
                                 </Card>
@@ -793,7 +734,7 @@ const ServicesPage = () => {
                         </Box>
                         
                         {/* Right side card - Horizontal layout */}
-                        <Box sx={{ gridColumn: { xs: 'span 12', md: 'span 6' } }}>
+                        <Box sx={{ gridColumn: { xs: 'span 1', md: 'span 6' } }}>
                             <AnimatedCard delay={1.8} animationType={services[5].animation}>
                                 <Card
                                     sx={{
@@ -812,7 +753,7 @@ const ServicesPage = () => {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         width: { xs: '100%', sm: '60%' },
-                                        p: 3
+                                        p: { xs: 2, md: 3 }
                                     }}>
                                         <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
                                             <Typography
@@ -843,20 +784,21 @@ const ServicesPage = () => {
                                                     '&:hover': {
                                                         background: 'transparent',
                                                         color: '#2C7A7B'
-                                                    }
-                                                }}
-                                            >
-                                                Read more
-                                            </Button>
+                                                }
+                                            }}
+                                        >
+                                            Read more
+                                        </Button>
                                         </CardActions>
                                     </Box>
                                     <CardMedia
                                         component="img"
                                         sx={{
                                             width: { xs: '100%', sm: '40%' },
-                                            height: { xs: 200, sm: 'auto' }
+                                            height: { xs: 150, sm: 'auto' },
+                                            objectFit: 'cover'
                                         }}
-                                        image="https://www.gonukkad.com/wp-content/uploads/2023/12/Ecommerce-Account-Management-Services.webp"
+                                        image={services[5].image}
                                         alt={services[5].title}
                                     />
                                 </Card>

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {
-    AppBar, Toolbar, Typography, Button, Container, Grid, Box,
-    Card, CardContent, List, ListItem, ListItemIcon, ListItemText,
-    Avatar, AvatarGroup, Divider, useTheme, Paper
+    AppBar, Toolbar, Typography, Button, Container, Box,
+    useTheme
 } from '@mui/material';
 import { motion } from 'framer-motion';
 
@@ -24,9 +23,11 @@ const AnimatedBackground = () => {
         window.addEventListener('resize', handleResize);
         handleResize();
 
-        // Particle settings
+        // Particle settings (reduce particles for mobile)
+        const isMobile = window.innerWidth <= 600;
+        const numberOfParticles = isMobile ? 50 : 100; // Fewer particles on mobile
+
         const particlesArray = [];
-        const numberOfParticles = 100;
 
         class Particle {
             constructor() {
@@ -74,8 +75,10 @@ const AnimatedBackground = () => {
                 particlesArray[i].draw();
             }
 
-            // Optional: Connect particles with lines
-            connectParticles();
+            // Optional: Connect particles with lines (skip on mobile for performance)
+            if (!isMobile) {
+                connectParticles();
+            }
 
             animationFrameId = requestAnimationFrame(animate);
         };
@@ -139,20 +142,15 @@ const Landing = () => {
         visible: { y: 0, opacity: 1, transition: { duration: 0.6 } }
     };
 
-    // Chart data for the middle card
-    const chartData = [3, 5, 2, 6, 4, 7, 3, 8, 5, 6, 7, 9];
-
-
-
     return (
         <Box sx={{
-           height:'600px',
-            bgcolor: '#EFF9F9', // Light skin color background
+            minHeight: { xs: '100vh', md: '600px' }, // Full height on mobile, fixed on desktop
+            bgcolor: '#EFF9F9',
             color: '#0A2725',
             display: 'flex',
             flexDirection: 'column',
-            position: 'relative', // For absolute positioning of background
-            overflow: 'hidden' // To ensure background doesn't cause scrollbars
+            position: 'relative',
+            overflow: 'hidden'
         }}>
             {/* Animated Background */}
             <AnimatedBackground />
@@ -164,39 +162,68 @@ const Landing = () => {
                 animate="visible"
                 maxWidth="lg"
                 sx={{
-                    my: 8,
+                    my: { xs: 4, md: 8 }, // Reduced margin on mobile
+                    px: { xs: 2, md: 3 }, // Responsive padding
                     textAlign: 'center',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    position: 'relative', // To ensure content stays above animated background
+                    position: 'relative',
                     zIndex: 1
                 }}
             >
                 {/* Tag Line */}
                 <Box component={motion.div} variants={fadeIn} sx={{ mb: 2 }}>
-                    <Typography variant="overline" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Typography
+                        variant="overline"
+                        sx={{
+                            fontSize: { xs: '0.7rem', md: '0.875rem' },
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
                         <Box component="span" sx={{ mr: 1 }}>◆</Box> INNOVATIVE AND TRANSFORMATIVE
                     </Typography>
                 </Box>
 
                 {/* Main Heading */}
                 <Box component={motion.div} variants={slideUp} sx={{ mb: 4 }}>
-                    <Typography variant="h2" component="h1" sx={{ fontWeight: 'bold', lineHeight: 1.2 }}>
+                    <Typography
+                        variant="h2"
+                        component="h1"
+                        sx={{
+                            fontWeight: 'bold',
+                            lineHeight: 1.2,
+                            fontSize: { xs: '2rem', sm: '3rem', md: '4rem' } // Responsive font size
+                        }}
+                    >
                         Innovating Beyond<br />Boundaries
                     </Typography>
                 </Box>
 
                 {/* Description */}
                 <Box component={motion.div} variants={slideUp} sx={{ mb: 1, maxWidth: 'md' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'normal' }}>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 'normal',
+                            fontSize: { xs: '1rem', md: '1.25rem' } // Smaller font on mobile
+                        }}
+                    >
                         We specialize in transforming ideas into impactful solutions.
                         From cutting-edge applications to intuitive designs, our work reflects a commitment to excellence and a passion for innovation.
                         Every project we undertake is a testament to our expertise and dedication to empowering businesses for success.
                     </Typography>
                 </Box>
                 <Box component={motion.div} variants={slideUp} sx={{ mb: 1, maxWidth: 'md' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'normal' }}>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 'normal',
+                            fontSize: { xs: '1rem', md: '1.25rem' }
+                        }}
+                    >
                         Explore our portfolio and discover how we can bring your vision to life.
                     </Typography>
                 </Box>
@@ -211,13 +238,13 @@ const Landing = () => {
                     <Box sx={{
                         display: 'flex',
                         justifyContent: 'center',
-                        gap: 3,
+                        gap: 2,
                         flexWrap: 'wrap'
                     }}>
-                        {/* Middle - CTA buttons side by side */}
+                        {/* CTA buttons */}
                         <Box sx={{
                             display: 'flex',
-                            flexDirection: 'row', // Changed from 'column' to 'row'
+                            flexDirection: { xs: 'column', sm: 'row' }, // Stack vertically on mobile
                             justifyContent: 'center',
                             alignItems: 'center',
                             gap: 2
@@ -231,12 +258,13 @@ const Landing = () => {
                                     bgcolor: '#0A2725',
                                     color: 'white',
                                     borderRadius: 5,
-                                    px: 3,
+                                    px: { xs: 2, md: 3 },
                                     py: 1,
                                     textTransform: 'none',
                                     fontWeight: 'medium',
                                     boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
                                     border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    fontSize: { xs: '0.9rem', md: '1rem' },
                                     '&:hover': {
                                         bgcolor: '#0D302E',
                                     }
@@ -253,12 +281,13 @@ const Landing = () => {
                                     bgcolor: '#0A2725',
                                     color: 'white',
                                     borderRadius: 5,
-                                    px: 3,
+                                    px: { xs: 2, md: 3 },
                                     py: 1,
                                     textTransform: 'none',
                                     fontWeight: 'medium',
                                     boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
                                     border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    fontSize: { xs: '0.9rem', md: '1rem' },
                                     '&:hover': {
                                         bgcolor: '#0D302E',
                                     }

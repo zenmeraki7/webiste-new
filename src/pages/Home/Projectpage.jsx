@@ -7,24 +7,17 @@ import {
   ThemeProvider, 
   createTheme,
   IconButton,
-  useMediaQuery,
-  Grid,
-  Card,
-  CardContent
+  useMediaQuery
 } from '@mui/material';
 import { 
   ArrowForward,
   ArrowBackIos,
   ArrowForwardIos,
   PlayArrow,
-  PauseCircle,
-  Computer,
-  Code,
-  Storage,
-  Share
+  PauseCircle
 } from '@mui/icons-material';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-// Import videos correctly - these are the direct imports
+// Placeholder for video imports
 import emailassis from "../../assets/images/emailassis.mp4";
 import meta from "../../assets/images/meta.mp4";
 import multi from "../../assets/images/multi.mp4";
@@ -47,9 +40,11 @@ const AnimatedBackground = () => {
     window.addEventListener('resize', handleResize);
     handleResize();
 
-    // Particle settings
+    // Particle settings (optimize for mobile)
+    const isMobile = window.innerWidth <= 600;
+    const numberOfParticles = isMobile ? 50 : 100;
+
     const particlesArray = [];
-    const numberOfParticles = 100;
 
     class Particle {
       constructor() {
@@ -65,7 +60,6 @@ const AnimatedBackground = () => {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        // Bounce off walls
         if (this.x > canvas.width || this.x < 0) {
           this.speedX = -this.speedX;
         }
@@ -91,14 +85,14 @@ const AnimatedBackground = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw particles
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
         particlesArray[i].draw();
       }
 
-      // Connect particles with lines
-      connectParticles();
+      if (!isMobile) {
+        connectParticles();
+      }
 
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -170,35 +164,25 @@ const theme = createTheme({
     fontFamily: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     h1: {
       fontWeight: 700,
-      fontSize: '3.5rem',
+      fontSize: '3.5rem', // Fixed as per original
       lineHeight: 1.2,
     },
     h2: {
       fontWeight: 700,
-      fontSize: '2.5rem',
+      fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
       lineHeight: 1.3,
     },
     h3: {
       fontWeight: 600,
-      fontSize: '1.75rem',
-      lineHeight: 1.4,
-    },
-    h4: {
-      fontWeight: 600,
-      fontSize: '1.5rem',
-      lineHeight: 1.4,
-    },
-    h5: {
-      fontWeight: 600,
-      fontSize: '1.25rem',
+      fontSize: { xs: '1.25rem', md: '1.75rem' },
       lineHeight: 1.4,
     },
     subtitle1: {
-      fontSize: '1.25rem',
+      fontSize: '1.25rem', // Fixed as per original
       lineHeight: 1.5,
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: { xs: '0.875rem', md: '1rem' },
       lineHeight: 1.6,
     },
   },
@@ -208,8 +192,9 @@ const theme = createTheme({
         root: {
           borderRadius: 8,
           textTransform: 'none',
-          padding: '10px 24px',
+          padding: { xs: '8px 16px', md: '10px 24px' },
           fontWeight: 600,
+          fontSize: { xs: '0.875rem', md: '1rem' },
         },
         containedPrimary: {
           boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.15)',
@@ -223,59 +208,35 @@ const theme = createTheme({
   },
 });
 
-// Project data - FIXED to use direct video references
+// Project data
 const projects = [
   {
     id: 1,
     title: "MULTI-VENDOR",
-    videoSrc: multi, // Direct reference to the imported video
+    videoSrc: multi,
     description: "Our multi-vendor solution enables businesses to create their own marketplace with multiple sellers."
   },
   {
     id: 2,
     title: "METAMATRIX-BULK EDITOR",
-    videoSrc: meta, // Direct reference to the imported video
+    videoSrc: meta,
     description: "A powerful bulk editing tool designed for efficient data management and updates."
   },
   {
     id: 3,
     title: "E-MAIL ASSISTANT",
-    videoSrc: emailassis, // Direct reference to the imported video
+    videoSrc: emailassis,
     description: "Streamline your email workflow with our intelligent assistant for better communication."
   }
 ];
 
-// Sample technologies data for additional section
-const technologies = [
-  {
-    icon: <Code fontSize="large" />,
-    title: "Custom Development",
-    description: "Tailored solutions built with cutting-edge technologies to meet your specific business needs."
-  },
-  {
-    icon: <Computer fontSize="large" />,
-    title: "Web Applications",
-    description: "Responsive, fast, and user-friendly web applications that provide seamless experiences."
-  },
-  {
-    icon: <Storage fontSize="large" />,
-    title: "Database Solutions",
-    description: "Efficient data storage and management systems that ensure reliability and performance."
-  },
-  {
-    icon: <Share fontSize="large" />,
-    title: "API Integration",
-    description: "Seamless connection of different systems and services through robust API implementations."
-  }
-];
-
-// Animated section component for scroll-triggered animations
+// Animated section component
 const AnimatedSection = ({ children, variants, delay = 0, threshold = 0.1 }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { 
     once: false, 
     amount: threshold,
-    margin: "-100px 0px" // Triggers a bit before element is in full view
+    margin: "-100px 0px"
   });
   
   return (
@@ -302,16 +263,6 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.8 } }
 };
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2
-    }
-  }
-};
-
 const ProjectsPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -325,7 +276,6 @@ const ProjectsPage = () => {
   }, []);
 
   const nextSlide = () => {
-    // Pause current video
     if (videoRefs.current[currentIndex]) {
       videoRefs.current[currentIndex].pause();
     }
@@ -335,12 +285,10 @@ const ProjectsPage = () => {
       prevIndex === projects.length - 1 ? 0 : prevIndex + 1
     );
     
-    // Reset playing state for all videos
     setIsPlaying({});
   };
   
   const prevSlide = () => {
-    // Pause current video
     if (videoRefs.current[currentIndex]) {
       videoRefs.current[currentIndex].pause();
     }
@@ -350,7 +298,6 @@ const ProjectsPage = () => {
       prevIndex === 0 ? projects.length - 1 : prevIndex - 1
     );
     
-    // Reset playing state for all videos
     setIsPlaying({});
   };
 
@@ -381,20 +328,21 @@ const ProjectsPage = () => {
     }
   };
 
-  // Handle storing references to videos
   const setVideoRef = (element, index) => {
     videoRefs.current[index] = element;
   };
 
-  // Indicators with active state
   const Indicators = () => (
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+    <Box sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      mt: { xs: 2, md: 3 } 
+    }}>
       {projects.map((_, index) => (
         <Box
           key={index}
           component="button"
           onClick={() => {
-            // Pause current video
             if (videoRefs.current[currentIndex]) {
               videoRefs.current[currentIndex].pause();
             }
@@ -402,12 +350,11 @@ const ProjectsPage = () => {
             setDirection(index > currentIndex ? 1 : -1);
             setCurrentIndex(index);
             
-            // Reset playing state
             setIsPlaying({});
           }}
           sx={{
-            width: 12,
-            height: 12,
+            width: { xs: 10, md: 12 },
+            height: { xs: 10, md: 12 },
             borderRadius: '50%',
             mx: 0.5,
             border: 'none',
@@ -438,20 +385,20 @@ const ProjectsPage = () => {
           sx={{ 
             position: 'relative',
             bgcolor: 'rgb(255, 255, 255)',
-            pt: 2,
-            pb: 2,
+            pt: { xs: 1, md: 2 },
+            pb: { xs: 1, md: 2 },
             zIndex: 1,
           }}
         >
-          <Container maxWidth="lg">
+          <Container maxWidth={isMobile ? 'sm' : 'lg'}>
             <AnimatedSection variants={fadeInUp}>
               <Typography 
                 variant="h1" 
                 component="h1" 
                 align="center"
                 sx={{ 
-                  mb: 2,
-                  py:2,
+                  mb: { xs: 1, md: 2 },
+                  py: { xs: 1, md: 2 },
                   backgroundImage: 'linear-gradient(135deg, #0A2725 0%, #245F5C 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
@@ -468,7 +415,11 @@ const ProjectsPage = () => {
                 variant="subtitle1" 
                 color="text.secondary" 
                 align="center" 
-                sx={{ mb: 3, maxWidth: 700, mx: 'auto' }}
+                sx={{ 
+                  mb: { xs: 2, md: 3 }, 
+                  maxWidth: { xs: 500, md: 700 }, 
+                  mx: 'auto' 
+                }}
               >
                 Explore our portfolio of innovative solutions that we've developed for our clients.
                 Each project showcases our expertise in creating impactful digital experiences.
@@ -481,8 +432,8 @@ const ProjectsPage = () => {
         <Container 
           maxWidth={isMobile ? "sm" : "lg"} 
           sx={{ 
-            mt: 8, 
-            mb: 12, 
+            mt: { xs: 4, md: 8 }, 
+            mb: { xs: 6, md: 12 }, 
             position: 'relative', 
             zIndex: 1,
           }}
@@ -491,7 +442,7 @@ const ProjectsPage = () => {
             <Box 
               sx={{ 
                 position: 'relative',
-                height: {xs: 500, md: 600},
+                height: { xs: '400px', sm: '500px', md: '600px' },
                 overflow: 'hidden',
                 borderRadius: 4,
                 boxShadow: '0 30px 60px rgba(0, 0, 0, 0.12)',
@@ -503,38 +454,40 @@ const ProjectsPage = () => {
                 onClick={prevSlide}
                 sx={{ 
                   position: 'absolute', 
-                  left: 20, 
+                  left: { xs: 10, md: 20 }, 
                   top: '50%', 
                   transform: 'translateY(-50%)',
                   zIndex: 10,
                   bgcolor: 'rgba(255, 255, 255, 0.15)',
                   color: 'white',
+                  fontSize: { xs: '1rem', md: '1.5rem' },
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.25)',
                   }
                 }}
                 aria-label="previous project"
               >
-                <ArrowBackIos />
+                <ArrowBackIos fontSize="inherit" />
               </IconButton>
               
               <IconButton 
                 onClick={nextSlide}
                 sx={{ 
                   position: 'absolute', 
-                  right: 20, 
+                  right: { xs: 10, md: 20 }, 
                   top: '50%', 
                   transform: 'translateY(-50%)',
                   zIndex: 10,
                   bgcolor: 'rgba(255, 255, 255, 0.15)',
                   color: 'white',
+                  fontSize: { xs: '1rem', md: '1.5rem' },
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.25)',
                   }
                 }}
                 aria-label="next project"
               >
-                <ArrowForwardIos />
+                <ArrowForwardIos fontSize="inherit" />
               </IconButton>
               
               {/* Carousel Slides */}
@@ -553,7 +506,7 @@ const ProjectsPage = () => {
                   style={{
                     position: 'absolute',
                     width: '100%',
-                    height: '600px',
+                    height: '100%',
                   }}
                 >
                   {/* Video Background */}
@@ -575,12 +528,11 @@ const ProjectsPage = () => {
                       }
                     }}
                   >
-                    {/* Proper video element */}
                     <Box
                       component="video"
                       ref={(el) => setVideoRef(el, currentIndex)}
                       src={projects[currentIndex].videoSrc}
-                      poster="" // You can add poster image if needed
+                      poster=""
                       loop
                       muted
                       sx={{
@@ -609,8 +561,8 @@ const ProjectsPage = () => {
                     >
                       <Box
                         sx={{
-                          width: 80,
-                          height: 80,
+                          width: { xs: 60, md: 80 },
+                          height: { xs: 60, md: 80 },
                           borderRadius: '50%',
                           bgcolor: 'rgba(10, 39, 37, 0.7)',
                           display: 'flex',
@@ -624,9 +576,9 @@ const ProjectsPage = () => {
                         }}
                       >
                         {isPlaying[currentIndex] ? (
-                          <PauseCircle sx={{ color: 'white', fontSize: 40 }} />
+                          <PauseCircle sx={{ color: 'white', fontSize: { xs: 30, md: 40 } }} />
                         ) : (
-                          <PlayArrow sx={{ color: 'white', fontSize: 40 }} />
+                          <PlayArrow sx={{ color: 'white', fontSize: { xs: 30, md: 40 } }} />
                         )}
                       </Box>
                     </Box>
@@ -642,7 +594,7 @@ const ProjectsPage = () => {
                       textAlign: 'center',
                       color: 'white',
                       zIndex: 2,
-                      p: 4,
+                      p: { xs: 2, md: 4 },
                       background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%)'
                     }}
                   >
@@ -650,8 +602,9 @@ const ProjectsPage = () => {
                       variant="h2" 
                       component="h2"
                       sx={{ 
-                        mb: 2,
-                        textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+                        mb: { xs: 1, md: 2 },
+                        textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+                        fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
                       }}
                     >
                       {projects[currentIndex].title}
@@ -660,10 +613,11 @@ const ProjectsPage = () => {
                     <Typography 
                       variant="body1" 
                       sx={{ 
-                        mb: 3,
-                        maxWidth: 700,
+                        mb: { xs: 2, md: 3 },
+                        maxWidth: { xs: 300, sm: 500, md: 700 },
                         mx: 'auto',
-                        opacity: 0.9
+                        opacity: 0.9,
+                        fontSize: { xs: '0.875rem', md: '1rem' }
                       }}
                     >
                       {projects[currentIndex].description}
@@ -674,8 +628,8 @@ const ProjectsPage = () => {
                       color="primary"
                       endIcon={<ArrowForward />}
                       sx={{
-                        px: 3,
-                        py: 1.2,
+                        px: { xs: 2, md: 3 },
+                        py: { xs: 0.8, md: 1.2 },
                         bgcolor: 'rgba(10, 39, 37, 0.9)',
                         '&:hover': {
                           bgcolor: 'rgba(10, 39, 37, 1)'
@@ -689,11 +643,8 @@ const ProjectsPage = () => {
               </AnimatePresence>
             </Box>
             
-            {/* Indicators */}
             <Indicators />
           </AnimatedSection>
-          
-          
         </Container>
       </Box>
     </ThemeProvider>

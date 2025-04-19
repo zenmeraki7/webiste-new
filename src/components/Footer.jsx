@@ -105,7 +105,7 @@ function Footer() {
         <Box sx={{ flexGrow: 1 }}>
             {/* Hero section */}
             <DarkGreenContainer>
-                <Container maxWidth="lg">
+                <Container maxWidth="100%">
                     <Grid container spacing={4} alignItems="center">
                         <Grid item xs={12} md={6}>
                             <Typography variant="subtitle1" component="div" color="#4CD787" gutterBottom>
