@@ -19,7 +19,7 @@ import {
   Psychology,
   People
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 
 // Animated Particles Background Component
 const AnimatedBackground = () => {
@@ -222,13 +222,13 @@ const theme = createTheme({
 
 // Animation variants for elements
 const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
 };
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1 }
+  visible: { opacity: 1, transition: { duration: 0.8 } }
 };
 
 // Staggered icon animation
@@ -261,51 +261,71 @@ const cardsContainerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.3,
-      delayChildren: 0.3
+      staggerChildren: 0.2
     }
   }
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 50 },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: {
       type: "spring",
-      stiffness: 70
+      stiffness: 50,
+      damping: 15
     }
   }
 };
 
+// Section component that animates when scrolled into view
+const AnimatedSection = ({ children, variants, delay = 0, threshold = 0.2 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { 
+    once: false, 
+    amount: threshold,
+    margin: "-100px 0px" // Triggers a bit before the element is in full view
+  });
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={variants}
+      transition={{ delay }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const VisionPage = () => {
   // Core values data - keeping original content
-  const coreValues = [
-    {
-      id: 1,
-      title: "Creative",
-      description: "We approach every challenge with fresh perspectives and innovative thinking, constantly pushing boundaries to create unique solutions.",
-      icon: <Lightbulb sx={{ color: '#fff', fontSize: 36 }} />,
-      color: "#0A2725"
-    },
-    {
-      id: 2,
-      title: "Innovative",
-      description: "Our team leverages cutting-edge technology and forward-thinking approaches to develop solutions that are ahead of the curve.",
-      icon: <Rocket sx={{ color: '#fff', fontSize: 36 }} />,
-      color: "#153F3D"
-    },
-    {
-      id: 3,
-      title: "Driven",
-      description: "We're passionate about results and committed to excellence, constantly striving to exceed expectations and deliver exceptional value.",
-      icon: <TrendingUp sx={{ color: '#fff', fontSize: 36 }} />,
-      color: "#0D302E"
-    },
-  ];
-
-
+  // const coreValues = [
+  //   {
+  //     id: 1,
+  //     title: "Creative",
+  //     description: "We approach every challenge with fresh perspectives and innovative thinking, constantly pushing boundaries to create unique solutions.",
+  //     icon: <Lightbulb sx={{ color: '#fff', fontSize: 36 }} />,
+  //     color: "#0A2725"
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Innovative",
+  //     description: "Our team leverages cutting-edge technology and forward-thinking approaches to develop solutions that are ahead of the curve.",
+  //     icon: <Rocket sx={{ color: '#fff', fontSize: 36 }} />,
+  //     color: "#153F3D"
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Driven",
+  //     description: "We're passionate about results and committed to excellence, constantly striving to exceed expectations and deliver exceptional value.",
+  //     icon: <TrendingUp sx={{ color: '#fff', fontSize: 36 }} />,
+  //     color: "#0D302E"
+  //   },
+  // ];
 
   // Sample icons for the main feature card
   const integrationIcons = Array(7).fill(null).map((_, index) => ({
@@ -313,17 +333,56 @@ const VisionPage = () => {
     icon: ['⚛️', '💻', '🚀', '🔍', '📊', '🌐', '📈'][index] || '✨'
   }));
 
+  // Create refs for scroll animation
+  const subtitleRef = useRef(null);
+  const titleRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const featureCardRef = useRef(null);
+  // const coreValuesRef = useRef(null);
+
+  // Check if elements are in viewport
+  const subtitleInView = useInView(subtitleRef, { once: false, amount: 0.5 });
+  const titleInView = useInView(titleRef, { once: false, amount: 0.5 });
+  const descriptionInView = useInView(descriptionRef, { once: false, amount: 0.5 });
+  const featureCardInView = useInView(featureCardRef, { once: false, amount: 0.3 });
+  // const coreValuesInView = useInView(coreValuesRef, { once: false, amount: 0.3 });
+
+  // Additional sections for more scrolling
+  const additionalSections = [
+    {
+      id: 1,
+      title: "Creative",
+      description: "We approach every challenge with fresh perspectives and innovative thinking, constantly pushing boundaries to create unique solutions.",
+      icon: <Lightbulb sx={{ color: '#fff', fontSize: 36 }} />,
+      // color: "#0A2725"
+    },
+    {
+      id: 2,
+      title: "Innovative",
+      description: "Our team leverages cutting-edge technology and forward-thinking approaches to develop solutions that are ahead of the curve.",
+      icon: <Rocket sx={{ color: '#fff', fontSize: 36 }} />,
+      // color: "#153F3D"
+    },
+    {
+      id: 3,
+      title: "Driven",
+      description: "We're passionate about results and committed to excellence, constantly striving to exceed expectations and deliver exceptional value.",
+      icon: <TrendingUp sx={{ color: '#fff', fontSize: 36 }} />,
+      // color: "#0D302E"
+    },
+  ];
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{
         bgcolor: 'background.default',
-        height:'900px',
+        minHeight: '100vh',
         position: 'relative',
         overflow: 'hidden',
       }}>
         <AnimatedBackground />
 
-        {/* Hero Section - with animations */}
+        {/* Hero Section - with scroll animations */}
         <Box
           sx={{
             position: 'relative',
@@ -334,13 +393,13 @@ const VisionPage = () => {
           }}
         >
           <Container maxWidth="lg">
-            {/* Title Section - sequentially animated */}
+            {/* Title Section - sequentially animated on scroll */}
             <Box sx={{ textAlign: 'center', mb: 5 }}>
               <motion.div
+                ref={subtitleRef}
                 initial="hidden"
-                animate="visible"
+                animate={subtitleInView ? "visible" : "hidden"}
                 variants={fadeInUp}
-                transition={{ duration: 0.7 }}
               >
                 <Typography
                   variant="subtitle2"
@@ -357,10 +416,10 @@ const VisionPage = () => {
               </motion.div>
 
               <motion.div
+                ref={titleRef}
                 initial="hidden"
-                animate="visible"
+                animate={titleInView ? "visible" : "hidden"}
                 variants={fadeInUp}
-                transition={{ duration: 0.7, delay: 0.3 }}
               >
                 <Typography
                   variant="h1"
@@ -375,10 +434,10 @@ const VisionPage = () => {
               </motion.div>
 
               <motion.div
+                ref={descriptionRef}
                 initial="hidden"
-                animate="visible"
+                animate={descriptionInView ? "visible" : "hidden"}
                 variants={fadeInUp}
-                transition={{ duration: 0.7, delay: 0.6 }}
               >
                 <Typography
                   variant="subtitle1"
@@ -394,12 +453,12 @@ const VisionPage = () => {
               </motion.div>
             </Box>
 
-            {/* Main Feature Card - with animation */}
+            {/* Main Feature Card - with scroll animation */}
             <motion.div
+              ref={featureCardRef}
               initial="hidden"
-              animate="visible"
+              animate={featureCardInView ? "visible" : "hidden"}
               variants={fadeInUp}
-              transition={{ duration: 0.8, delay: 0.9 }}
             >
               <Card sx={{
                 bgcolor: 'rgba(230, 255, 223, 0.9)', // Light mint green with opacity
@@ -416,11 +475,7 @@ const VisionPage = () => {
                 </Typography>
 
                 {/* Integration icons with staggered animation */}
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
+                <AnimatedSection variants={containerVariants} threshold={0.6}>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
                     {integrationIcons.map((icon) => (
                       <motion.div key={icon.id} variants={itemVariants}>
@@ -443,13 +498,9 @@ const VisionPage = () => {
                       </motion.div>
                     ))}
                   </Box>
-                </motion.div>
+                </AnimatedSection>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 2.2, duration: 0.5 }}
-                >
+                <AnimatedSection variants={fadeInUp} delay={0.3} threshold={0.6}>
                   <Button
                     variant="outlined"
                     size="small"
@@ -464,15 +515,16 @@ const VisionPage = () => {
                   >
                     Let's Create Together
                   </Button>
-                </motion.div>
+                </AnimatedSection>
               </Card>
             </motion.div>
 
-            {/* Three core values in a single row - with staggered animation */}
-            <motion.div
+            {/* Three core values in a single row - with staggered animation on scroll */}
+            {/* <motion.div
+              ref={coreValuesRef}
               variants={cardsContainerVariants}
               initial="hidden"
-              animate="visible"
+              animate={coreValuesInView ? "visible" : "hidden"}
               style={{ width: '100%' }}
             >
               <Box 
@@ -521,7 +573,120 @@ const VisionPage = () => {
                   </motion.div>
                 ))}
               </Box>
-            </motion.div>
+            </motion.div> */}
+
+            {/* Additional sections to create more scroll opportunities */}
+            <Box sx={{ mt: 2, mb: 8 }}>
+              
+              
+              <Box sx={{ mt: 6 }}>
+                {additionalSections.map((section, index) => (
+                  <AnimatedSection key={section.id} variants={fadeInUp} threshold={0.3}>
+                    <Box 
+                      sx={{ 
+                        display: 'flex', 
+                        flexDirection: { xs: 'column', md: 'row' },
+                        alignItems: 'center',
+                        mb: 8,
+                        gap: 4
+                      }}
+                    >
+                      {/* Alternate layout for visual interest */}
+                      {index % 2 === 0 ? (
+                        <>
+                          <Box sx={{ flex: 1 }}>
+                            <Card sx={{ p: 3 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    p: 1,
+                                    bgcolor: 'rgba(255, 255, 255, 0.06)',
+                                    borderRadius: 2,
+                                    width: 40,
+                                    height: 40,
+                                    mr: 2
+                                  }}
+                                >
+                                  {section.icon}
+                                </Box>
+                                <Typography variant="h3">{section.title}</Typography>
+                              </Box>
+                              <Typography variant="body1" color="text.secondary">
+                                {section.description}
+                              </Typography>
+                            </Card>
+                          </Box>
+                          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                            <Card 
+                              sx={{ 
+                                width: 280, 
+                                height: 280, 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center',
+                                bgcolor: 'rgba(255, 255, 255, 0.03)'
+                              }}
+                            >
+                              <Typography variant="h1" sx={{ opacity: 0.6, fontSize: '4rem' }}>
+                                {index + 1}
+                              </Typography>
+                            </Card>
+                          </Box>
+                        </>
+                      ) : (
+                        <>
+                          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                            <Card 
+                              sx={{ 
+                                width: 280, 
+                                height: 280, 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center',
+                                bgcolor: 'rgba(255, 255, 255, 0.03)'
+                              }}
+                            >
+                              <Typography variant="h1" sx={{ opacity: 0.6, fontSize: '4rem' }}>
+                                {index + 1}
+                              </Typography>
+                            </Card>
+                          </Box>
+                          <Box sx={{ flex: 1 }}>
+                            <Card sx={{ p: 3 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    p: 1,
+                                    bgcolor: 'rgba(255, 255, 255, 0.06)',
+                                    borderRadius: 2,
+                                    width: 40,
+                                    height: 40,
+                                    mr: 2
+                                  }}
+                                >
+                                  {section.icon}
+                                </Box>
+                                <Typography variant="h3">{section.title}</Typography>
+                              </Box>
+                              <Typography variant="body1" color="text.secondary">
+                                {section.description}
+                              </Typography>
+                            </Card>
+                          </Box>
+                        </>
+                      )}
+                    </Box>
+                  </AnimatedSection>
+                ))}
+              </Box>
+            </Box>
+
           </Container>
         </Box>
       </Box>

@@ -140,13 +140,20 @@ const GrowioHeader = () => {
   return (
     <AppBar position="sticky" color="default" elevation={0} sx={{ bgcolor: '#EFF9F9' }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+        <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Logo */}
           <GrowioLogo />
 
-          {/* Desktop Navigation */}
-          {!isMobile && (
-            <Box sx={{ display: 'flex', mx: 'auto', ml: 4 }}>
+          {/* Center Section with Navigation - Desktop only */}
+          <Box sx={{ 
+            display: { xs: 'none', md: 'flex' }, 
+            justifyContent: 'center', 
+            flexGrow: 1
+          }}>
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'center'
+            }}>
               {navigationItems.map((item, index) => (
                 <Box key={index} sx={{ position: 'relative' }}>
                   <Button
@@ -185,7 +192,7 @@ const GrowioHeader = () => {
                 </Box>
               ))}
             </Box>
-          )}
+          </Box>
 
           {/* Mobile menu icon */}
           {isMobile && (
@@ -202,7 +209,6 @@ const GrowioHeader = () => {
 
           {/* Auth Buttons */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-            
             <Button 
               variant="contained" 
               color="primary" 

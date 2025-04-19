@@ -24,12 +24,14 @@ export default function Home() {
         <VisionPage />
       </section>
 
-      <section id="apps">
-        <OurAppsPage />
-      </section>
+      
 
       <section>
         <ProjectsPage />
+      </section>
+
+      <section id="apps">
+        <OurAppsPage />
       </section>
 
       <section>

@@ -381,6 +381,7 @@ const ProjectsPage = () => {
                 align="center"
                 sx={{ 
                   mb: 2,
+                  py:2,
                   backgroundImage: 'linear-gradient(135deg, #0A2725 0%, #245F5C 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
@@ -388,7 +389,7 @@ const ProjectsPage = () => {
                   color: '#0A2725',
                 }}
               >
-                Our Projects
+                Explore Our Projects
               </Typography>
             </motion.div>
             
