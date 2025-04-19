@@ -7,16 +7,23 @@ import {
   ThemeProvider, 
   createTheme,
   IconButton,
-  useMediaQuery
+  useMediaQuery,
+  Grid,
+  Card,
+  CardContent
 } from '@mui/material';
 import { 
   ArrowForward,
   ArrowBackIos,
   ArrowForwardIos,
   PlayArrow,
-  PauseCircle
+  PauseCircle,
+  Computer,
+  Code,
+  Storage,
+  Share
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 // Import videos correctly - these are the direct imports
 import emailassis from "../../assets/images/emailassis.mp4";
 import meta from "../../assets/images/meta.mp4";
@@ -238,6 +245,73 @@ const projects = [
   }
 ];
 
+// Sample technologies data for additional section
+const technologies = [
+  {
+    icon: <Code fontSize="large" />,
+    title: "Custom Development",
+    description: "Tailored solutions built with cutting-edge technologies to meet your specific business needs."
+  },
+  {
+    icon: <Computer fontSize="large" />,
+    title: "Web Applications",
+    description: "Responsive, fast, and user-friendly web applications that provide seamless experiences."
+  },
+  {
+    icon: <Storage fontSize="large" />,
+    title: "Database Solutions",
+    description: "Efficient data storage and management systems that ensure reliability and performance."
+  },
+  {
+    icon: <Share fontSize="large" />,
+    title: "API Integration",
+    description: "Seamless connection of different systems and services through robust API implementations."
+  }
+];
+
+// Animated section component for scroll-triggered animations
+const AnimatedSection = ({ children, variants, delay = 0, threshold = 0.1 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { 
+    once: false, 
+    amount: threshold,
+    margin: "-100px 0px" // Triggers a bit before element is in full view
+  });
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={variants}
+      transition={{ delay }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.8 } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
 const ProjectsPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -370,11 +444,7 @@ const ProjectsPage = () => {
           }}
         >
           <Container maxWidth="lg">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-            >
+            <AnimatedSection variants={fadeInUp}>
               <Typography 
                 variant="h1" 
                 component="h1" 
@@ -391,13 +461,9 @@ const ProjectsPage = () => {
               >
                 Explore Our Projects
               </Typography>
-            </motion.div>
+            </AnimatedSection>
             
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-            >
+            <AnimatedSection variants={fadeInUp} delay={0.2}>
               <Typography 
                 variant="subtitle1" 
                 color="text.secondary" 
@@ -407,7 +473,7 @@ const ProjectsPage = () => {
                 Explore our portfolio of innovative solutions that we've developed for our clients.
                 Each project showcases our expertise in creating impactful digital experiences.
               </Typography>
-            </motion.div>
+            </AnimatedSection>
           </Container>
         </Box>
         
@@ -418,214 +484,216 @@ const ProjectsPage = () => {
             mt: 8, 
             mb: 12, 
             position: 'relative', 
-            zIndex: 1 ,
-            
+            zIndex: 1,
           }}
         >
-          <Box 
-            sx={{ 
-              position: 'relative',
-              height: {xs: 500, md: 600},
-              overflow: 'hidden',
-              borderRadius: 4,
-              boxShadow: '0 30px 60px rgba(0, 0, 0, 0.12)',
-              bgcolor: '#000',
-            }}
-          >
-            {/* Navigation Arrows */}
-            <IconButton 
-              onClick={prevSlide}
+          <AnimatedSection variants={fadeIn} threshold={0.3}>
+            <Box 
               sx={{ 
-                position: 'absolute', 
-                left: 20, 
-                top: '50%', 
-                transform: 'translateY(-50%)',
-                zIndex: 10,
-                bgcolor: 'rgba(255, 255, 255, 0.15)',
-                color: 'white',
-                '&:hover': {
-                  bgcolor: 'rgba(255, 255, 255, 0.25)',
-                }
+                position: 'relative',
+                height: {xs: 500, md: 600},
+                overflow: 'hidden',
+                borderRadius: 4,
+                boxShadow: '0 30px 60px rgba(0, 0, 0, 0.12)',
+                bgcolor: '#000',
               }}
-              aria-label="previous project"
             >
-              <ArrowBackIos />
-            </IconButton>
-            
-            <IconButton 
-              onClick={nextSlide}
-              sx={{ 
-                position: 'absolute', 
-                right: 20, 
-                top: '50%', 
-                transform: 'translateY(-50%)',
-                zIndex: 10,
-                bgcolor: 'rgba(255, 255, 255, 0.15)',
-                color: 'white',
-                '&:hover': {
-                  bgcolor: 'rgba(255, 255, 255, 0.25)',
-                }
-              }}
-              aria-label="next project"
-            >
-              <ArrowForwardIos />
-            </IconButton>
-            
-            {/* Carousel Slides */}
-            <AnimatePresence initial={false} custom={direction}>
-              <motion.div
-                key={currentIndex}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 }
+              {/* Navigation Arrows */}
+              <IconButton 
+                onClick={prevSlide}
+                sx={{ 
+                  position: 'absolute', 
+                  left: 20, 
+                  top: '50%', 
+                  transform: 'translateY(-50%)',
+                  zIndex: 10,
+                  bgcolor: 'rgba(255, 255, 255, 0.15)',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.25)',
+                  }
                 }}
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '600px',
-                }}
+                aria-label="previous project"
               >
-                {/* Video Background */}
-                <Box
-                  sx={{
+                <ArrowBackIos />
+              </IconButton>
+              
+              <IconButton 
+                onClick={nextSlide}
+                sx={{ 
+                  position: 'absolute', 
+                  right: 20, 
+                  top: '50%', 
+                  transform: 'translateY(-50%)',
+                  zIndex: 10,
+                  bgcolor: 'rgba(255, 255, 255, 0.15)',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.25)',
+                  }
+                }}
+                aria-label="next project"
+              >
+                <ArrowForwardIos />
+              </IconButton>
+              
+              {/* Carousel Slides */}
+              <AnimatePresence initial={false} custom={direction}>
+                <motion.div
+                  key={currentIndex}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
+                  style={{
                     position: 'absolute',
                     width: '100%',
-                    height: '100%',
-                    bgcolor: '#000',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      background: 'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%)',
-                      zIndex: 1
-                    }
+                    height: '600px',
                   }}
                 >
-                  {/* Proper video element */}
-                  <Box
-                    component="video"
-                    ref={(el) => setVideoRef(el, currentIndex)}
-                    src={projects[currentIndex].videoSrc}
-                    poster="" // You can add poster image if needed
-                    loop
-                    muted
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }}
-                  />
-                  
-                  {/* Play/Pause Button */}
+                  {/* Video Background */}
                   <Box
                     sx={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      zIndex: 2,
-                      cursor: 'pointer',
-                      opacity: isPlaying[currentIndex] ? 0 : 1,
-                      transition: 'opacity 0.3s',
-                      '&:hover': {
-                        opacity: 1
+                      width: '100%',
+                      height: '100%',
+                      bgcolor: '#000',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        background: 'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%)',
+                        zIndex: 1
                       }
                     }}
-                    onClick={() => handlePlayVideo(currentIndex)}
                   >
+                    {/* Proper video element */}
+                    <Box
+                      component="video"
+                      ref={(el) => setVideoRef(el, currentIndex)}
+                      src={projects[currentIndex].videoSrc}
+                      poster="" // You can add poster image if needed
+                      loop
+                      muted
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                    
+                    {/* Play/Pause Button */}
                     <Box
                       sx={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: '50%',
-                        bgcolor: 'rgba(10, 39, 37, 0.7)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.3s',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: 2,
+                        cursor: 'pointer',
+                        opacity: isPlaying[currentIndex] ? 0 : 1,
+                        transition: 'opacity 0.3s',
                         '&:hover': {
-                          bgcolor: 'rgba(10, 39, 37, 0.9)',
-                          transform: 'scale(1.1)'
+                          opacity: 1
+                        }
+                      }}
+                      onClick={() => handlePlayVideo(currentIndex)}
+                    >
+                      <Box
+                        sx={{
+                          width: 80,
+                          height: 80,
+                          borderRadius: '50%',
+                          bgcolor: 'rgba(10, 39, 37, 0.7)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.3s',
+                          '&:hover': {
+                            bgcolor: 'rgba(10, 39, 37, 0.9)',
+                            transform: 'scale(1.1)'
+                          }
+                        }}
+                      >
+                        {isPlaying[currentIndex] ? (
+                          <PauseCircle sx={{ color: 'white', fontSize: 40 }} />
+                        ) : (
+                          <PlayArrow sx={{ color: 'white', fontSize: 40 }} />
+                        )}
+                      </Box>
+                    </Box>
+                  </Box>
+                  
+                  {/* Caption */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      width: '100%',
+                      textAlign: 'center',
+                      color: 'white',
+                      zIndex: 2,
+                      p: 4,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%)'
+                    }}
+                  >
+                    <Typography 
+                      variant="h2" 
+                      component="h2"
+                      sx={{ 
+                        mb: 2,
+                        textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+                      }}
+                    >
+                      {projects[currentIndex].title}
+                    </Typography>
+                    
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        mb: 3,
+                        maxWidth: 700,
+                        mx: 'auto',
+                        opacity: 0.9
+                      }}
+                    >
+                      {projects[currentIndex].description}
+                    </Typography>
+                    
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      endIcon={<ArrowForward />}
+                      sx={{
+                        px: 3,
+                        py: 1.2,
+                        bgcolor: 'rgba(10, 39, 37, 0.9)',
+                        '&:hover': {
+                          bgcolor: 'rgba(10, 39, 37, 1)'
                         }
                       }}
                     >
-                      {isPlaying[currentIndex] ? (
-                        <PauseCircle sx={{ color: 'white', fontSize: 40 }} />
-                      ) : (
-                        <PlayArrow sx={{ color: 'white', fontSize: 40 }} />
-                      )}
-                    </Box>
+                      View Project
+                    </Button>
                   </Box>
-                </Box>
-                
-                {/* Caption */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    width: '100%',
-                    textAlign: 'center',
-                    color: 'white',
-                    zIndex: 2,
-                    p: 4,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%)'
-                  }}
-                >
-                  <Typography 
-                    variant="h2" 
-                    component="h2"
-                    sx={{ 
-                      mb: 2,
-                      textShadow: '0 2px 10px rgba(0,0,0,0.3)'
-                    }}
-                  >
-                    {projects[currentIndex].title}
-                  </Typography>
-                  
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
-                      mb: 3,
-                      maxWidth: 700,
-                      mx: 'auto',
-                      opacity: 0.9
-                    }}
-                  >
-                    {projects[currentIndex].description}
-                  </Typography>
-                  
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    endIcon={<ArrowForward />}
-                    sx={{
-                      px: 3,
-                      py: 1.2,
-                      bgcolor: 'rgba(10, 39, 37, 0.9)',
-                      '&:hover': {
-                        bgcolor: 'rgba(10, 39, 37, 1)'
-                      }
-                    }}
-                  >
-                    View Project
-                  </Button>
-                </Box>
-              </motion.div>
-            </AnimatePresence>
-          </Box>
+                </motion.div>
+              </AnimatePresence>
+            </Box>
+            
+            {/* Indicators */}
+            <Indicators />
+          </AnimatedSection>
           
-          {/* Indicators */}
-          <Indicators />
-         
+          
         </Container>
       </Box>
     </ThemeProvider>
