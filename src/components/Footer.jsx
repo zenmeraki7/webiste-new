@@ -106,8 +106,8 @@ function Footer() {
             {/* Hero section */}
             <DarkGreenContainer>
                 <Container maxWidth="100%">
-                    <Grid container spacing={4} alignItems="center">
-                        <Grid item xs={12} md={6}>
+                    <Grid container spacing={4} direction="column" alignItems="center" textAlign="center">
+                        <Grid item xs={12}>
                             <Typography variant="subtitle1" component="div" color="#4CD787" gutterBottom>
                                 JOIN THE BEST
                             </Typography>
@@ -115,13 +115,10 @@ function Footer() {
                             Ready to Transform Your E-Commerce Business?
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} md={6} container justifyContent="flex-end" spacing={2}>
-                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                                <GreenButton variant="contained" size="large">
-                                    Contact Us
-                                </GreenButton>
-
-                            </Stack>
+                        <Grid item xs={12} container justifyContent="center" >
+                            <GreenButton variant="contained" size="large">
+                                Contact Us
+                            </GreenButton>
                         </Grid>
                     </Grid>
                 </Container>

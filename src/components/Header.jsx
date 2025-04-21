@@ -101,15 +101,15 @@ const navigationItems = [
     hasDropdown: true,
     link: '/expertise',
     items: [
-      { name: 'Shopify App Development', link: '' },
-      { name: 'Custom Shopify App Development', link: '' },
-      { name: 'Custom App Development', link: '' },
-      { name: 'Website Development', link: '' },
-      { name: 'Digital Marketing', link: '' },
-      { name: 'E-Commerce Account Management', link: '' }
+      { name: 'Shopify App Development', link: '/shopify-app' },
+      { name: 'Custom Shopify App Development', link: '/custom-store' },
+      { name: 'Custom App Development', link: '/custom-app' },
+      { name: 'Website Development', link: '/website-management' },
+      { name: 'Digital Marketing', link: '/digital-marketing' },
+      { name: 'E-Commerce Account Management', link: '/e-commerce-management' }
     ]
   },
-  { title: 'About Us', hasDropdown: false, link: '/' },
+  { title: 'About Us', hasDropdown: false, link: '/about-us' },
   { title: 'Apps', hasDropdown: false, link: '/' },
   { title: 'Projects', hasDropdown: false, link: '/' },
   { title: 'Careers', hasDropdown: false, link: '/' },
