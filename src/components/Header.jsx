@@ -112,7 +112,7 @@ const navigationItems = [
   { title: 'About Us', hasDropdown: false, link: '/about-us' },
   { title: 'Apps', hasDropdown: false, link: '/' },
   { title: 'Projects', hasDropdown: false, link: '/' },
-  { title: 'Careers', hasDropdown: false, link: '/' },
+  { title: 'Careers', hasDropdown: false, link: '/careers' },
 ];
 
 const GrowioHeader = () => {

@@ -9,6 +9,7 @@ import Website from './pages/Expertise/Website'
 import DigitalMarketing from './pages/Expertise/DigitalMarketing'
 import Ecommerce from './pages/Expertise/E-commerce'
 import AboutUs from './pages/AboutUs/Aboutus'
+import Careers from './pages/Carrers/Careers'
 
 function App() {
 
@@ -17,6 +18,8 @@ function App() {
    <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/about-us" element={<AboutUs/>} />
+    <Route path="/careers" element={<Careers />} />
+
 
       {/* Expertise Routes */}
     <Route path="/shopify-app" element={<ShopifyApp />} />
@@ -25,6 +28,7 @@ function App() {
     <Route path="/website-management" element={<Website/>} />
     <Route path="/digital-marketing" element={<DigitalMarketing />} />
     <Route path="/e-commerce-management" element={<Ecommerce />} />
+
 
    </Routes>
    

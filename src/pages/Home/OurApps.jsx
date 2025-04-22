@@ -20,7 +20,7 @@ import {
   NavigateBefore,
   NavigateNext,
 } from '@mui/icons-material';
-import { motion, useAnimation, useInView } from 'framer-motion'; // Added useAnimation and useInView
+import { motion, useAnimation, useInView } from 'framer-motion';
 
 // Theme and AnimatedBackground component remain unchanged...
 // Create custom theme with your primary color #0A2725
@@ -240,14 +240,14 @@ const AnimatedSectionTitle = ({ children }) => {
   );
 };
 
-// App data - using your primary color for gradients
+// App data - UPDATED with solid color
 const apps = [
   {
     id: 1,
     name: "Metamatrix",
     description: "Advanced analytics and data visualization platform",
     icon: <BarChart sx={{ fontSize: 40 }} />,
-    bgColor: 'linear-gradient(135deg, #0A2725 0%, #144542 100%)',
+    bgColor: '#0A2725',
     featured: true,
   },
   {
@@ -255,7 +255,7 @@ const apps = [
     name: "Tap2share",
     description: "Streamline your social media management",
     icon: <Share sx={{ fontSize: 40 }} />,
-    bgColor: 'linear-gradient(135deg, #0F3230 0%, #0A2725 100%)',
+    bgColor: '#0A2725',
     featured: true,
   },
   {
@@ -263,7 +263,7 @@ const apps = [
     name: "Multivendor",
     description: "Comprehensive marketplace solution",
     icon: <Store sx={{ fontSize: 40 }} />,
-    bgColor: 'linear-gradient(135deg, #124240 0%, #0A2725 100%)',
+    bgColor: '#0A2725',
     featured: true,
   },
   {
@@ -271,7 +271,7 @@ const apps = [
     name: "Virtual Photoshoot",
     description: "Create professional-grade images instantly",
     icon: <CameraAlt sx={{ fontSize: 40 }} />,
-    bgColor: 'linear-gradient(135deg, #0A2725 0%, #0F3230 100%)',
+    bgColor: '#0A2725',
     featured: true,
   },
   {
@@ -279,7 +279,7 @@ const apps = [
     name: "Chatbot",
     description: "Intelligent conversational AI assistant",
     icon: <ChatBubbleOutline sx={{ fontSize: 40 }} />,
-    bgColor: 'linear-gradient(135deg, #144542 0%, #0A2725 100%)',
+    bgColor: '#0A2725',
     featured: true,
   }
 ].filter(app => !app.disable);
@@ -351,16 +351,7 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
             '0 8px 40px rgba(0, 0, 0, 0.06)',
         }}
       >
-        {/* Subtle glass effect overlay */}
-        <Box sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
-          borderRadius: 'inherit',
-        }} />
+        {/* Remove the white glass effect overlay */}
         
         <CardContent sx={{ 
           flexGrow: 1, 
@@ -386,7 +377,7 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
               width: 80,
               height: 80,
               borderRadius: '50%',
-              bgcolor: 'rgba(255, 255, 255, 0.2)',
+              bgcolor: 'rgba(0, 0, 0, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -425,14 +416,14 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
             <Button 
               variant="contained"
               sx={{ 
-                bgcolor: 'rgba(255,255,255,0.9)',
-                color: '#0A2725',
+                bgcolor: 'rgba(8, 74, 73, 0.9)',
+                color: 'white',
                 borderRadius: 28,
                 px: 3,
                 py: 0.8,
                 fontWeight: 600,
                 '&:hover': { 
-                  bgcolor: 'white',
+                  bgcolor: '#084A49',
                 },
               }}
             >
@@ -441,28 +432,7 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
           </motion.div>
         </CardActions>
         
-        {/* Abstract decorative elements */}
-        <Box sx={{
-          position: 'absolute',
-          width: 120,
-          height: 120,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%)',
-          top: 20,
-          left: -40,
-          zIndex: 1,
-        }} />
-        
-        <Box sx={{
-          position: 'absolute',
-          width: 80,
-          height: 80,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%)',
-          bottom: -20,
-          right: -20,
-          zIndex: 1,
-        }} />
+        {/* Remove abstract decorative elements with white */}
       </Card>
     </motion.div>
   );
@@ -615,7 +585,7 @@ const OurAppsPage = () => {
         <Box 
           sx={{ 
             position: 'relative',
-            background: 'linear-gradient(180deg, #0A2725 0%, #144542 100%)',
+            background: '#0A2725',
             pt: 12,
             pb: 4,
             zIndex: 1,
@@ -843,4 +813,4 @@ const OurAppsPage = () => {
   );
 };
 
-export default OurAppsPage
+export default OurAppsPage;
