@@ -10,29 +10,47 @@ import DigitalMarketing from './pages/Expertise/DigitalMarketing'
 import Ecommerce from './pages/Expertise/E-commerce'
 import AboutUs from './pages/AboutUs/Aboutus'
 import Careers from './pages/Carrers/Careers'
+import Contact from './pages/Contact/Contact'
+import MetaMatrixApp from './pages/Apps/MetamatrixApp'
+import MultiVendorApp from './pages/Apps/MultivendorApp'
+import Tap2shareApp from './pages/Apps/Tap2share'
+import EmailAssistant from './pages/Projects/EmailAssistant'
 
 function App() {
 
   return (
-   <>
-   <Routes>
-    <Route path="/" element={<Home />} />
-    <Route path="/about-us" element={<AboutUs/>} />
-    <Route path="/careers" element={<Careers />} />
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/careers" element={<Careers />} />
+        <Route path="/contact" element={<Contact />} />
 
 
-      {/* Expertise Routes */}
-    <Route path="/shopify-app" element={<ShopifyApp />} />
-    <Route path="/custom-store" element={<CustomShopify/>} />
-    <Route path="/custom-app" element={<CustomApp />} />
-    <Route path="/website-management" element={<Website/>} />
-    <Route path="/digital-marketing" element={<DigitalMarketing />} />
-    <Route path="/e-commerce-management" element={<Ecommerce />} />
 
+        {/* Expertise Routes */}
+        <Route path="/shopify-app" element={<ShopifyApp />} />
+        <Route path="/custom-store" element={<CustomShopify />} />
+        <Route path="/custom-app" element={<CustomApp />} />
+        <Route path="/website-management" element={<Website />} />
+        <Route path="/digital-marketing" element={<DigitalMarketing />} />
+        <Route path="/e-commerce-management" element={<Ecommerce />} />
 
-   </Routes>
+        {/* apps */}
+        <Route path="/metamatrix-app" element={<MetaMatrixApp />} />
+        <Route path="/multivendor-app" element={<MultiVendorApp />} />
+        <Route path="/tap2share-app" element={<Tap2shareApp />} />
+
+        {/* projects */}
+        <Route path="/email-assitant" element={<EmailAssistant />} />
+
    
-   </>
+
+
+
+      </Routes>
+
+    </>
   )
 }
 

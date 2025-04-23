@@ -249,6 +249,8 @@ const apps = [
     icon: <BarChart sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
+    link:'/metamatrix-app'
+
   },
   {
     id: 2,
@@ -257,6 +259,7 @@ const apps = [
     icon: <Share sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
+    link:'tap2share-app'
   },
   {
     id: 3,
@@ -265,6 +268,7 @@ const apps = [
     icon: <Store sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
+     link:'/multivendor-app'
   },
   {
     id: 4,
@@ -273,6 +277,7 @@ const apps = [
     icon: <CameraAlt sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
+     link:''
   },
   {
     id: 5,
@@ -281,6 +286,7 @@ const apps = [
     icon: <ChatBubbleOutline sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
+     link:''
   }
 ].filter(app => !app.disable);
 
@@ -415,6 +421,7 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
           >
             <Button 
               variant="contained"
+              href={app.link}
               sx={{ 
                 bgcolor: 'rgba(8, 74, 73, 0.9)',
                 color: 'white',
@@ -432,7 +439,7 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
           </motion.div>
         </CardActions>
         
-        {/* Remove abstract decorative elements with white */}
+      
       </Card>
     </motion.div>
   );

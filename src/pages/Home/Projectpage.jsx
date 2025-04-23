@@ -214,19 +214,22 @@ const projects = [
     id: 1,
     title: "MULTI-VENDOR",
     videoSrc: multi,
-    description: "Our multi-vendor solution enables businesses to create their own marketplace with multiple sellers."
+    description: "Our multi-vendor solution enables businesses to create their own marketplace with multiple sellers.",
+    link:'/multivendor-app'
   },
   {
     id: 2,
     title: "METAMATRIX-BULK EDITOR",
     videoSrc: meta,
-    description: "A powerful bulk editing tool designed for efficient data management and updates."
+    description: "A powerful bulk editing tool designed for efficient data management and updates.",
+    link:'/metamatrix-app'
   },
   {
     id: 3,
     title: "E-MAIL ASSISTANT",
     videoSrc: emailassis,
-    description: "Streamline your email workflow with our intelligent assistant for better communication."
+    description: "Streamline your email workflow with our intelligent assistant for better communication.",
+    link:'/email-assitant'
   }
 ];
 
@@ -601,6 +604,8 @@ const ProjectsPage = () => {
                     <Typography 
                       variant="h2" 
                       component="h2"
+                      
+
                       sx={{ 
                         mb: { xs: 1, md: 2 },
                         textShadow: '0 2px 10px rgba(0,0,0,0.3)',
@@ -625,6 +630,7 @@ const ProjectsPage = () => {
                     
                     <Button
                       variant="contained"
+                      href={projects[currentIndex].link}
                       color="primary"
                       endIcon={<ArrowForward />}
                       sx={{

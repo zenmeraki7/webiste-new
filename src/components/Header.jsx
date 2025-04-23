@@ -250,6 +250,7 @@ const GrowioHeader = () => {
                 px: 2,
                 boxShadow: 'none'
               }}
+              onClick={() => window.location.href = '/contact'}
             >
               CONTACT US
             </Button>
