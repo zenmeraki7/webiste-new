@@ -15,6 +15,8 @@ import MetaMatrixApp from './pages/Apps/MetamatrixApp'
 import MultiVendorApp from './pages/Apps/MultivendorApp'
 import Tap2shareApp from './pages/Apps/Tap2share'
 import EmailAssistant from './pages/Projects/EmailAssistant'
+import Metamatrix from './pages/Projects/Metamatrix'
+import Multivendor from './pages/Projects/Multivendor'
 
 function App() {
 
@@ -43,6 +45,10 @@ function App() {
 
         {/* projects */}
         <Route path="/email-assitant" element={<EmailAssistant />} />
+        <Route path="/meta-matrix" element={<Metamatrix />} />
+        <Route path="/multivendor" element={<Multivendor />} />
+
+        {/* Catch all route */}
 
    
 

@@ -72,7 +72,7 @@ function Footer() {
         { label: 'Projects', link: '#' },
         { label: 'About Us', link: '#' },
         { label: 'Careers', link: '#' },
-        { label: 'Contact Us', link: '#' },
+        { label: 'Contact Us', link: '/contact' },
     ];
 
     const servicesItems = [
@@ -116,7 +116,7 @@ function Footer() {
                             </Typography>
                         </Grid>
                         <Grid item xs={12} container justifyContent="center" >
-                            <GreenButton variant="contained" size="large">
+                            <GreenButton variant="contained" size="large" onClick={() => window.location.href = '/contact'}>
                                 Contact Us
                             </GreenButton>
                         </Grid>

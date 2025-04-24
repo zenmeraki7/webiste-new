@@ -665,6 +665,9 @@ const OurAppsPage = () => {
                         bgcolor: 'rgba(255,255,255,0.9)',
                       }
                     }}
+                    // need to route to contact us page
+                    onClick={() => window.location.href = '/contact'}
+                    
                   >
                     Contact Us
                   </Button>

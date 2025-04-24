@@ -215,14 +215,14 @@ const projects = [
     title: "MULTI-VENDOR",
     videoSrc: multi,
     description: "Our multi-vendor solution enables businesses to create their own marketplace with multiple sellers.",
-    link:'/multivendor-app'
+    link:'/multivendor'
   },
   {
     id: 2,
     title: "METAMATRIX-BULK EDITOR",
     videoSrc: meta,
     description: "A powerful bulk editing tool designed for efficient data management and updates.",
-    link:'/metamatrix-app'
+    link:'/meta-matrix'
   },
   {
     id: 3,

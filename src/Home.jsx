@@ -26,7 +26,7 @@ export default function Home() {
 
       
 
-      <section>
+      <section id="projects">
         <ProjectsPage />
       </section>
 

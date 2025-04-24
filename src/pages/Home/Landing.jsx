@@ -269,6 +269,8 @@ const Landing = () => {
                                         bgcolor: '#0D302E',
                                     }
                                 }}
+                                // link to about us page
+                               onClick={() => window.location.href = '/about-us'}
                             >
                                 Learn More
                             </Button>
@@ -292,6 +294,7 @@ const Landing = () => {
                                         bgcolor: '#0D302E',
                                     }
                                 }}
+                                 onClick={() => window.scrollTo({ top: document.getElementById('projects').offsetTop, behavior: 'smooth' })}
                             >
                                 Our Projects
                             </Button>

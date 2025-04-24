@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { Twitter, Facebook, Instagram, Linkedin, Mail, Shield, CheckCircle } from "lucide-react";
-import emailproject from "../../assets/images/emailproject.png";
-import emailwrk from "../../assets/images/emailwrk.jpg";
+import multivendor from "../../assets/images/multivendor.png";
 import Footer from "../../components/Footer";
 import "./email.css";
 
@@ -134,7 +133,9 @@ const FeatureIcons = {
   )
 };
 
-function EmailAssistant() {
+
+
+function Multivendor() {
   const [email, setEmail] = useState("");
   const [featureIndex, setFeatureIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
@@ -232,32 +233,32 @@ function EmailAssistant() {
 
   const features = [
     {
-      title: "Real-time processing",
-      description: "Monitors, prioritizes, and categorizes emails as they arrive",
+      title: "Vendor Management",
+      description: "Dedicated dashboard with bulk product uploads",
       icon: <FeatureIcons.clock color="#2E7D32" />,
       color: "#2E7D32"
     },
     {
-      title: "Smart automation",
-      description: "Suggests responses, creates tasks, and schedules meetings automatically",
+      title: "Product Search & Filters",
+      description: "Advanced filtering by size, color, price, and more",
       icon: <FeatureIcons.autoFix color="#1565C0" />,
       color: "#1565C0"
     },
     {
-      title: "Adaptive learning",
-      description: "Improves with use, learning your style and preferences",
+      title: "Order & Payments",
+      description: "Multi-vendor cart with secure payment options",
       icon: <FeatureIcons.brain color="#7B1FA2" />,
       color: "#7B1FA2"
     },
     {
-      title: "Seamless experience",
-      description: "Works consistently across all your devices and locations",
+      title: "Customer Engagement",
+      description: "Wishlists, reviews, and personalized recommendations",
       icon: <FeatureIcons.devices color="#EF6C00" />,
       color: "#EF6C00"
     },
     {
-      title: "Time-saving",
-      description: "Handles routine correspondence so you can focus on what matters",
+      title: "Delivery & Logistics",
+      description: "Flexible shipping options and tracking",
       icon: <FeatureIcons.timer color="#C62828" />,
       color: "#C62828"
     }
@@ -301,7 +302,7 @@ function EmailAssistant() {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.7, type: "spring", stiffness: 50 }}
             >
-              Email Assistant
+              Multi-Vendor
             </motion.h1>
 
             <motion.p
@@ -315,7 +316,7 @@ function EmailAssistant() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              Your Smart Email Companion
+              A platform enabling multiple sellers to list, sell, and manage products.
             </motion.p>
 
             <motion.div
@@ -325,7 +326,7 @@ function EmailAssistant() {
               transition={{ delay: 0.5, duration: 1, type: "spring", stiffness: 30 }}
             >
               <img
-                src={emailproject}
+                src={multivendor}
                 alt="Email Assistant Dashboard"
                 className="email-img-fluid img-fluid rounded shadow-lg"
                 style={{
@@ -340,7 +341,7 @@ function EmailAssistant() {
         </div>
       </section>
 
-     
+      
 
       {/* Email Assistant in Motion Section */}
       <div style={{
@@ -366,7 +367,8 @@ function EmailAssistant() {
             order: isMobile ? 1 : 2
           }} className="animate-fadeIn">
             <Typography variant="h1">
-              Email Assistant in Motion
+              Features in Action
+
             </Typography>
 
             <List>
@@ -766,4 +768,4 @@ function EmailAssistant() {
   );
 }
 
-export default EmailAssistant;
+export default Multivendor;
