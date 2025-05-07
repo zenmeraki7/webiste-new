@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { 
+import {
   AppBar,
   Box,
   Toolbar,
@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
 import zenmeraki from "../assets/images/zenlogo.png";
 
@@ -66,17 +67,16 @@ const customTheme = createTheme({
   },
 });
 
-// Logo component with image and text
 const GrowioLogo = () => (
   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     <img
       src={zenmeraki}
       alt="ZEN MERAKI"
-      style={{ 
-        width: 35, 
-        height: 35, 
+      style={{
+        width: 35,
+        height: 35,
         marginRight: '10px',
-        objectFit: 'contain' 
+        objectFit: 'contain'
       }}
     />
     <Typography
@@ -96,8 +96,8 @@ const GrowioLogo = () => (
 // Navigation items
 const navigationItems = [
   { title: 'Home', hasDropdown: false, link: '/' },
-  { 
-    title: 'Expertise', 
+  {
+    title: 'Expertise',
     hasDropdown: true,
     link: '/expertise',
     items: [
@@ -110,15 +110,15 @@ const navigationItems = [
     ]
   },
   { title: 'About Us', hasDropdown: false, link: '/about-us' },
-  { title: 'Apps', hasDropdown: false, link: '/' },
-  { title: 'Projects', hasDropdown: false, link: '/' },
+  { title: 'Apps', hasDropdown: false, link: '/apps' },
+  { title: 'Projects', hasDropdown: false, link: '/projects' },
   { title: 'Careers', hasDropdown: false, link: '/careers' },
 ];
 
 const GrowioHeader = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   const [anchorEls, setAnchorEls] = useState(Array(navigationItems.length).fill(null));
   const [mobileMenuAnchorEl, setMobileMenuAnchorEl] = useState(null);
 
@@ -143,55 +143,52 @@ const GrowioHeader = () => {
   };
 
   return (
-    <AppBar 
-      position="sticky" 
-      color="default" 
-      elevation={0} 
-      sx={{ 
+    <AppBar
+      position="sticky"
+      color="default"
+      elevation={0}
+      sx={{
         bgcolor: '#EFF9F9',
-        width: '100%', 
+        width: '100%',
         left: 0,
         right: 0,
-        margin: 0, // Ensure no margin
+        margin: 0,
       }}
     >
-      <Container 
-        disableGutters 
-        maxWidth={false} // Set to false to remove max-width constraint
-        sx={{ 
+      <Container
+        disableGutters
+        maxWidth={false}
+        sx={{
           width: '100%',
           px: { xs: 2, sm: 3, md: 4 },
-          margin: 0, // Ensure no margin
+          margin: 0,
         }}
       >
-        <Toolbar 
-          disableGutters 
-          sx={{ 
-            display: 'flex', 
+        <Toolbar
+          disableGutters
+          sx={{
+            display: 'flex',
             justifyContent: 'space-between',
             width: '100%',
-            margin: 0, // Ensure no margin
+            margin: 0,
           }}
         >
           <GrowioLogo />
 
-          <Box sx={{ 
-            display: { xs: 'none', md: 'flex' }, 
-            justifyContent: 'center', 
+          <Box sx={{
+            display: { xs: 'none', md: 'flex' },
+            justifyContent: 'center',
             flexGrow: 1
           }}>
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'center'
-            }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               {navigationItems.map((item, index) => (
                 <Box key={index} sx={{ position: 'relative' }}>
                   <Button
                     color="inherit"
-                    component={item.hasDropdown ? 'div' : 'a'}
-                    href={!item.hasDropdown ? item.link : undefined}
-                    sx={{ 
-                      mx: 1.5, 
+                    component={item.hasDropdown ? 'div' : Link}
+                    to={!item.hasDropdown ? item.link : undefined}
+                    sx={{
+                      mx: 1.5,
                       color: 'text.secondary',
                       textTransform: 'none',
                       fontWeight: 500,
@@ -202,7 +199,7 @@ const GrowioHeader = () => {
                   >
                     {item.title}
                   </Button>
-                  
+
                   {item.hasDropdown && (
                     <Menu
                       anchorEl={anchorEls[index]}
@@ -212,11 +209,11 @@ const GrowioHeader = () => {
                       sx={{ mt: 1 }}
                     >
                       {item.items && item.items.map((subItem, subIndex) => (
-                        <MenuItem 
-                          key={subIndex} 
+                        <MenuItem
+                          key={subIndex}
                           onClick={() => handleMenuClose(index)}
-                          component="a"
-                          href={subItem.link}
+                          component={Link}
+                          to={subItem.link}
                           sx={{ minWidth: 150, textDecoration: 'none', color: 'inherit' }}
                         >
                           {subItem.name}
@@ -242,15 +239,16 @@ const GrowioHeader = () => {
           )}
 
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              sx={{ 
-                textTransform: 'none', 
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                textTransform: 'none',
                 px: 2,
                 boxShadow: 'none'
               }}
-              onClick={() => window.location.href = '/contact'}
+              component={Link}
+              to="/contact"
             >
               CONTACT US
             </Button>
@@ -260,7 +258,7 @@ const GrowioHeader = () => {
             anchorEl={mobileMenuAnchorEl}
             open={Boolean(mobileMenuAnchorEl)}
             onClose={handleMobileMenuClose}
-            sx={{ 
+            sx={{
               display: { xs: 'block', md: 'none' },
               '& .MuiPaper-root': {
                 width: '100%',
@@ -281,20 +279,20 @@ const GrowioHeader = () => {
           >
             {navigationItems.map((item, index) => (
               <div key={index}>
-                <MenuItem 
+                <MenuItem
                   onClick={handleMobileMenuClose}
-                  component={!item.hasDropdown ? "a" : "div"}
-                  href={!item.hasDropdown ? item.link : undefined}
+                  component={!item.hasDropdown ? Link : 'div'}
+                  to={!item.hasDropdown ? item.link : undefined}
                   sx={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   {item.title}
                 </MenuItem>
                 {item.hasDropdown && item.items && item.items.map((subItem, subIndex) => (
-                  <MenuItem 
+                  <MenuItem
                     key={subIndex}
                     onClick={handleMobileMenuClose}
-                    component="a"
-                    href={subItem.link}
+                    component={Link}
+                    to={subItem.link}
                     sx={{ pl: 4, fontSize: '0.95rem', textDecoration: 'none', color: 'inherit' }}
                   >
                     {subItem.name}
@@ -304,7 +302,7 @@ const GrowioHeader = () => {
             ))}
             <Box sx={{ borderTop: 1, borderColor: 'divider', mt: 1, pt: 1 }}>
               <MenuItem onClick={handleMobileMenuClose}>Log In</MenuItem>
-              <MenuItem 
+              <MenuItem
                 onClick={handleMobileMenuClose}
                 sx={{ color: 'primary.main', fontWeight: 500 }}
               >
@@ -318,15 +316,14 @@ const GrowioHeader = () => {
   );
 };
 
-// Main App component with theme setup
 const Header = () => {
   return (
     <ThemeProvider theme={customTheme}>
-      <Box sx={{ 
+      <Box sx={{
         flexGrow: 1,
         width: '100%',
         overflowX: 'hidden',
-        margin: 0, // Ensure no margin
+        margin: 0,
       }}>
         <GrowioHeader />
       </Box>
