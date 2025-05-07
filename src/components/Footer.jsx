@@ -1,39 +1,34 @@
 import React from 'react';
 import {
-    AppBar,
     Box,
     Button,
     Container,
-    Divider,
     Grid,
     IconButton,
     Link,
     List,
     ListItem,
-    ListItemText,
-    Menu,
-    MenuItem,
     Stack,
-    Toolbar,
     Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { Link as RouterLink } from 'react-router-dom';
+
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneIcon from '@mui/icons-material/Phone';
+
 import zenmeraki from "../assets/images/zenlogo.png";
 
-
-// Custom styled components
+// Styled components
 const DarkGreenContainer = styled(Box)(({ theme }) => ({
     backgroundColor: '#0A2725',
     color: 'white',
     padding: theme.spacing(5, 0),
     borderRadius: 20,
-
 }));
 
 const FooterSection = styled(Box)(({ theme }) => ({
@@ -56,31 +51,19 @@ const GreenButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const OutlinedButton = styled(Button)(({ theme }) => ({
-    borderColor: 'white',
-    color: 'white',
-    borderRadius: '50px',
-    padding: theme.spacing(1, 3),
-    '&:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    },
-}));
-
 function Footer() {
-    // Navigation menu items
     const navigationItems = [
-        { label: 'Projects', link: '#' },
-        { label: 'About Us', link: '#' },
-        { label: 'Careers', link: '#' },
+        { label: 'About Us', link: '/about-us' },
+        { label: 'Careers', link: '/careers' },
         { label: 'Contact Us', link: '/contact' },
     ];
 
     const servicesItems = [
-        { label: 'Shopify App Development', link: '#' },
-        { label: 'Custom Shopify Development', link: '#' },
-        { label: 'Website Development', link: '#' },
-        { label: 'Digital Marketing', link: '#' },
-        { label: 'E-commerce Management', link: '#' },
+        { label: 'Shopify App Development', link: '/shopify-app' },
+        { label: 'Custom Shopify Development', link: '/custom-store' },
+        { label: 'Website Development', link: '/website-management' },
+        { label: 'Digital Marketing', link: '/digital-marketing' },
+        { label: 'E-commerce Management', link: '/e-commerce-management' },
     ];
 
     const contactInfo = [
@@ -108,15 +91,15 @@ function Footer() {
                 <Container maxWidth="100%">
                     <Grid container spacing={4} direction="column" alignItems="center" textAlign="center">
                         <Grid item xs={12}>
-                            <Typography variant="subtitle1" component="div" color="#4CD787" gutterBottom>
+                            <Typography variant="subtitle1" color="#4CD787" gutterBottom>
                                 JOIN THE BEST
                             </Typography>
-                            <Typography variant="h3" component="h1" gutterBottom>
-                            Ready to Transform Your E-Commerce Business?
+                            <Typography variant="h3" gutterBottom>
+                                Ready to Transform Your E-Commerce Business?
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} container justifyContent="center" >
-                            <GreenButton variant="contained" size="large" onClick={() => window.location.href = '/contact'}>
+                        <Grid item xs={12} container justifyContent="center">
+                            <GreenButton variant="contained" size="large" component={RouterLink} to="/contact">
                                 Contact Us
                             </GreenButton>
                         </Grid>
@@ -131,7 +114,7 @@ function Footer() {
                         {/* Logo and description */}
                         <Grid item xs={12} md={3}>
                             <Box sx={{ mb: 2 }}>
-                                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
                                     <img
                                         src={zenmeraki}
                                         alt="ZEN MERAKI"
@@ -146,52 +129,24 @@ function Footer() {
                                 </Typography>
                             </Box>
                             <Typography variant="body2" color="text.secondary" paragraph>
-                                We specialize in transforming ideas into impactful solutions. <br /> From cutting-edge applications to intuitive designs,<br /> our work reflects a commitment to excellence and innovation in all we deliver.
+                                We specialize in transforming ideas into impactful solutions. <br />
+                                From cutting-edge applications to intuitive designs,<br />
+                                our work reflects a commitment to excellence and innovation in all we deliver.
                             </Typography>
                             <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                                <IconButton
-                                    size="small"
-                                    aria-label="Twitter"
-                                    sx={{
-                                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                        color: '#0A2725',
-                                        '&:hover': {
-                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                        }
-                                    }}
-                                >
+                                <IconButton size="small" aria-label="Twitter" sx={{ color: '#0A2725' }}>
                                     <TwitterIcon fontSize="small" />
                                 </IconButton>
-                                <IconButton
-                                    size="small"
-                                    aria-label="LinkedIn"
-                                    sx={{
-                                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                        color: '#0A2725',
-                                        '&:hover': {
-                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                        }
-                                    }}
-                                >
+                                <IconButton size="small" aria-label="LinkedIn" sx={{ color: '#0A2725' }}>
                                     <LinkedInIcon fontSize="small" />
                                 </IconButton>
-                                <IconButton
-                                    size="small"
-                                    aria-label="Email"
-                                    sx={{
-                                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                        color: '#0A2725',
-                                        '&:hover': {
-                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                        }
-                                    }}
-                                >
+                                <IconButton size="small" aria-label="Email" sx={{ color: '#0A2725' }}>
                                     <EmailIcon fontSize="small" />
                                 </IconButton>
                             </Stack>
                         </Grid>
 
-                        {/* Navigation menus */}
+                        {/* Navigation */}
                         <Grid item xs={12} sm={6} md={2}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
                                 position: 'relative',
@@ -211,7 +166,7 @@ function Footer() {
                             <List dense disablePadding>
                                 {navigationItems.map((item) => (
                                     <ListItem key={item.label} disablePadding sx={{ py: 0.5 }}>
-                                        <Link href={item.link} color="inherit" underline="hover">
+                                        <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
                                             <Typography variant="body2">{item.label}</Typography>
                                         </Link>
                                     </ListItem>
@@ -219,6 +174,7 @@ function Footer() {
                             </List>
                         </Grid>
 
+                        {/* Services */}
                         <Grid item xs={12} sm={6} md={2}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
                                 position: 'relative',
@@ -238,7 +194,7 @@ function Footer() {
                             <List dense disablePadding>
                                 {servicesItems.map((item) => (
                                     <ListItem key={item.label} disablePadding sx={{ py: 0.5 }}>
-                                        <Link href={item.link} color="inherit" underline="hover">
+                                        <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
                                             <Typography variant="body2">{item.label}</Typography>
                                         </Link>
                                     </ListItem>
@@ -246,6 +202,7 @@ function Footer() {
                             </List>
                         </Grid>
 
+                        {/* Contact Info */}
                         <Grid item xs={12} sm={6} md={3}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
                                 position: 'relative',
@@ -281,7 +238,7 @@ function Footer() {
                 </Container>
             </ContentSection>
 
-            {/* Footer section */}
+            {/* Footer Section */}
             <FooterSection>
                 <Container maxWidth="lg">
                     <Grid container justifyContent="space-between" alignItems="center">
@@ -292,10 +249,10 @@ function Footer() {
                         </Grid>
                         <Grid item>
                             <Stack direction="row" spacing={2}>
-                                <Link href="#" color="inherit" underline="hover">
+                                <Link component={RouterLink} to="/privacy-policy" color="inherit" underline="hover">
                                     <Typography variant="body2">Privacy Policy</Typography>
                                 </Link>
-                                <Link href="#" color="inherit" underline="hover">
+                                <Link component={RouterLink} to="/terms-of-service" color="inherit" underline="hover">
                                     <Typography variant="body2">Terms of Service</Typography>
                                 </Link>
                             </Stack>
