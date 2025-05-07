@@ -17,6 +17,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 import zenmeraki from "../assets/images/zenlogo.png";
 
@@ -110,8 +111,8 @@ const navigationItems = [
     ]
   },
   { title: 'About Us', hasDropdown: false, link: '/about-us' },
-  { title: 'Apps', hasDropdown: false, link: '/apps' },
-  { title: 'Projects', hasDropdown: false, link: '/projects' },
+  { title: 'Apps', hasDropdown: false, link: '/#apps' }, // scroll to #apps
+  { title: 'Projects', hasDropdown: false, link: '/#projects' }, // scroll to #projects
   { title: 'Careers', hasDropdown: false, link: '/careers' },
 ];
 
@@ -140,6 +141,10 @@ const GrowioHeader = () => {
 
   const handleMobileMenuClose = () => {
     setMobileMenuAnchorEl(null);
+  };
+
+  const getLinkComponent = (link) => {
+    return link.includes('#') ? HashLink : Link;
   };
 
   return (
@@ -181,48 +186,51 @@ const GrowioHeader = () => {
             flexGrow: 1
           }}>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              {navigationItems.map((item, index) => (
-                <Box key={index} sx={{ position: 'relative' }}>
-                  <Button
-                    color="inherit"
-                    component={item.hasDropdown ? 'div' : Link}
-                    to={!item.hasDropdown ? item.link : undefined}
-                    sx={{
-                      mx: 1.5,
-                      color: 'text.secondary',
-                      textTransform: 'none',
-                      fontWeight: 500,
-                      textDecoration: 'none'
-                    }}
-                    endIcon={item.hasDropdown ? <KeyboardArrowDownIcon /> : null}
-                    onClick={item.hasDropdown ? (event) => handleMenuOpen(index, event) : undefined}
-                  >
-                    {item.title}
-                  </Button>
-
-                  {item.hasDropdown && (
-                    <Menu
-                      anchorEl={anchorEls[index]}
-                      open={Boolean(anchorEls[index])}
-                      onClose={() => handleMenuClose(index)}
-                      MenuListProps={{ 'aria-labelledby': `${item.title}-button` }}
-                      sx={{ mt: 1 }}
+              {navigationItems.map((item, index) => {
+                const LinkComponent = getLinkComponent(item.link);
+                return (
+                  <Box key={index} sx={{ position: 'relative' }}>
+                    <Button
+                      color="inherit"
+                      component={item.hasDropdown ? 'div' : LinkComponent}
+                      to={!item.hasDropdown ? item.link : undefined}
+                      sx={{
+                        mx: 1.5,
+                        color: 'text.secondary',
+                        textTransform: 'none',
+                        fontWeight: 500,
+                        textDecoration: 'none'
+                      }}
+                      endIcon={item.hasDropdown ? <KeyboardArrowDownIcon /> : null}
+                      onClick={item.hasDropdown ? (event) => handleMenuOpen(index, event) : undefined}
                     >
-                      {item.items && item.items.map((subItem, subIndex) => (
-                        <MenuItem
-                          key={subIndex}
-                          onClick={() => handleMenuClose(index)}
-                          component={Link}
-                          to={subItem.link}
-                          sx={{ minWidth: 150, textDecoration: 'none', color: 'inherit' }}
-                        >
-                          {subItem.name}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  )}
-                </Box>
-              ))}
+                      {item.title}
+                    </Button>
+
+                    {item.hasDropdown && (
+                      <Menu
+                        anchorEl={anchorEls[index]}
+                        open={Boolean(anchorEls[index])}
+                        onClose={() => handleMenuClose(index)}
+                        MenuListProps={{ 'aria-labelledby': `${item.title}-button` }}
+                        sx={{ mt: 1 }}
+                      >
+                        {item.items && item.items.map((subItem, subIndex) => (
+                          <MenuItem
+                            key={subIndex}
+                            onClick={() => handleMenuClose(index)}
+                            component={Link}
+                            to={subItem.link}
+                            sx={{ minWidth: 150, textDecoration: 'none', color: 'inherit' }}
+                          >
+                            {subItem.name}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    )}
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
 
@@ -277,29 +285,32 @@ const GrowioHeader = () => {
               horizontal: 'center',
             }}
           >
-            {navigationItems.map((item, index) => (
-              <div key={index}>
-                <MenuItem
-                  onClick={handleMobileMenuClose}
-                  component={!item.hasDropdown ? Link : 'div'}
-                  to={!item.hasDropdown ? item.link : undefined}
-                  sx={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  {item.title}
-                </MenuItem>
-                {item.hasDropdown && item.items && item.items.map((subItem, subIndex) => (
+            {navigationItems.map((item, index) => {
+              const LinkComponent = getLinkComponent(item.link);
+              return (
+                <div key={index}>
                   <MenuItem
-                    key={subIndex}
                     onClick={handleMobileMenuClose}
-                    component={Link}
-                    to={subItem.link}
-                    sx={{ pl: 4, fontSize: '0.95rem', textDecoration: 'none', color: 'inherit' }}
+                    component={!item.hasDropdown ? LinkComponent : 'div'}
+                    to={!item.hasDropdown ? item.link : undefined}
+                    sx={{ textDecoration: 'none', color: 'inherit' }}
                   >
-                    {subItem.name}
+                    {item.title}
                   </MenuItem>
-                ))}
-              </div>
-            ))}
+                  {item.hasDropdown && item.items && item.items.map((subItem, subIndex) => (
+                    <MenuItem
+                      key={subIndex}
+                      onClick={handleMobileMenuClose}
+                      component={Link}
+                      to={subItem.link}
+                      sx={{ pl: 4, fontSize: '0.95rem', textDecoration: 'none', color: 'inherit' }}
+                    >
+                      {subItem.name}
+                    </MenuItem>
+                  ))}
+                </div>
+              );
+            })}
             <Box sx={{ borderTop: 1, borderColor: 'divider', mt: 1, pt: 1 }}>
               <MenuItem onClick={handleMobileMenuClose}>Log In</MenuItem>
               <MenuItem
