@@ -516,50 +516,290 @@
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+  .careers-hero {
+    min-height: 400px;
+    margin-bottom: 40px;
+  }
+  
   .careers-hero-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
   }
   
   .careers-hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+  
+  .careers-hero-button {
+    padding: 12px 25px;
+    font-size: 1rem;
   }
   
   .careers-section-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  
+  .careers-section-subtitle {
+    font-size: 1rem;
+  }
+  
+  .careers-values-section,
+  .careers-join-us-section,
+  .careers-jobs-section {
+    padding: 50px 0;
   }
   
   .careers-values-row {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+  
+  .careers-value-card {
+    padding: 25px;
+  }
+  
+  .careers-value-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+  }
+  
+  .careers-value-title {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
   }
   
   .careers-join-us-container {
     flex-direction: column;
+    gap: 30px;
   }
   
   .careers-join-us-image, 
   .careers-join-us-content {
     width: 100%;
   }
-}
-
-@media (max-width: 480px) {
-  .careers-hero-title {
-    font-size: 2.5rem;
+  
+  .careers-benefit-item {
+    margin-bottom: 20px;
   }
   
-  .careers-hero-subtitle {
+  .careers-benefit-icon {
+    width: 35px;
+    height: 35px;
+    margin-right: 15px;
+  }
+  
+  .careers-benefit-details h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+  
+  .careers-not-hiring-card {
+    padding: 30px 25px;
+  }
+  
+  .careers-not-hiring-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .careers-not-hiring-text {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+  
+  .careers-email-section {
+    margin: 25px 0;
+  }
+  
+  .careers-email-label {
+    font-size: 1rem;
+  }
+  
+  .careers-email-link {
     font-size: 1.1rem;
   }
   
+  .careers-future-message {
+    font-size: 1rem;
+    margin-top: 15px;
+  }
+  
+  .careers-job-card {
+    padding: 15px;
+  }
+  
+  .careers-job-icon {
+    margin-right: 15px;
+  }
+  
+  .careers-job-details h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .careers-hero {
+    min-height: 350px;
+    margin-bottom: 30px;
+  }
+  
+  .careers-hero-title {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+  
+  .careers-hero-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+  }
+  
+  .careers-hero-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .careers-container {
+    padding: 0 15px;
+  }
+  
   .careers-section-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  
+  .careers-section-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .careers-values-section,
+  .careers-join-us-section,
+  .careers-jobs-section {
+    padding: 40px 0;
+  }
+  
+  .careers-section-header {
+    margin-bottom: 30px;
+  }
+  
+  .careers-values-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 25px;
   }
   
   .careers-value-card {
     padding: 20px;
   }
   
+  .careers-value-icon {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 12px;
+  }
+  
+  .careers-value-title {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  
+  .careers-value-description {
+    font-size: 0.9rem;
+  }
+  
+  .careers-join-us-container {
+    gap: 25px;
+  }
+  
+  .careers-join-us-content {
+    padding: 15px 10px;
+  }
+  
+  .careers-benefits-list {
+    margin-top: 20px;
+  }
+  
+  .careers-benefit-item {
+    margin-bottom: 15px;
+  }
+  
+  .careers-benefit-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 12px;
+  }
+  
+  .careers-benefit-details h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  
+  .careers-benefit-details p {
+    font-size: 0.9rem;
+  }
+  
   .careers-not-hiring-card {
-    padding: 30px 20px;
+    padding: 25px 15px;
+  }
+  
+  .careers-not-hiring-title {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+  
+  .careers-not-hiring-text {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  
+  .careers-email-section {
+    margin: 20px 0;
+  }
+  
+  .careers-email-label {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  
+  .careers-email-link {
+    font-size: 1rem;
+  }
+  
+  .careers-future-message {
+    font-size: 0.9rem;
+    margin-top: 12px;
+  }
+  
+  .careers-job-card {
+    padding: 12px;
+  }
+  
+  .careers-job-icon {
+    margin-right: 12px;
+  }
+  
+  .careers-job-details h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+  
+  .careers-job-meta {
+    font-size: 0.8rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .careers-job-location {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  
+  .careers-job-type {
+    padding: 3px 8px;
+    font-size: 0.8rem;
   }
 }

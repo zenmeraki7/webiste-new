@@ -216,7 +216,7 @@ const Landing = () => {
                         Every project we undertake is a testament to our expertise and dedication to empowering businesses for success.
                     </Typography>
                 </Box>
-                <Box component={motion.div} variants={slideUp} sx={{ mb: 1, maxWidth: 'md' }}>
+                <Box component={motion.div} variants={slideUp} sx={{ mb: 4, maxWidth: 'md' }}>
                     <Typography
                         variant="h6"
                         sx={{
@@ -228,78 +228,75 @@ const Landing = () => {
                     </Typography>
                 </Box>
 
+                {/* CTA buttons */}
                 <Box
                     component={motion.div}
                     initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.8 }}
-                    sx={{ width: '100%', mt: 4 }}
-                >
-                    <Box sx={{
+                    sx={{
                         display: 'flex',
                         justifyContent: 'center',
+                        flexWrap: 'wrap',
                         gap: 2,
-                        flexWrap: 'wrap'
-                    }}>
-                        {/* CTA buttons */}
-                        <Box sx={{
-                            display: 'flex',
-                            flexDirection: { xs: 'column', sm: 'row' }, // Stack vertically on mobile
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            gap: 2
-                        }}>
-                            <Button
-                                component={motion.button}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                variant="contained"
-                                sx={{
-                                    bgcolor: '#0A2725',
-                                    color: 'white',
-                                    borderRadius: 5,
-                                    px: { xs: 2, md: 3 },
-                                    py: 1,
-                                    textTransform: 'none',
-                                    fontWeight: 'medium',
-                                    boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                    fontSize: { xs: '0.9rem', md: '1rem' },
-                                    '&:hover': {
-                                        bgcolor: '#0D302E',
-                                    }
-                                }}
-                                // link to about us page
-                               onClick={() => window.location.href = '/about-us'}
-                            >
-                                Learn More
-                            </Button>
-                            <Button
-                                component={motion.button}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                variant="contained"
-                                sx={{
-                                    bgcolor: '#0A2725',
-                                    color: 'white',
-                                    borderRadius: 5,
-                                    px: { xs: 2, md: 3 },
-                                    py: 1,
-                                    textTransform: 'none',
-                                    fontWeight: 'medium',
-                                    boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                    fontSize: { xs: '0.9rem', md: '1rem' },
-                                    '&:hover': {
-                                        bgcolor: '#0D302E',
-                                    }
-                                }}
-                                 onClick={() => window.scrollTo({ top: document.getElementById('projects').offsetTop, behavior: 'smooth' })}
-                            >
-                                Our Projects
-                            </Button>
-                        </Box>
-                    </Box>
+                        width: '100%',
+                        maxWidth: '600px', // Add a max width if needed
+                        margin: '0 auto'
+                    }}
+                >
+                    <Button
+                        component={motion.button}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        variant="contained"
+                        sx={{
+                            bgcolor: '#0A2725',
+                            color: 'white',
+                            borderRadius: 5,
+                            px: { xs: 2, md: 3 },
+                            py: 1,
+                            textTransform: 'none',
+                            fontWeight: 'medium',
+                            boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            fontSize: { xs: '0.9rem', md: '1rem' },
+                            '&:hover': {
+                                bgcolor: '#0D302E',
+                            },
+                            flex: '1', // Allow buttons to take up equal space
+                            minWidth: '150px' // Ensure buttons have a minimum width
+
+                        }}
+                        onClick={() => window.location.href = '/about-us'}
+                    >
+                        Learn More
+                    </Button>
+                    <Button
+                        component={motion.button}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        variant="contained"
+                        sx={{
+                            bgcolor: '#0A2725',
+                            color: 'white',
+                            borderRadius: 5,
+                            px: { xs: 2, md: 3 },
+                            py: 1,
+                            textTransform: 'none',
+                            fontWeight: 'medium',
+                            boxShadow: '0px 4px 12px rgba(10, 39, 37, 0.2)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            fontSize: { xs: '0.9rem', md: '1rem' },
+                            '&:hover': {
+                                bgcolor: '#0D302E',
+                            },
+                            flex: '1',
+                            minWidth: '150px'
+                        }}
+                        onClick={() => window.scrollTo({ top: document.getElementById('projects').offsetTop, behavior: 'smooth' })}
+                    >
+                        Our Projects
+                    </Button>
                 </Box>
             </Container>
         </Box>
@@ -307,3 +304,4 @@ const Landing = () => {
 };
 
 export default Landing;
+

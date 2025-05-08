@@ -9,7 +9,9 @@ import {
     List,
     ListItem,
     Stack,
-    Typography
+    Typography,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
@@ -27,31 +29,48 @@ import zenmeraki from "../assets/images/zenlogo.png";
 const DarkGreenContainer = styled(Box)(({ theme }) => ({
     backgroundColor: '#0A2725',
     color: 'white',
-    padding: theme.spacing(5, 0),
+    padding: theme.spacing(3, 0), // Reduced padding for mobile
     borderRadius: 20,
+    [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(5, 0), // Original padding for larger screens
+    },
 }));
 
 const FooterSection = styled(Box)(({ theme }) => ({
     backgroundColor: '#FFF6F6',
-    padding: theme.spacing(2, 0),
+    padding: theme.spacing(1, 0), // Reduced padding for mobile
+    [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(2, 0), // Original padding for larger screens
+    },
 }));
 
 const ContentSection = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(4, 0),
+    padding: theme.spacing(2, 0), // Reduced padding for mobile
     backgroundColor: 'white',
+    [theme.breakpoints.up('md')]: {
+        padding: theme.spacing(4, 0), // Original padding for larger screens
+    },
 }));
 
 const GreenButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#E0F1DE',
     color: '#0A2725',
     borderRadius: '50px',
-    padding: theme.spacing(1, 3),
+    padding: theme.spacing(0.5, 2), // Reduced padding for mobile
+    fontSize: theme.typography.body2.fontSize, // Smaller font size for mobile
     '&:hover': {
         backgroundColor: '#C5E1C1',
+    },
+    [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(1, 3), // Original padding for larger screens
+        fontSize: theme.typography.body1.fontSize, // Original font size
     },
 }));
 
 function Footer() {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const navigationItems = [
         { label: 'About Us', link: '/about-us' },
         { label: 'Careers', link: '/careers' },
@@ -59,17 +78,17 @@ function Footer() {
     ];
 
     const servicesItems = [
-        { label: 'Shopify App Development', link: '/shopify-app' },
-        { label: 'Custom Shopify Development', link: '/custom-store' },
-        { label: 'Website Development', link: '/website-management' },
-        { label: 'Digital Marketing', link: '/digital-marketing' },
-        { label: 'E-commerce Management', link: '/e-commerce-management' },
+        { label: 'Shopify App', link: '/shopify-app' }, // Shortened labels for mobile
+        { label: 'Custom Shopify', link: '/custom-store' },
+        { label: 'Web Dev', link: '/website-management' },
+        { label: 'Digital Mktg', link: '/digital-marketing' },
+        { label: 'E-comm Mgmt', link: '/e-commerce-management' },
     ];
 
     const contactInfo = [
         {
             icon: 'location',
-            text: 'Thrissur, Kerala India',
+            text: isMobile ? 'Thrissur, Kerala' : 'Thrissur, Kerala India', // Shorter text for mobile
             link: '#'
         },
         {
@@ -89,17 +108,17 @@ function Footer() {
             {/* Hero section */}
             <DarkGreenContainer>
                 <Container maxWidth="100%">
-                    <Grid container spacing={4} direction="column" alignItems="center" textAlign="center">
+                    <Grid container spacing={2} direction="column" alignItems="center" textAlign="center">
                         <Grid item xs={12}>
-                            <Typography variant="subtitle1" color="#4CD787" gutterBottom>
+                            <Typography variant={isMobile ? 'subtitle2' : 'subtitle1'} color="#4CD787" gutterBottom>
                                 JOIN THE BEST
                             </Typography>
-                            <Typography variant="h3" gutterBottom>
+                            <Typography variant={isMobile ? 'h5' : 'h3'} gutterBottom>
                                 Ready to Transform Your E-Commerce Business?
                             </Typography>
                         </Grid>
                         <Grid item xs={12} container justifyContent="center">
-                            <GreenButton variant="contained" size="large" component={RouterLink} to="/contact">
+                            <GreenButton variant="contained" size={isMobile ? 'small' : 'large'} component={RouterLink} to="/contact">
                                 Contact Us
                             </GreenButton>
                         </Grid>
@@ -110,30 +129,30 @@ function Footer() {
             {/* Main content section */}
             <ContentSection>
                 <Container maxWidth="lg">
-                    <Grid container spacing={4}>
+                    <Grid container spacing={isMobile ? 2 : 4}>
                         {/* Logo and description */}
                         <Grid item xs={12} md={3}>
-                            <Box sx={{ mb: 2 }}>
+                            <Box sx={{ mb: 1 }}>
                                 <Typography variant="h6" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
                                     <img
                                         src={zenmeraki}
                                         alt="ZEN MERAKI"
                                         style={{
-                                            width: 35,
-                                            height: 35,
-                                            marginRight: '10px',
+                                            width: isMobile ? 25 : 35,
+                                            height: isMobile ? 25 : 35,
+                                            marginRight: '8px',
                                             objectFit: 'contain'
                                         }}
                                     />
                                     ZENMERAKI
                                 </Typography>
                             </Box>
-                            <Typography variant="body2" color="text.secondary" paragraph>
+                            <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}>
                                 We specialize in transforming ideas into impactful solutions. <br />
                                 From cutting-edge applications to intuitive designs,<br />
                                 our work reflects a commitment to excellence and innovation in all we deliver.
                             </Typography>
-                            <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
+                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                                 <IconButton size="small" aria-label="Twitter" sx={{ color: '#0A2725' }}>
                                     <TwitterIcon fontSize="small" />
                                 </IconButton>
@@ -147,17 +166,18 @@ function Footer() {
                         </Grid>
 
                         {/* Navigation */}
-                        <Grid item xs={12} sm={6} md={2}>
+                        <Grid item xs={6} md={2}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
                                 position: 'relative',
-                                paddingBottom: 1,
+                                paddingBottom: 0.5,
+                                fontSize: isMobile ? '0.9rem' : '1rem',
                                 '&::after': {
                                     content: '""',
                                     position: 'absolute',
                                     left: 0,
                                     bottom: 0,
-                                    width: 40,
-                                    height: 3,
+                                    width: 30,
+                                    height: 2,
                                     backgroundColor: '#00B8A9',
                                 }
                             }}>
@@ -165,9 +185,9 @@ function Footer() {
                             </Typography>
                             <List dense disablePadding>
                                 {navigationItems.map((item) => (
-                                    <ListItem key={item.label} disablePadding sx={{ py: 0.5 }}>
+                                    <ListItem key={item.label} disablePadding sx={{ py: 0.25 }}>
                                         <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
-                                            <Typography variant="body2">{item.label}</Typography>
+                                            <Typography variant="body2" sx={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}>{item.label}</Typography>
                                         </Link>
                                     </ListItem>
                                 ))}
@@ -175,17 +195,18 @@ function Footer() {
                         </Grid>
 
                         {/* Services */}
-                        <Grid item xs={12} sm={6} md={2}>
+                        <Grid item xs={6} md={2}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
                                 position: 'relative',
-                                paddingBottom: 1,
+                                paddingBottom: 0.5,
+                                fontSize: isMobile ? '0.9rem' : '1rem',
                                 '&::after': {
                                     content: '""',
                                     position: 'absolute',
                                     left: 0,
                                     bottom: 0,
-                                    width: 40,
-                                    height: 3,
+                                    width: 30,
+                                    height: 2,
                                     backgroundColor: '#00B8A9',
                                 }
                             }}>
@@ -193,9 +214,9 @@ function Footer() {
                             </Typography>
                             <List dense disablePadding>
                                 {servicesItems.map((item) => (
-                                    <ListItem key={item.label} disablePadding sx={{ py: 0.5 }}>
+                                    <ListItem key={item.label} disablePadding sx={{ py: 0.25 }}>
                                         <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
-                                            <Typography variant="body2">{item.label}</Typography>
+                                            <Typography variant="body2" sx={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}>{item.label}</Typography>
                                         </Link>
                                     </ListItem>
                                 ))}
@@ -203,17 +224,18 @@ function Footer() {
                         </Grid>
 
                         {/* Contact Info */}
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} md={3}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
                                 position: 'relative',
-                                paddingBottom: 1,
+                                paddingBottom: 0.5,
+                                fontSize: isMobile ? '0.9rem' : '1rem',
                                 '&::after': {
                                     content: '""',
                                     position: 'absolute',
                                     left: 0,
                                     bottom: 0,
-                                    width: 40,
-                                    height: 3,
+                                    width: 30,
+                                    height: 2,
                                     backgroundColor: '#00B8A9',
                                 }
                             }}>
@@ -221,14 +243,14 @@ function Footer() {
                             </Typography>
                             <List dense disablePadding>
                                 {contactInfo.map((item, index) => (
-                                    <ListItem key={index} disablePadding sx={{ py: 0.5 }}>
+                                    <ListItem key={index} disablePadding sx={{ py: 0.25 }}>
                                         <Box sx={{ color: '#00B8A9', mr: 1, display: 'flex', alignItems: 'center' }}>
                                             {item.icon === 'location' && <LocationOnIcon fontSize="small" />}
                                             {item.icon === 'email' && <MailOutlineIcon fontSize="small" />}
                                             {item.icon === 'phone' && <PhoneIcon fontSize="small" />}
                                         </Box>
                                         <Link href={item.link} color="inherit" underline="hover">
-                                            <Typography variant="body2">{item.text}</Typography>
+                                            <Typography variant="body2" sx={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}>{item.text}</Typography>
                                         </Link>
                                     </ListItem>
                                 ))}
@@ -241,19 +263,19 @@ function Footer() {
             {/* Footer Section */}
             <FooterSection>
                 <Container maxWidth="lg">
-                    <Grid container justifyContent="space-between" alignItems="center">
-                        <Grid item>
-                            <Typography variant="body2" color="text.secondary">
+                    <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                        <Grid item xs={12} sm="auto">
+                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.7rem' : '0.8rem', textAlign: isMobile ? 'center' : 'left' }}>
                                 © 2025 Zenmeraki. All rights reserved.
                             </Typography>
                         </Grid>
-                        <Grid item>
-                            <Stack direction="row" spacing={2}>
+                        <Grid item xs={12} sm="auto">
+                            <Stack direction="row" spacing={1} justifyContent={isMobile ? 'center' : 'flex-end'}>
                                 <Link component={RouterLink} to="/privacy-policy" color="inherit" underline="hover">
-                                    <Typography variant="body2">Privacy Policy</Typography>
+                                    <Typography variant="body2" sx={{ fontSize: isMobile ? '0.7rem' : '0.8rem' }}>Privacy Policy</Typography>
                                 </Link>
                                 <Link component={RouterLink} to="/terms-of-service" color="inherit" underline="hover">
-                                    <Typography variant="body2">Terms of Service</Typography>
+                                    <Typography variant="body2" sx={{ fontSize: isMobile ? '0.7rem' : '0.8rem' }}>Terms of Service</Typography>
                                 </Link>
                             </Stack>
                         </Grid>

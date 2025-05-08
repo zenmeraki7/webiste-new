@@ -146,29 +146,58 @@ const theme = createTheme({
       fontWeight: 700,
       fontSize: '2.8rem',
       lineHeight: 1.2,
+      '@media (max-width:600px)': {
+        fontSize: '2.2rem',
+      },
     },
     h2: {
       fontWeight: 600,
       fontSize: '2rem',
       lineHeight: 1.3,
+      '@media (max-width:600px)': {
+        fontSize: '1.7rem',
+      },
     },
     h3: {
       fontWeight: 600,
       fontSize: '1.5rem',
       lineHeight: 1.4,
+      '@media (max-width:600px)': {
+        fontSize: '1.3rem',
+      },
     },
     h4: {
       fontWeight: 500,
       fontSize: '1.2rem',
       lineHeight: 1.4,
+      '@media (max-width:600px)': {
+        fontSize: '1rem',
+      },
     },
     subtitle1: {
       fontSize: '1.1rem',
       lineHeight: 1.5,
+      '@media (max-width:600px)': {
+        fontSize: '0.9rem',
+        lineHeight: 1.4,
+      },
     },
     body1: {
       fontSize: '1rem',
       lineHeight: 1.6,
+      '@media (max-width:600px)': {
+        fontSize: '0.85rem',
+        lineHeight: 1.5,
+      },
+    },
+    subtitle2: {
+      fontSize: '0.8rem',
+      lineHeight: 1.5,
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+      '@media (max-width:600px)': {
+        fontSize: '0.7rem',
+      },
     },
   },
   components: {
@@ -179,6 +208,10 @@ const theme = createTheme({
           textTransform: 'none',
           padding: '8px 20px',
           fontWeight: 500,
+          '@media (max-width:600px)': {
+            padding: '6px 16px',
+            fontSize: '0.9rem',
+          },
         },
         containedPrimary: {
           backgroundColor: '#014A42',
@@ -196,6 +229,11 @@ const theme = createTheme({
           backgroundColor: '#023B34',
           boxShadow: 'none',
           border: '1px solid rgba(255, 255, 255, 0.08)',
+          '@media (max-width:600px)': {
+            padding: 16,
+            marginBottom: 24,
+            borderRadius: 12,
+          },
         },
       },
     },
@@ -221,8 +259,8 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, scale: 0.8 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     transition: {
       type: 'spring',
@@ -235,7 +273,7 @@ const itemVariants = {
 const AnimatedSection = ({ children, variants, threshold = 0.2 }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: threshold, margin: '-100px 0px' });
-  
+
   return (
     <motion.div
       ref={ref}
@@ -276,19 +314,19 @@ const VisionPage = () => {
       id: 1,
       title: 'Creative',
       description: 'We approach every challenge with fresh perspectives and innovative thinking, constantly pushing boundaries to create unique solutions.',
-      icon: <Lightbulb sx={{ color: '#fff', fontSize: 36 }} />,
+      icon: <Lightbulb sx={{ color: '#fff', fontSize: isMobile ? 28 : 36 }} />,
     },
     {
       id: 2,
       title: 'Innovative',
       description: 'Our team leverages cutting-edge technology and forward-thinking approaches to develop solutions that are ahead of the curve.',
-      icon: <Rocket sx={{ color: '#fff', fontSize: 36 }} />,
+      icon: <Rocket sx={{ color: '#fff', fontSize: isMobile ? 28 : 36 }} />,
     },
     {
       id: 3,
       title: 'Driven',
       description: 'We’re passionate about results and committed to excellence, constantly striving to exceed expectations and deliver exceptional value.',
-      icon: <TrendingUp sx={{ color: '#fff', fontSize: 36 }} />,
+      icon: <TrendingUp sx={{ color: '#fff', fontSize: isMobile ? 28 : 36 }} />,
     },
   ];
 
@@ -306,14 +344,14 @@ const VisionPage = () => {
           sx={{
             position: 'relative',
             bgcolor: 'transparent',
-            pt: 8,
-            pb: 6,
+            pt: isMobile ? 6 : 8,
+            pb: isMobile ? 4 : 6,
             zIndex: 1,
           }}
         >
           <Container maxWidth="lg">
             {/* Hero Section */}
-            <Box sx={{ textAlign: 'center', mb: 5 }}>
+            <Box sx={{ textAlign: 'center', mb: isMobile ? 3 : 5 }}>
               <motion.div
                 ref={subtitleRef}
                 initial="hidden"
@@ -364,7 +402,6 @@ const VisionPage = () => {
                     color: 'rgba(255, 255, 255, 0.7)',
                     maxWidth: 800,
                     mx: 'auto',
-                    fontSize: '1rem'
                   }}
                 >
                   Our startup thrives on creativity and dedication. Through innovative technology and human-centered design, we transform complex challenges into elegant solutions.
@@ -382,8 +419,8 @@ const VisionPage = () => {
               <Card sx={{
                 bgcolor: 'rgba(230, 255, 223, 0.9)',
                 color: '#000',
-                p: 4,
-                mb: 5,
+                p: isMobile ? 3 : 4,
+                mb: isMobile ? 3 : 5,
                 border: 'none'
               }}>
                 <Typography variant="h3" component="h3" sx={{ color: '#00332D', mb: 1 }}>
@@ -405,11 +442,11 @@ const VisionPage = () => {
                             p: 1.5,
                             bgcolor: 'white',
                             borderRadius: 2,
-                            width: 40,
-                            height: 40
+                            width: isMobile ? 32 : 40,
+                            height: isMobile ? 32 : 40
                           }}
                         >
-                          <Typography sx={{ fontSize: '18px' }}>
+                          <Typography sx={{ fontSize: isMobile ? '16px' : '18px' }}>
                             {icon.icon}
                           </Typography>
                         </Box>
@@ -437,119 +474,118 @@ const VisionPage = () => {
               </Card>
             </motion.div>
 
-            {/* Additional Sections */}
-            <Box sx={{ mt: 2, mb: 8 }}>
+            {/* Additional Sections (Conditionally Rendered) */}
+            <Box sx={{ mt: 2, mb: isMobile ? 4 : 8 }}>
               <Box sx={{ mt: 6 }}>
                 {!isMobile && additionalSections.map((section, index) => (
                   <AnimatedSection key={section.id} variants={fadeInUp} threshold={0.3}>
-                    <Box 
-                      sx={{ 
-                        display: 'flex', 
+                    <Box
+                      sx={{
+                        display: 'flex',
                         flexDirection: { xs: 'column', md: 'row' },
                         alignItems: 'center',
                         mb: 8,
                         gap: 4
                       }}
-                    >
-                      {index % 2 === 0 ? (
-                        <>
-                          <Box sx={{ flex: 1 }}>
-                            <Card sx={{ p: 3 }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <Box
-                                  sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    p: 1,
-                                    bgcolor: 'rgba(255, 255, 255, 0.06)',
-                                    borderRadius: 2,
-                                    width: 40,
-                                    height: 40,
-                                    mr: 2
-                                  }}
-                                >
-                                  {section.icon}
-                                </Box>
-                                <Typography variant="h3">{section.title}</Typography>
+                    >{index % 2 === 0 ? (
+                      <>
+                        <Box sx={{ flex: 1 }}>
+                          <Card sx={{ p: 3 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  p: 1,
+                                  bgcolor: 'rgba(255, 255, 255, 0.06)',
+                                  borderRadius: 2,
+                                  width: 40,
+                                  height: 40,
+                                  mr: 2
+                                }}
+                              >
+                                {section.icon}
                               </Box>
-                              <Typography variant="body1" color="text.secondary">
-                                {section.description}
-                              </Typography>
-                            </Card>
-                          </Box>
-                          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-                            <Card 
-                              sx={{ 
-                                width: 280, 
-                                height: 280, 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center',
-                                bgcolor: 'rgba(255, 255, 255, 0.03)'
-                              }}
-                            >
-                              <Typography variant="h1" sx={{ opacity: 0.6, fontSize: '4rem' }}>
-                                {index + 1}
-                              </Typography>
-                            </Card>
-                          </Box>
-                        </>
-                      ) : (
-                        <>
-                          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-                            <Card 
-                              sx={{ 
-                                width: 280, 
-                                height: 280, 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center',
-                                bgcolor: 'rgba(255, 255, 255, 0.03)'
-                              }}
-                            >
-                              <Typography variant="h1" sx={{ opacity: 0.6, fontSize: '4rem' }}>
-                                {index + 1}
-                              </Typography>
-                            </Card>
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <Card sx={{ p: 3 }}>
-                              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <Box
-                                  sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    p: 1,
-                                    bgcolor: 'rgba(255, 255, 255, 0.06)',
-                                    borderRadius: 2,
-                                    width: 40,
-                                    height: 40,
-                                    mr: 2
-                                  }}
-                                >
-                                  {section.icon}
-                                </Box>
-                                <Typography variant="h3">{section.title}</Typography>
+                              <Typography variant="h3">{section.title}</Typography>
+                            </Box>
+                            <Typography variant="body1" color="text.secondary">
+                              {section.description}
+                            </Typography>
+                          </Card>
+                        </Box>
+                        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                          <Card
+                            sx={{
+                              width: 280,
+                              height: 280,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              bgcolor: 'rgba(255, 255, 255, 0.03)'
+                            }}
+                          >
+                            <Typography variant="h1" sx={{ opacity: 0.6, fontSize: '4rem' }}>
+                              {index + 1}
+                            </Typography>
+                          </Card>
+                        </Box>
+                      </>
+                    ) : (
+                      <>
+                        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                          <Card
+                            sx={{
+                              width: 280,
+                              height: 280,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              bgcolor: 'rgba(255, 255, 255, 0.03)'
+                            }}
+                          >
+                            <Typography variant="h1" sx={{ opacity: 0.6, fontSize: '4rem' }}>
+                              {index + 1}
+                            </Typography>
+                          </Card>
+                        </Box>
+                        <Box sx={{ flex: 1 }}>
+                          <Card sx={{ p: 3 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  p: 1,
+                                  bgcolor: 'rgba(255, 255, 255, 0.06)',
+                                  borderRadius: 2,
+                                  width: 40,
+                                  height: 40,
+                                  mr: 2
+                                }}
+                              >
+                                {section.icon}
                               </Box>
-                              <Typography variant="body1" color="text.secondary">
-                                {section.description}
-                              </Typography>
-                            </Card>
-                          </Box>
-                        </>
-                      )}
-                    </Box>
-                  </AnimatedSection>
-                ))}
-              </Box>
+                              <Typography variant="h3">{section.title}</Typography>
+                            </Box>
+                            <Typography variant="body1" color="text.secondary">
+                              {section.description}
+                            </Typography>
+                          </Card>
+                        </Box>
+                      </>
+                    )}
+                  </Box>
+                </AnimatedSection>
+              ))}
             </Box>
-          </Container>
-        </Box>
+          </Box>
+        </Container>
       </Box>
-    </ThemeProvider>
-  );
+    </Box>
+  </ThemeProvider>
+);
 };
 
 export default VisionPage;

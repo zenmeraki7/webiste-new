@@ -192,50 +192,50 @@ const AnimatedCard = ({ children, delay, animationType, duration = 0.7 }) => {
     const animations = {
         fadeUp: {
             hidden: { y: 50, opacity: 0 },
-            visible: { 
-                y: 0, 
-                opacity: 1, 
-                transition: { duration, delay, ease: "easeOut" } 
+            visible: {
+                y: 0,
+                opacity: 1,
+                transition: { duration, delay, ease: "easeOut" }
             }
         },
         slideRight: {
             hidden: { x: -70, opacity: 0 },
-            visible: { 
-                x: 0, 
-                opacity: 1, 
-                transition: { duration, delay, type: "spring", stiffness: 100, damping: 12 } 
+            visible: {
+                x: 0,
+                opacity: 1,
+                transition: { duration, delay, type: "spring", stiffness: 100, damping: 12 }
             }
         },
         slideLeft: {
             hidden: { x: 70, opacity: 0 },
-            visible: { 
-                x: 0, 
-                opacity: 1, 
-                transition: { duration, delay, type: "spring", stiffness: 100, damping: 12 } 
+            visible: {
+                x: 0,
+                opacity: 1,
+                transition: { duration, delay, type: "spring", stiffness: 100, damping: 12 }
             }
         },
         zoomIn: {
             hidden: { scale: 0.8, opacity: 0 },
-            visible: { 
-                scale: 1, 
-                opacity: 1, 
-                transition: { duration, delay, type: "spring", stiffness: 200 } 
+            visible: {
+                scale: 1,
+                opacity: 1,
+                transition: { duration, delay, type: "spring", stiffness: 200 }
             }
         },
         flip: {
             hidden: { rotateY: 90, opacity: 0 },
-            visible: { 
-                rotateY: 0, 
-                opacity: 1, 
-                transition: { duration, delay } 
+            visible: {
+                rotateY: 0,
+                opacity: 1,
+                transition: { duration, delay }
             }
         },
         rise: {
             hidden: { y: 100, opacity: 0 },
-            visible: { 
-                y: 0, 
-                opacity: 1, 
-                transition: { duration, delay, type: "spring", stiffness: 50, damping: 15 } 
+            visible: {
+                y: 0,
+                opacity: 1,
+                transition: { duration, delay, type: "spring", stiffness: 50, damping: 15 }
             }
         }
     };
@@ -325,7 +325,7 @@ const ServicesPage = () => {
 
     const headerVariants = {
         hidden: { opacity: 0 },
-        visible: { 
+        visible: {
             opacity: 1,
             transition: { staggerChildren: 0.3 }
         }
@@ -333,8 +333,8 @@ const ServicesPage = () => {
 
     const headerItemVariants = {
         hidden: { y: -20, opacity: 0 },
-        visible: { 
-            y: 0, 
+        visible: {
+            y: 0,
             opacity: 1,
             transition: { duration: 0.6 }
         }
@@ -350,15 +350,15 @@ const ServicesPage = () => {
                 pb: { xs: 6, sm: 8, md: 12 }
             }}>
                 <AnimatedBackground />
-                
-                <Container maxWidth="lg">
+
+                <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
                     {/* Header Section */}
                     <motion.div
                         ref={headerRef}
                         initial="hidden"
                         animate={headerControls}
                         variants={headerVariants}
-                        style={{ marginBottom: { xs: '2rem', md: '3rem' }, textAlign: 'center' }}
+                        style={{ marginBottom: { xs: '1.5rem', md: '3rem' }, textAlign: 'center' }}
                     >
                         <motion.div variants={headerItemVariants}>
                             <Typography
@@ -376,8 +376,8 @@ const ServicesPage = () => {
                                 <Box
                                     component="span"
                                     sx={{
-                                        width: { xs: 12, md: 16 },
-                                        height: { xs: 12, md: 16 },
+                                        width: { xs: 10, md: 16 },
+                                        height: { xs: 10, md: 16 },
                                         bgcolor: '#38B2AC',
                                         borderRadius: '50%',
                                         mr: 1,
@@ -389,13 +389,13 @@ const ServicesPage = () => {
                         </motion.div>
 
                         <motion.div variants={headerItemVariants}>
-                            <Typography variant="h1" component="h1" sx={{ mb: 2 }}>
+                            <Typography variant="h1" component="h1" sx={{ mb: 1, fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' } }}>
                                 Welcome to Our Services
                             </Typography>
                         </motion.div>
 
                         <motion.div variants={headerItemVariants}>
-                            <Typography variant="body1" sx={{ color: '#718096', maxWidth: { xs: 400, sm: 600 }, mx: 'auto' }}>
+                            <Typography variant="body1" sx={{ color: '#718096', maxWidth: { xs: 300, sm: 600 }, mx: 'auto', fontSize: { xs: '0.9rem', sm: '1rem' } }}>
                                 Explore our expertise in web development, offering cutting-edge solutions to bring your ideas to life.
                             </Typography>
                         </motion.div>
@@ -407,8 +407,8 @@ const ServicesPage = () => {
                             display: 'grid',
                             gridTemplateColumns: { xs: '1fr', md: 'repeat(12, 1fr)' },
                             gridTemplateRows: { xs: 'auto', md: 'auto auto' },
-                            gap: { xs: 2, md: 3 },
-                            mb: { xs: 4, md: 6 }
+                            gap: { xs: 1.5, md: 3 },
+                            mb: { xs: 3, md: 6 }
                         }}
                     >
                         {/* First Row - Left side large card */}
@@ -429,7 +429,7 @@ const ServicesPage = () => {
                                 >
                                     <CardMedia
                                         component="img"
-                                        sx={{ height: { xs: 200, sm: 250, md: 320 }, objectFit: 'cover' }}
+                                        sx={{ height: { xs: 180, sm: 220, md: 320 }, objectFit: 'cover' }}
                                         image={services[0].image}
                                         alt={services[0].title}
                                     />
@@ -437,14 +437,14 @@ const ServicesPage = () => {
                                         <Typography
                                             variant="h3"
                                             component="h2"
-                                            sx={{ mb: 1.5 }}
+                                            sx={{ mb: 1, fontSize: { xs: '1.3rem', sm: '1.5rem', md: '1.8rem' } }}
                                         >
                                             {services[0].title}
                                         </Typography>
                                         <Typography
                                             variant="body1"
                                             color="text.secondary"
-                                            sx={{ mb: 2 }}
+                                            sx={{ mb: 1.5, fontSize: { xs: '0.9rem', sm: '1rem' } }}
                                         >
                                             {services[0].description}
                                         </Typography>
@@ -494,18 +494,18 @@ const ServicesPage = () => {
                                         width: { xs: '100%', sm: '60%' },
                                         p: { xs: 2, md: 3 }
                                     }}>
-                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
+                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 1.5 }}>
                                             <Typography
                                                 variant="h3"
                                                 component="h2"
-                                                sx={{ mb: 1.5 }}
+                                                sx={{ mb: 1, fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' } }}
                                             >
                                                 {services[1].title}
                                             </Typography>
                                             <Typography
                                                 variant="body1"
                                                 color="text.secondary"
-                                                sx={{ mb: 2 }}
+                                                sx={{ mb: 1.5, fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
                                             >
                                                 {services[1].description.split('.')[0] + '.'}
                                             </Typography>
@@ -523,18 +523,18 @@ const ServicesPage = () => {
                                                     '&:hover': {
                                                         background: 'transparent',
                                                         color: '#2C7A7B'
-                                                }
-                                            }}
-                                        >
-                                            Read more
-                                        </Button>
+                                                    }
+                                                }}
+                                            >
+                                                Read more
+                                            </Button>
                                         </CardActions>
                                     </Box>
                                     <CardMedia
                                         component="img"
                                         sx={{
                                             width: { xs: '100%', sm: '40%' },
-                                            height: { xs: 150, sm: 'auto' },
+                                            height: { xs: 120, sm: 'auto' },
                                             objectFit: 'cover'
                                         }}
                                         image={services[1].image}
@@ -562,7 +562,7 @@ const ServicesPage = () => {
                                 >
                                     <CardMedia
                                         component="img"
-                                        sx={{ height: { xs: 120, sm: 140 }, objectFit: 'cover' }}
+                                        sx={{ height: { xs: 100, sm: 120 }, objectFit: 'cover' }}
                                         image={services[2].image}
                                         alt={services[2].title}
                                     />
@@ -570,7 +570,7 @@ const ServicesPage = () => {
                                         <Typography
                                             variant="h3"
                                             component="h2"
-                                            sx={{ mb: 1.5, fontSize: { xs: '1rem', sm: '1.1rem', md: '1.1rem' } }}
+                                            sx={{ mb: 1, fontSize: { xs: '1rem', sm: '1.1rem', md: '1.1rem' } }}
                                         >
                                             {services[2].title}
                                         </Typography>
@@ -615,7 +615,7 @@ const ServicesPage = () => {
                                 >
                                     <CardMedia
                                         component="img"
-                                        sx={{ height: { xs: 120, sm: 140 }, objectFit: 'cover' }}
+                                        sx={{ height: { xs: 100, sm: 120 }, objectFit: 'cover' }}
                                         image={services[3].image}
                                         alt={services[3].title}
                                     />
@@ -623,7 +623,7 @@ const ServicesPage = () => {
                                         <Typography
                                             variant="h3"
                                             component="h2"
-                                            sx={{ mb: 1.5, fontSize: { xs: '1rem', sm: '1.1rem', md: '1.1rem' } }}
+                                            sx={{ mb: 1, fontSize: { xs: '1rem', sm: '1.1rem', md: '1.1rem' } }}
                                         >
                                             {services[3].title}
                                         </Typography>
@@ -657,7 +657,7 @@ const ServicesPage = () => {
                         sx={{
                             display: 'grid',
                             gridTemplateColumns: { xs: '1fr', md: 'repeat(12, 1fr)' },
-                            gap: { xs: 2, md: 3 }
+                            gap: { xs: 1.5, md: 3 }
                         }}
                     >
                         {/* Left side card - Horizontal layout */}
@@ -682,18 +682,18 @@ const ServicesPage = () => {
                                         width: { xs: '100%', sm: '60%' },
                                         p: { xs: 2, md: 3 }
                                     }}>
-                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
+                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 1.5 }}>
                                             <Typography
                                                 variant="h3"
                                                 component="h2"
-                                                sx={{ mb: 1.5 }}
+                                                sx={{ mb: 1, fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' } }}
                                             >
                                                 {services[4].title}
                                             </Typography>
                                             <Typography
                                                 variant="body1"
                                                 color="text.secondary"
-                                                sx={{ mb: 2 }}
+                                                sx={{ mb: 1.5, fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
                                             >
                                                 {services[4].description.split('.')[0] + '.'}
                                             </Typography>
@@ -711,19 +711,18 @@ const ServicesPage = () => {
                                                     '&:hover': {
                                                         background: 'transparent',
                                                         color: '#2C7A7B'
-                                                }
-                                            }}
-                                        >
-                                            Read more
-                                        </Button>
+                                                    }
+                                                }}
+                                            >
+                                                Read more
+                                            </Button>
                                         </CardActions>
                                     </Box>
                                     <CardMedia
-                                        Referral
                                         component="img"
                                         sx={{
                                             width: { xs: '100%', sm: '40%' },
-                                            height: { xs: 150, sm: 'auto' },
+                                            height: { xs: 120, sm: 'auto' },
                                             objectFit: 'cover'
                                         }}
                                         image={services[4].image}
@@ -732,7 +731,7 @@ const ServicesPage = () => {
                                 </Card>
                             </AnimatedCard>
                         </Box>
-                        
+
                         {/* Right side card - Horizontal layout */}
                         <Box sx={{ gridColumn: { xs: 'span 1', md: 'span 6' } }}>
                             <AnimatedCard delay={1.8} animationType={services[5].animation}>
@@ -755,18 +754,18 @@ const ServicesPage = () => {
                                         width: { xs: '100%', sm: '60%' },
                                         p: { xs: 2, md: 3 }
                                     }}>
-                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 2 }}>
+                                        <CardContent sx={{ flexGrow: 1, p: 0, pb: 1.5 }}>
                                             <Typography
                                                 variant="h3"
                                                 component="h2"
-                                                sx={{ mb: 1.5 }}
+                                                sx={{ mb: 1, fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' } }}
                                             >
                                                 {services[5].title}
                                             </Typography>
                                             <Typography
                                                 variant="body1"
                                                 color="text.secondary"
-                                                sx={{ mb: 2 }}
+                                                sx={{ mb: 1.5, fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
                                             >
                                                 {services[5].description.split('.')[0] + '.'}
                                             </Typography>
@@ -784,18 +783,18 @@ const ServicesPage = () => {
                                                     '&:hover': {
                                                         background: 'transparent',
                                                         color: '#2C7A7B'
-                                                }
-                                            }}
-                                        >
-                                            Read more
-                                        </Button>
+                                                    }
+                                                }}
+                                            >
+                                                Read more
+                                            </Button>
                                         </CardActions>
                                     </Box>
                                     <CardMedia
                                         component="img"
                                         sx={{
                                             width: { xs: '100%', sm: '40%' },
-                                            height: { xs: 150, sm: 'auto' },
+                                            height: { xs: 120, sm: 'auto' },
                                             objectFit: 'cover'
                                         }}
                                         image={services[5].image}
@@ -806,6 +805,7 @@ const ServicesPage = () => {
                         </Box>
                     </Box>
                 </Container>
+
             </Box>
         </ThemeProvider>
     );

@@ -1,17 +1,18 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { 
-  Box, 
-  Button, 
-  Card, 
-  CardContent, 
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
   CardActions,
-  Container, 
-  Typography, 
-  ThemeProvider, 
+  Container,
+  Typography,
+  ThemeProvider,
   createTheme,
-  IconButton
+  IconButton,
+  useMediaQuery, // Import useMediaQuery
 } from '@mui/material';
-import { 
+import {
   BarChart,
   Share,
   Store,
@@ -217,13 +218,13 @@ const AnimatedSectionTitle = ({ children }) => {
   const controls = useAnimation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
-  
+
   useEffect(() => {
     if (isInView) {
       controls.start('visible');
     }
   }, [controls, isInView]);
-  
+
   return (
     <motion.div
       ref={ref}
@@ -249,7 +250,7 @@ const apps = [
     icon: <BarChart sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
-    link:'/metamatrix-app'
+    link: '/metamatrix-app'
 
   },
   {
@@ -259,7 +260,7 @@ const apps = [
     icon: <Share sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
-    link:'tap2share-app'
+    link: 'tap2share-app'
   },
   {
     id: 3,
@@ -268,7 +269,7 @@ const apps = [
     icon: <Store sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
-     link:'/multivendor-app'
+    link: '/multivendor-app'
   },
   {
     id: 4,
@@ -277,7 +278,7 @@ const apps = [
     icon: <CameraAlt sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
-     link:''
+    link: ''
   },
   {
     id: 5,
@@ -286,21 +287,21 @@ const apps = [
     icon: <ChatBubbleOutline sx={{ fontSize: 40 }} />,
     bgColor: '#0A2725',
     featured: true,
-     link:''
+    link: ''
   }
 ].filter(app => !app.disable);
 
 // New component for animated cards that appear one by one
-const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
+const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick, isMobile }) => {
   const controls = useAnimation();
   const ref = useRef(null);
-  const isInView = useInView(ref, { 
-    once: true, 
+  const isInView = useInView(ref, {
+    once: true,
     amount: 0.1,
     // This margin makes elements activate before they're fully in view
-    margin: "0px 0px -100px 0px" 
+    margin: "0px 0px -100px 0px"
   });
-  
+
   useEffect(() => {
     if (isInView) {
       // Start animation after a delay based on index
@@ -309,7 +310,11 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
       }, index * 200); // 200ms staggered delay between cards
     }
   }, [controls, isInView, index]);
-  
+
+  // Define card dimensions based on screen size
+  const cardWidth = isMobile ? 240 : 280;
+  const cardHeight = isMobile ? 300 : 340;
+
   return (
     <motion.div
       ref={ref}
@@ -317,33 +322,34 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
       animate={controls}
       variants={{
         hidden: { opacity: 0, y: 50, scale: 0.9 },
-        visible: { 
-          opacity: 1, 
-          y: 0, 
+        visible: {
+          opacity: 1,
+          y: 0,
           scale: isCurrentCard ? 1.05 : 1,
-          transition: { 
-            type: "spring", 
-            stiffness: 300, 
+          transition: {
+            type: "spring",
+            stiffness: 300,
             damping: 24,
             delay: index * 0.1 // Staggered animation
           }
         }
       }}
-      whileHover={{ 
-        scale: 1.1, 
+      whileHover={{
+        scale: 1.1,
         y: -15,
-        transition: { type: "spring", stiffness: 400, damping: 15 } 
+        transition: { type: "spring", stiffness: 400, damping: 15 }
       }}
-      style={{ 
+      style={{
         flex: '0 0 auto',
         scrollSnapAlign: 'center',
+        width: cardWidth, // Dynamic width
       }}
       onClick={() => handleCardClick(index)}
     >
-      <Card 
-        sx={{ 
-          height: 340,
-          width: 280,
+      <Card
+        sx={{
+          height: cardHeight, // Dynamic height
+          width: cardWidth, // Dynamic width
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -352,16 +358,16 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
           zIndex: isCurrentCard ? 2 : 1,
           position: 'relative',
           opacity: isCurrentCard ? 1 : 0.85,
-          boxShadow: isCurrentCard ? 
+          boxShadow: isCurrentCard ?
             '0 20px 40px -12px rgba(10, 39, 37, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3)' :
             '0 8px 40px rgba(0, 0, 0, 0.06)',
         }}
       >
         {/* Remove the white glass effect overlay */}
-        
-        <CardContent sx={{ 
-          flexGrow: 1, 
-          display: 'flex', 
+
+        <CardContent sx={{
+          flexGrow: 1,
+          display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
@@ -372,25 +378,25 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ 
-              delay: index * 0.1 + 0.3, 
-              type: "spring", 
-              stiffness: 300, 
-              damping: 20 
+            transition={{
+              delay: index * 0.1 + 0.3,
+              type: "spring",
+              stiffness: 300,
+              damping: 20
             }}
           >
             <Box sx={{
-              width: 80,
-              height: 80,
+              width: 60, // Reduced icon size on mobile
+              height: 60, // Reduced icon size on mobile
               borderRadius: '50%',
               bgcolor: 'rgba(0, 0, 0, 0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'white',
-              mb: 3
+              mb: 2 // Reduced margin on mobile
             }}>
-              {app.icon}
+              {React.cloneElement(app.icon, { style: { fontSize: 32 } })} {/* Smaller icon */}
             </Box>
           </motion.div>
           <motion.div
@@ -398,7 +404,7 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: index * 0.1 + 0.4, duration: 0.5 }}
           >
-            <Typography variant="h5" component="h3" align="center" gutterBottom sx={{ color: 'white', fontWeight: 600 }}>
+            <Typography variant={isMobile ? "h6" : "h5"} component="h3" align="center" gutterBottom sx={{ color: 'white', fontWeight: 600 }}>
               {app.name}
             </Typography>
           </motion.div>
@@ -407,29 +413,30 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: index * 0.1 + 0.5, duration: 0.5 }}
           >
-            <Typography variant="body2" align="center" sx={{ color: 'rgba(255,255,255,0.9)' }}>
+            <Typography variant="body2" align="center" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: isMobile ? '0.9rem' : '1rem' }}>
               {app.description}
             </Typography>
           </motion.div>
         </CardContent>
-        
-        <CardActions sx={{ p: 0, justifyContent: 'center', pb: 3, position: 'relative', zIndex: 2 }}>
+
+        <CardActions sx={{ p: 0, justifyContent: 'center', pb: 2, position: 'relative', zIndex: 2 }}> {/* Reduced bottom padding */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: index * 0.1 + 0.6, duration: 0.5 }}
           >
-            <Button 
+            <Button
               variant="contained"
               href={app.link}
-              sx={{ 
+              sx={{
                 bgcolor: 'rgba(8, 74, 73, 0.9)',
                 color: 'white',
-                borderRadius: 28,
-                px: 3,
-                py: 0.8,
+                borderRadius: 24, // Slightly smaller border radius
+                px: 2.5, // Reduced horizontal padding
+                py: 0.6, // Reduced vertical padding
                 fontWeight: 600,
-                '&:hover': { 
+                fontSize: isMobile ? '0.875rem' : '1rem', // Smaller font size
+                '&:hover': {
                   bgcolor: '#084A49',
                 },
               }}
@@ -438,8 +445,8 @@ const AnimatedAppCard = ({ app, index, isCurrentCard, handleCardClick }) => {
             </Button>
           </motion.div>
         </CardActions>
-        
-      
+
+
       </Card>
     </motion.div>
   );
@@ -451,18 +458,19 @@ const OurAppsPage = () => {
   const [autoScroll, setAutoScroll] = useState(true);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const autoScrollIntervalRef = useRef(null);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if it's mobile
 
   // Calculate scroll amount based on container width
   const scrollAmount = () => {
     if (containerRef.current) {
       // Return approximately one card width plus gap
-      return containerRef.current.offsetWidth / 3;
+      return containerRef.current.offsetWidth / (isMobile ? 1.5 : 3); // Adjust for mobile
     }
-    return 300; // Default fallback
+    return isMobile ? 260 : 300; // Default fallback for mobile
   };
 
   const getCardWidth = () => {
-    return 280; // Width of featured card
+    return isMobile ? 240 : 280;
   };
 
   const scrollToCard = (index) => {
@@ -470,12 +478,12 @@ const OurAppsPage = () => {
       const cardWidth = getCardWidth();
       const gap = 12; // Approximate gap between cards
       const scrollPosition = index * (cardWidth + gap);
-      
+
       scrollRef.current.scrollTo({
         left: scrollPosition,
         behavior: 'smooth'
       });
-      
+
       setCurrentCardIndex(index);
     }
   };
@@ -523,14 +531,14 @@ const OurAppsPage = () => {
       const scrollPosition = scrollRef.current.scrollLeft;
       const cardWidth = getCardWidth();
       const gap = 12;
-      
+
       // Find the closest card to the current scroll position
       const estimatedIndex = Math.round(scrollPosition / (cardWidth + gap));
       const boundedIndex = Math.max(0, Math.min(estimatedIndex, apps.length - 1));
-      
+
       if (boundedIndex !== currentCardIndex) {
         setCurrentCardIndex(boundedIndex);
-        
+
         // Reset auto-scroll timer when user manually changes cards
         if (autoScroll) {
           clearInterval(autoScrollIntervalRef.current);
@@ -578,23 +586,23 @@ const OurAppsPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ 
+      <Box sx={{
         bgcolor: '#F5F7F9', // Light background color
-        minHeight: '100vh', 
+        minHeight: '100vh',
         position: 'relative',
         overflow: 'hidden',
         color: '#0A2725'
       }}>
         {/* Add animated background with proper color */}
         <AnimatedBackground />
-        
+
         {/* Hero Section with improved animations */}
-        <Box 
-          sx={{ 
+        <Box
+          sx={{
             position: 'relative',
             background: '#0A2725',
-            pt: 12,
-            pb: 4,
+            pt: { xs: 8, sm: 12 }, // Reduce top padding on extra-small screens
+            pb: { xs: 2, sm: 4 },  // Reduce bottom padding on extra-small screens
             zIndex: 1,
             color: 'white'
           }}
@@ -603,71 +611,81 @@ const OurAppsPage = () => {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ 
+              transition={{
                 duration: 0.7,
                 type: "spring",
                 stiffness: 100
               }}
             >
-              <Typography 
-                variant="h1" 
-                component="h1" 
+              <Typography
+                variant="h1"
+                component="h1"
                 align="center"
-                sx={{ 
-                  mb: 1,
+                sx={{
+                  mb: { xs: 0.5, sm: 1 }, // Reduce margin-bottom on extra-small screens
+                  fontSize: { xs: '2.5rem', sm: '3.5rem' }, // Smaller font size on extra-small screens
+                  lineHeight: 1.1, // Adjust line height for smaller text
                   color: 'white',
                 }}
               >
                 Explore Our Apps
               </Typography>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.7, 
+              transition={{
+                duration: 0.7,
                 delay: 0.3,
                 type: "spring",
-                stiffness: 100 
+                stiffness: 100
               }}
             >
-              <Typography 
-                variant="subtitle1" 
-                color="rgba(255,255,255,0.8)" 
-                align="center" 
-                sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}
+              <Typography
+                variant="subtitle1"
+                color="rgba(255,255,255,0.8)"
+                align="center"
+                sx={{
+                  mb: { xs: 2, sm: 4 }, // Reduce margin-bottom on extra-small screens
+                  fontSize: { xs: '1rem', sm: '1.25rem' }, // Smaller font size on extra-small screens
+                  lineHeight: 1.4, // Adjust line height for smaller text
+                  maxWidth: 600,
+                  mx: 'auto'
+                }}
               >
                 Discover our suite of innovative applications designed to enhance your experience with cutting-edge AI technology.
               </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mb: { xs: 2, sm: 4 } }}> {/* Reduce margin-bottom on extra-small screens */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ 
-                    duration: 0.5, 
+                  transition={{
+                    duration: 0.5,
                     delay: 0.6,
                     type: "spring",
                     stiffness: 200
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.05,
-                    transition: { duration: 0.2 } 
+                    transition: { duration: 0.2 }
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button 
+                  <Button
                     variant="contained"
                     sx={{
                       bgcolor: 'white',
                       color: '#0A2725',
+                      fontSize: { xs: '0.9rem', sm: '1rem' }, // Smaller font size on extra-small screens
+                      padding: { xs: '8px 16px', sm: '10px 24px' }, // Smaller padding on extra-small screens
                       '&:hover': {
                         bgcolor: 'rgba(255,255,255,0.9)',
                       }
                     }}
                     // need to route to contact us page
                     onClick={() => window.location.href = '/contact'}
-                    
+
                   >
                     Contact Us
                   </Button>
@@ -676,36 +694,36 @@ const OurAppsPage = () => {
             </motion.div>
           </Container>
         </Box>
-        
+
         {/* Apps Gallery with LIGHT background and improved scroll animations */}
-        <Box 
-          sx={{ 
-            position: 'relative', 
+        <Box
+          sx={{
+            position: 'relative',
             zIndex: 1,
             background: 'linear-gradient(180deg, #EFF9F9 0%, #F5F7F9 100%)', // Light gradient background
             borderTop: '1px solid rgba(10, 39, 37, 0.05)'
-          }} 
+          }}
           ref={containerRef}
         >
           <Container maxWidth="xl" sx={{ position: 'relative' }}>
-            
-            
+
+
             {/* Navigation buttons */}
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              position: 'absolute', 
-              width: '100%', 
-              top: '50%', 
+            <Box sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              position: 'absolute',
+              width: '100%',
+              top: '50%',
               transform: 'translateY(-50%)',
               zIndex: 10,
               px: { xs: 1, sm: 2, md: 4 },
               pointerEvents: 'none'
             }}>
-              <IconButton 
+              <IconButton
                 onClick={scrollLeft}
-                sx={{ 
-                  bgcolor: 'rgba(10, 39, 37, 0.1)', 
+                sx={{
+                  bgcolor: 'rgba(10, 39, 37, 0.1)',
                   color: '#0A2725',
                   pointerEvents: 'auto',
                   '&:hover': {
@@ -715,10 +733,10 @@ const OurAppsPage = () => {
               >
                 <NavigateBefore />
               </IconButton>
-              <IconButton 
+              <IconButton
                 onClick={scrollRight}
-                sx={{ 
-                  bgcolor: 'rgba(10, 39, 37, 0.1)', 
+                sx={{
+                  bgcolor: 'rgba(10, 39, 37, 0.1)',
                   color: '#0A2725',
                   pointerEvents: 'auto',
                   '&:hover': {
@@ -729,11 +747,11 @@ const OurAppsPage = () => {
                 <NavigateNext />
               </IconButton>
             </Box>
-            
+
             {/* Scrolling Cards with staggered animations */}
-            <Box 
+            <Box
               ref={scrollRef}
-              sx={{ 
+              sx={{
                 display: 'flex',
                 overflowX: 'auto',
                 gap: 3,
@@ -748,7 +766,7 @@ const OurAppsPage = () => {
                 // Ensure proper centering
                 justifyContent: 'flex-start',
                 alignItems: 'center',
-                minHeight: 400, // Ensure consistent height
+                minHeight: 360, // Adjusted minHeight for mobile
                 '&::after': {
                   content: '""',
                   flexShrink: 0,
@@ -762,34 +780,35 @@ const OurAppsPage = () => {
               }}
             >
               {apps.map((app, index) => (
-                <AnimatedAppCard 
+                <AnimatedAppCard
                   key={app.id}
                   app={app}
                   index={index}
                   isCurrentCard={currentCardIndex === index}
                   handleCardClick={handleCardClick}
+                  isMobile={isMobile} // Pass isMobile prop
                 />
               ))}
             </Box>
-            
+
             {/* Pagination indicators with animation */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
             >
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                mt: 4, 
-                gap: 1 
+              <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                mt: 4,
+                gap: 1
               }}>
                 {apps.map((_, index) => (
                   <motion.div
                     key={index}
                     initial={{ scale: 0.6, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ 
+                    transition={{
                       delay: 0.8 + index * 0.1,
                       duration: 0.3
                     }}
@@ -799,8 +818,8 @@ const OurAppsPage = () => {
                     <Box
                       onClick={() => scrollToCard(index)}
                       sx={{
-                        width: 10,
-                        height: 10,
+                        width: 8, // Slightly smaller pagination dots on mobile
+                        height: 8,
                         borderRadius: '50%',
                         bgcolor: currentCardIndex === index ? '#0A2725' : 'rgba(10, 39, 37, 0.2)',
                         cursor: 'pointer',
@@ -814,8 +833,8 @@ const OurAppsPage = () => {
                 ))}
               </Box>
             </motion.div>
-            
-           
+
+
           </Container>
         </Box>
       </Box>
