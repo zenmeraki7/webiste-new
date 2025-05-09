@@ -623,7 +623,8 @@ const OurAppsPage = () => {
                 align="center"
                 sx={{
                   mb: { xs: 0.5, sm: 1 }, // Reduce margin-bottom on extra-small screens
-                  fontSize: { xs: '2.5rem', sm: '3.5rem' }, // Smaller font size on extra-small screens
+                  fontSize: { xs: '1.9rem', sm: '1.8rem', md: '3.4rem' } ,
+                  // fontSize: { xs: '2.5rem', sm: '3.5rem' }, // Smaller font size on extra-small screens
                   lineHeight: 1.1, // Adjust line height for smaller text
                   color: 'white',
                 }}

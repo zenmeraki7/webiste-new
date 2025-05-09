@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   AppBar, Box, Button, Card, CardContent, Container, Divider,
   Grid, IconButton, Paper, Tab, Tabs, Typography, List,
-  ListItem, ListItemIcon, ListItemText, Rating
+  ListItem, ListItemIcon, ListItemText, Rating, useMediaQuery
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
@@ -11,7 +11,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import Header from '../../components/Header';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../../components/Footer';
 
@@ -47,8 +47,7 @@ const theme = createTheme({
       bounce: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
     }
   }
-
-  });
+});
 
 // Create motion components with enhanced color transitions
 const MotionBox = motion(Box);
@@ -60,6 +59,11 @@ const MetaMatrixApp = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activePage, setActivePage] = useState('hero');
   const [hoverStates, setHoverStates] = useState({});
+  
+  // Use MUI's useMediaQuery hook to detect mobile view
+  const muiTheme = useTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(muiTheme.breakpoints.down('md'));
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -116,23 +120,43 @@ const MetaMatrixApp = () => {
   };
 
   const HeroSection = () => (
-    <Box sx={{ py: 4 }}>
-      <Grid container spacing={4}>
+    <Box sx={{ py: { xs: 1, md: 4 } }}> {/* Reduced vertical padding on mobile */}
+      <Grid container spacing={isMobile ? 2 : 4}> {/* Reduced spacing on mobile */}
         <Grid item xs={12} md={6}>
-          <Typography variant="h3" component="h1" fontWeight="bold" gutterBottom>
-          MetaMatrix – Effortless Bulk Editing for Your Shopify Store!
+          <Typography 
+            variant={isMobile ? "h5" : "h3"} /* Smaller heading on mobile */
+            component="h1"
+            fontWeight="bold"
+            gutterBottom
+            sx={{ fontSize: { xs: '1.4rem', sm: '1.8rem', md: '3.4rem' } }} /* Custom font size scaling */
+          >
+            MetaMatrix – Effortless Bulk Editing for Your Shopify Store!
           </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 4 }}>
-          MetaMatrix is a powerful bulk editor tool designed to streamline and simplify product data management.MetaMatrix enables users to efficiently update, modify, and manage large volumes of product information with ease. Built with a user-friendly interface, it enhances productivity by offering seamless bulk editing capabilities, ensuring accuracy and efficiency for e-commerce businesses.
+          <Typography 
+            variant={isMobile ? "body2" : "body1"} /* Smaller body text on mobile */
+            color="text.secondary"
+            paragraph
+            sx={{ 
+              mb: { xs: 1.5, md: 4 }, /* Less margin on mobile */
+              fontSize: { xs: '0.875rem', md: '1rem' } /* Custom font size scaling */
+            }}
+          >
+            MetaMatrix is a powerful bulk editor tool designed to streamline and simplify product data management. MetaMatrix enables users to efficiently update, modify, and manage large volumes of product information with ease. Built with a user-friendly interface, it enhances productivity by offering seamless bulk editing capabilities, ensuring accuracy and efficiency for e-commerce businesses.
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: 1, md: 2 }, /* Smaller gap on mobile */
+            mb: { xs: 1.5, md: 4 } /* Less margin on mobile */
+          }}>
             <MotionButton
               variant="contained"
               color="primary"
-              size="large"
-              startIcon={<DataUsageIcon />}
+              size={isMobile ? "medium" : "large"} /* Smaller button on mobile */
+              fullWidth={isMobile}
+              startIcon={<DataUsageIcon fontSize={isMobile ? "small" : "medium"} />} /* Smaller icon on mobile */
               whileHover={{
-                scale: 1.05,
+                scale: isMobile ? 1.03 : 1.05, /* Subtler hover effect on mobile */
                 transition: { duration: 0.3 }
               }}
               whileTap={{ scale: 0.95 }}
@@ -154,25 +178,35 @@ const MetaMatrixApp = () => {
               style={{
                 background: hoverStates['installBtn']
                   ? `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`
-                  : undefined
+                  : undefined,
+                padding: isMobile ? '6px 16px' : undefined /* Custom padding for mobile */
               }}
               onClick={() => window.open('https://apps.shopify.com/metamatrix', '_blank')}
+              sx={{
+                fontSize: { xs: '0.8rem', md: '0.875rem' }, /* Smaller font on mobile */
+                height: { xs: '36px', md: '48px' } /* Reduced height on mobile */
+              }}
             >
               GET THE APP
             </MotionButton>
             <MotionButton
               variant="outlined"
               color="primary"
-              size="large"
+              size={isMobile ? "medium" : "large"} /* Smaller button on mobile */
+              fullWidth={isMobile}
               whileHover={{
                 borderColor: theme.palette.primary.dark,
                 color: theme.palette.primary.dark,
-                scale: 1.05,
+                scale: isMobile ? 1.03 : 1.05, /* Subtler hover effect on mobile */
                 transition: { duration: 0.3 }
               }}
               whileTap={{ scale: 0.95 }}
               onClick={() => window.open('https://youtu.be/1UMtbQG5Z1M', '_blank')}
-             
+              sx={{
+                fontSize: { xs: '0.8rem', md: '0.875rem' }, /* Smaller font on mobile */
+                height: { xs: '36px', md: '48px' }, /* Reduced height on mobile */
+                mt: { xs: 0.5, sm: 0 } /* Small margin top only on extra small screens */
+              }}
             >
               Watch Demo
             </MotionButton>
@@ -183,9 +217,14 @@ const MetaMatrixApp = () => {
   );
 
   const FeatureSection = () => (
-    <Box sx={{ py: 4 }}>
+    <Box sx={{ py: { xs: 2, md: 4 } }}>
       <Box role="tabpanel" hidden={activeTab !== 0} id="tabpanel-0">
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom
+        >
           {tabContents[activeTab].title}
         </Typography>
         <Typography variant="body1" paragraph>
@@ -203,7 +242,12 @@ const MetaMatrixApp = () => {
                   <CheckIcon color="success" />
                 </motion.div>
               </ListItemIcon>
-              <ListItemText primary={benefit} />
+              <ListItemText 
+                primary={benefit} 
+                primaryTypographyProps={{ 
+                  fontSize: isMobile ? '0.9rem' : 'inherit' 
+                }}
+              />
             </ListItem>
           ))}
         </List>
@@ -222,26 +266,32 @@ const MetaMatrixApp = () => {
     };
 
     return (
-      <Box sx={{ py: 4 }}>
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+      <Box sx={{ py: { xs: 2, md: 4 } }}>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom 
+          sx={{ mb: 3 }}
+        >
           How MetaMatrix Works
         </Typography>
         <Typography variant="body1" paragraph sx={{ mb: 4 }}>
-        Effortless bulk editing for a smarter Shopify store!
+          Effortless bulk editing for a smarter Shopify store!
         </Typography>
 
-        <Grid container spacing={6} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center">
           {[
-            { icon: <DataUsageIcon fontSize="large" />, title: '1. Connect Your Store', desc: 'Sync your Shopify store instantly for seamless product management.' },
-            { icon: <InsightsIcon fontSize="large" />, title: '2. Edit in Bulk', desc: 'Modify products, variants, pricing, and inventory with powerful bulk-editing tools.' },
-            { icon: <AutoGraphIcon fontSize="large" />, title: '3. Optimize & Automate', desc: 'Save time with automation, scheduled updates, and smart editing suggestions.' }
+            { icon: <DataUsageIcon fontSize={isMobile ? "medium" : "large"} />, title: '1. Connect Your Store', desc: 'Sync your Shopify store instantly for seamless product management.' },
+            { icon: <InsightsIcon fontSize={isMobile ? "medium" : "large"} />, title: '2. Edit in Bulk', desc: 'Modify products, variants, pricing, and inventory with powerful bulk-editing tools.' },
+            { icon: <AutoGraphIcon fontSize={isMobile ? "medium" : "large"} />, title: '3. Optimize & Automate', desc: 'Save time with automation, scheduled updates, and smart editing suggestions.' }
           ].map((item, index) => (
             <Grid key={index} item xs={12} md={4} sx={{ textAlign: 'center' }}>
               <MotionPaper
                 elevation={0}
                 sx={{
-                  width: 80,
-                  height: 80,
+                  width: isMobile ? 60 : 80,
+                  height: isMobile ? 60 : 80,
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -282,10 +332,15 @@ const MetaMatrixApp = () => {
                   {item.icon}
                 </motion.div>
               </MotionPaper>
-              <Typography variant="h6" component="h3" fontWeight="bold" gutterBottom>
+              <Typography 
+                variant={isMobile ? "subtitle1" : "h6"} 
+                component="h3" 
+                fontWeight="bold" 
+                gutterBottom
+              >
                 {item.title}
               </Typography>
-              <Typography variant="body2">
+              <Typography variant={isMobile ? "body2" : "body1"}>
                 {item.desc}
               </Typography>
             </Grid>
@@ -296,81 +351,77 @@ const MetaMatrixApp = () => {
   };
 
   const PricingSection = () => (
-    <Box sx={{ py: 4 }}>
-      <Typography variant="h6" component="div" sx={{ mb: 1, mt: 2 }}>
+    <Box sx={{ py: { xs: 2, md: 4 } }}>
+      <Typography
+        variant="h6"
+        component="div"
+        sx={{ mb: 1, mt: 2 }}
+      >
         Pricing Plans
       </Typography>
-
-      <Grid container spacing={3}>
+  
+      <Grid container spacing={3} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         {[
           {
             title: "Free Version",
             price: "$0",
-            // description: "For small businesses",
             features: [
               "10 product edits monthly",
               "Edit as much as you want",
               "Unlimited use in dev until launch",
-        
             ]
           },
           {
             title: "Basic(Monthly)",
             price: "$20",
-            // description: "For growing businesses",
             features: [
               "Unlimited Product per Task",
               "60-Day Bulk Edit History",
               "Scheduled Edits",
-              
             ],
-            
           },
           {
             title: "Advanced(Monthly)",
             price: "$40",
-            // description: "For large organizations",
             features: [
               "90-Day Bulk Edit History",
               "Scheduled exports for seamless reporting",
               "5 product rules",
-              
             ]
           },
           {
             title: "Pro(Monthly)",
             price: "$50",
-            // description: "For large organizations",
             features: [
               "180-Day Bulk Edit History",
               "10 inventory syncs for comprehensive",
               "Dedicated Account Manager",
-              
             ]
           },
           {
             title: "Advanced(Yearly)",
             price: "$100",
-            // description: "For large organizations",
             features: [
               "90-Day Bulk Edit History",
               "Scheduled exports for seamless reporting",
               "5 product rules",
-              
             ]
           }
         ].map((plan, index) => (
-          <Grid item xs={12} md={4} key={index}>
+          <Grid item xs={12} sm={6} md={4} key={index} sx={{ display: 'flex' }}>
             <MotionCard
               variant="outlined"
               sx={{
                 borderRadius: 2,
                 position: 'relative',
-                overflow: 'visible',
+                overflow: 'hidden', // Ensure content doesn't overflow if height is fixed
                 mb: 4,
-                height: '100%',
+                minHeight: '400px', // Adjust this value to your desired fixed height
+                display: 'flex',
+                flexDirection: 'column',
                 borderColor: plan.highlighted ? theme.palette.primary.main : undefined,
-                boxShadow: plan.highlighted ? `0px 5px 15px rgba(25, 118, 210, 0.2)` : undefined
+                boxShadow: plan.highlighted ? `0px 5px 15px rgba(25, 118, 210, 0.2)` : undefined,
+                flexGrow: 1,
               }}
               whileHover={{
                 boxShadow: '0px 10px 30px rgba(25, 118, 210, 0.2)',
@@ -410,24 +461,33 @@ const MetaMatrixApp = () => {
                   Most Popular
                 </Box>
               )}
-              <CardContent sx={{ p: 4 }}>
-                <Typography variant="h5" component="div" fontWeight="bold" gutterBottom>
+              <CardContent sx={{ p: { xs: 2, md: 4 }, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                <Typography
+                  variant={isMobile ? "h6" : "h5"}
+                  component="div"
+                  fontWeight="bold"
+                  gutterBottom
+                >
                   {plan.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
                   {plan.description}
                 </Typography>
-
+  
                 <Box sx={{ my: 3 }}>
-                  <Typography component="span" variant="h4" fontWeight="bold">
+                  <Typography
+                    component="span"
+                    variant={isMobile ? "h5" : "h4"}
+                    fontWeight="bold"
+                  >
                     {plan.price}
                   </Typography>
                   <Typography component="span" variant="subtitle1" color="text.secondary">
                     /month
                   </Typography>
                 </Box>
-
-                <List disablePadding>
+  
+                <List disablePadding sx={{ flexGrow: 1 }}>
                   {plan.features.map((feature, featureIndex) => (
                     <ListItem key={featureIndex} disablePadding disableGutters sx={{ py: 0.5 }}>
                       <ListItemIcon sx={{ minWidth: 36 }}>
@@ -435,20 +495,25 @@ const MetaMatrixApp = () => {
                           initial={{ scale: 1 }}
                           whileHover={{ scale: 1.2, color: theme.palette.primary.main }}
                         >
-                          <CheckIcon color="success" fontSize="small" />
+                          <CheckIcon sx={{ color: theme.palette.primary.main }} fontSize={isMobile ? "small" : "medium"} />
                         </motion.div>
                       </ListItemIcon>
-                      <ListItemText primary={feature} />
+                      <ListItemText
+                        primary={feature}
+                        primaryTypographyProps={{
+                          fontSize: isMobile ? '0.85rem' : 'inherit'
+                        }}
+                      />
                     </ListItem>
                   ))}
                 </List>
-
+  
                 <MotionButton
                   variant={plan.highlighted ? "contained" : "outlined"}
                   color="primary"
                   fullWidth
-                  size="large"
-                  sx={{ mt: 4 }}
+                  size={isMobile ? "medium" : "large"}
+                  sx={{ mt: 'auto' }} // Push the button to the bottom
                   whileHover={{
                     scale: 1.02,
                     transition: { duration: 0.3 }
@@ -503,8 +568,14 @@ const MetaMatrixApp = () => {
     ];
 
     return (
-      <Box sx={{ py: 4 }}>
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+      <Box sx={{ py: { xs: 2, md: 4 } }}>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom 
+          sx={{ mb: 3 }}
+        >
           Frequently Asked Questions
         </Typography>
 
@@ -512,169 +583,89 @@ const MetaMatrixApp = () => {
           {faqs.map((faq, index) => (
             <MotionBox
               key={index}
-              sx={{ mb: 3 }}
+              sx={{ 
+                mb: 3,
+                px: isMobile ? 1 : 2 
+              }}
               initial={{ opacity: 0.9 }}
               whileHover={{
                 backgroundColor: 'rgba(25, 118, 210, 0.03)',
                 borderRadius: '8px',
-                padding: '16px',
-                marginLeft: '-16px',
-                marginRight: '-16px',
+                padding: isMobile ? '8px' : '16px',
+                marginLeft: isMobile ? '-8px' : '-16px',
+                marginRight: isMobile ? '-8px' : '-16px',
                 x: 0,
                 borderLeft: `3px solid ${theme.palette.primary.main}`
               }}
               transition={{ duration: 0.2 }}
             >
-              <Typography variant="h6" component="h3" fontWeight="bold" gutterBottom>
+              <Typography 
+                variant={isMobile ? "subtitle1" : "h6"} 
+                component="h3" 
+                fontWeight="bold" 
+                gutterBottom
+              >
                 {faq.question}
               </Typography>
-              <Typography variant="body1" color="text.secondary">
+              <Typography 
+                variant={isMobile ? "body2" : "body1"} 
+                color="text.secondary"
+              >
                 {faq.answer}
               </Typography>
               {index < faqs.length - 1 && <Divider sx={{ mt: 3 }} />}
             </MotionBox>
           ))}
         </Box>
-
-        {/* <Box sx={{ mt: 4, textAlign: 'center' }}>
-          <Typography variant="body1" paragraph>
-            Still have questions? Our data experts are here to help.
-          </Typography>
-          <MotionButton
-            variant="outlined"
-            color="primary"
-            sx={{ mx: 1 }}
-            whileHover={{
-              borderColor: theme.palette.primary.dark,
-              color: theme.palette.primary.dark,
-              scale: 1.05
-            }}
-            whileTap={{ scale: 0.95 }}
-            animate={{
-              borderColor: [
-                theme.palette.primary.main,
-                theme.palette.primary.light,
-                theme.palette.primary.main
-              ],
-              color: [
-                theme.palette.primary.main,
-                theme.palette.primary.light,
-                theme.palette.primary.main
-              ],
-              transition: {
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }
-            }}
-          >
-            Contact Support
-          </MotionButton>
-          <MotionButton
-            variant="text"
-            color="primary"
-            sx={{ mx: 1 }}
-            whileHover={{
-              color: theme.palette.primary.dark,
-              scale: 1.05
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Read Documentation
-          </MotionButton>
-        </Box> */}
       </Box>
     );
   };
 
-//   const TestimonialsSection = () => {
-//     const testimonials = [
-//       {
-//         name: "Sarah Johnson",
-//         company: "Boutique Apparel",
-//         quote: "MetaMatrix transformed how we understand our business. We identified underperforming product lines and optimized our inventory, increasing our profit margin by 22% in just three months.",
-//         rating: 5
-//       },
-//       {
-//         name: "Michael Chen",
-//         company: "Tech Gadgets Direct",
-//         quote: "The predictive analytics feature has been a game-changer for our seasonal planning. We can now accurately forecast demand and adjust our marketing spend accordingly.",
-//         rating: 5
-//       },
-//       {
-//         name: "Jessica Williams",
-//         company: "Organic Home Goods",
-//         quote: "I was intimidated by data analytics before, but MetaMatrix makes it so simple. The visualizations help me understand trends at a glance, and the AI recommendations have directly improved our conversion rates.",
-//         rating: 4.5
-//       }
-//     ];
-
-//     return (
-//       <Box sx={{ py: 4 }}>
-//         <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
-//           What Our Customers Say
-//         </Typography>
-
-//         <Grid container spacing={3}>
-//           {testimonials.map((testimonial, index) => (
-//             <Grid item xs={12} md={4} key={index}>
-//               <MotionCard
-//                 variant="outlined"
-//                 sx={{ height: '100%', borderRadius: 2, p: 2 }}
-//                 whileHover={{
-//                   boxShadow: '0px 5px 15px rgba(25, 118, 210, 0.2)',
-//                   y: -5
-//                 }}
-//                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
-//               >
-//                 <CardContent>
-//                   <Typography variant="body1" paragraph sx={{ fontStyle: 'italic', mb: 2 }}>
-//                     "{testimonial.quote}"
-//                   </Typography>
-//                   <Box sx={{ mt: 'auto' }}>
-//                     <Typography variant="subtitle1" fontWeight="bold">
-//                       {testimonial.name}
-//                     </Typography>
-//                     <Typography variant="body2" color="text.secondary" gutterBottom>
-//                       {testimonial.company}
-//                     </Typography>
-//                     <Rating value={testimonial.rating} precision={0.5} readOnly />
-//                   </Box>
-//                 </CardContent>
-//               </MotionCard>
-//             </Grid>
-//           ))}
-//         </Grid>
-//       </Box>
-//     );
-//   };
-
   const CallToActionSection = () => (
     <Box
       sx={{
-        py: 5,
+        py: { xs: 3, md: 5 },
+        px: { xs: 2, md: 3 },
         borderRadius: 2,
         mb: 4,
         bgcolor: theme.palette.primary.main,
         position: 'relative'
       }}
     >
-      <Container>
-        <Grid container spacing={4} alignItems="center">
+      <Container maxWidth={isMobile ? "xs" : "lg"}>
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} md={8}>
-            <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom color="white">
+            <Typography 
+              variant={isMobile ? "h5" : "h4"} 
+              component="h2" 
+              fontWeight="bold" 
+              gutterBottom 
+              color="white"
+            >
               Ready to Transform Your Data into Insights?
             </Typography>
-            <Typography variant="body1" sx={{ mb: 3 }} color="white">
+            <Typography 
+              variant={isMobile ? "body2" : "body1"} 
+              sx={{ mb: 3 }} 
+              color="white"
+            >
               Join thousands of successful businesses using MetaMatrix to unlock the full potential of their data. Start your free 14-day trial today.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
-            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+          <Grid item xs={12} md={4} sx={{ 
+            display: 'flex', 
+            justifyContent: { xs: 'center', md: 'flex-end' } 
+          }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: { xs: 'column', sm: 'row' }, 
+              gap: 2,
+              width: { xs: '100%', sm: 'auto' }
+            }}>
               <Button
                 variant="contained"
-                size="large"
-                // startIcon={<BarChartIcon />}
+                size={isMobile ? "medium" : "large"}
+                fullWidth={isMobile}
                 sx={{
                   bgcolor: 'white',
                   color: 'primary.main',
@@ -683,24 +674,9 @@ const MetaMatrixApp = () => {
                   }
                 }}
                 onClick={() => window.open('https://youtu.be/1UMtbQG5Z1M', '_blank')}
-                >
-               WATCH DEMO
-              </Button>
-              {/* <Button
-                variant="outlined"
-                color="inherit"
-                size="large"
-                sx={{
-                  borderColor: 'white',
-                  color: 'white',
-                  '&:hover': {
-                    borderColor: 'grey.300',
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                  }
-                }}
               >
-                Watch Demo
-              </Button> */}
+                WATCH DEMO
+              </Button>
             </Box>
           </Grid>
         </Grid>
@@ -727,7 +703,13 @@ const MetaMatrixApp = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
         <Header />
-        <Container sx={{ py: 4 }}>
+        <Container 
+          sx={{ 
+            py: { xs: 2, md: 4 },
+            px: { xs: 1, md: 3 }
+          }}
+          maxWidth={isMobile ? "xs" : "lg"}
+        >
           <MotionPaper
             sx={{ p: 0, overflow: 'hidden' }}
             initial={{ opacity: 0, y: 20 }}
@@ -739,8 +721,8 @@ const MetaMatrixApp = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                px: 3,
-                py: 2,
+                px: { xs: 2, md: 3 },
+                py: { xs: 1, md: 2 },
                 borderBottom: 1,
                 borderColor: 'divider'
               }}
@@ -753,10 +735,10 @@ const MetaMatrixApp = () => {
                   sx={{
                     bgcolor: 'primary.main',
                     color: 'white',
-                    p: 1,
+                    p: isMobile ? 0.5 : 1,
                     borderRadius: 1,
                     display: 'flex',
-                    mr: 2
+                    mr: { xs: 1, md: 2 }
                   }}
                   whileHover={{
                     rotate: [0, -10, 10, -10, 0],
@@ -790,89 +772,131 @@ const MetaMatrixApp = () => {
                       }
                     }}
                   >
-                    <BarChartIcon />
+                    <BarChartIcon fontSize={isMobile ? "small" : "medium"} />
                   </motion.div>
                 </MotionBox>
-                <Typography variant="h6" component="div">
+                <Typography 
+                  variant={isMobile ? "subtitle1" : "h6"} 
+                  component="div"
+                >
                   MetaMatrix
                 </Typography>
               </Box>
-              {/* <MotionButton
-                variant="contained"
-                color="primary"
-                whileHover={{
-                  scale: 1.05,
-                  transition: { duration: 0.3 }
-                }}
-                whileTap={{ scale: 0.95 }}
-                animate={{
-                  backgroundImage: [
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`,
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`
-                  ],
-                  boxShadow: [
-                    '0px 3px 5px rgba(25, 118, 210, 0.2)',
-                    '0px 3px 10px rgba(25, 118, 210, 0.4)',
-                    '0px 3px 5px rgba(25, 118, 210, 0.2)'
-                  ],
-                  transition: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }
-                }}
-              >
-               GET THE APP
-              </MotionButton> */}
             </MotionBox>
 
-            <Box sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                {['hero', 'features', 'how-it-works', 'pricing', 'faq'].map((page) => (
-                  <MotionButton
-                    key={page}
-                    color="inherit"
-                    onClick={() => setActivePage(page)}
-                    initial={activePage === page ? "active" : "inactive"}
-                    animate={activePage === page ? "active" : "inactive"}
-                    whileHover="hover"
-                    variants={NavigationButtonVariants}
-                    sx={{ mx: 1 }}
-                  >
-                    {page === 'hero' ? 'Overview' :
-                      page === 'features' ? 'Features' :
-                        page === 'how-it-works' ? 'How It Works' :
-                          page === 'pricing' ? 'Pricing' :
-                          page === 'faq' ? 'FAQ' : 'Overview'}
-                            
-                  </MotionButton>
-                ))}
+            <Box sx={{ p: { xs: 2, md: 3 } }}>
+              {/* Navigation tabs - improved scrollable navigation */}
+              <Box sx={{ 
+                position: 'relative',
+                mb: 4,
+                width: '100%'
+              }}>
+                {/* Fade indicator for horizontal scroll on small screens */}
+                {isMobile && (
+                  <>
+                    <Box 
+                      sx={{ 
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '20px',
+                        background: 'linear-gradient(to right, white, transparent)',
+                        zIndex: 1,
+                        pointerEvents: 'none'
+                      }}
+                    />
+                    <Box 
+                      sx={{ 
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '20px',
+                        background: 'linear-gradient(to left, white, transparent)',
+                        zIndex: 1,
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </>
+                )}
+                
+                {/* Scrollable container with visual indicator */}
+                <Box 
+                  sx={{ 
+                    display: 'flex',
+                    width: '100%',
+                    justifyContent: { xs: 'flex-start', md: 'center' },
+                    overflowX: 'auto',
+                    pb: 1, // Add padding bottom for scrollbar space
+                    '&::-webkit-scrollbar': { 
+                      height: '4px'
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: '#f1f1f1',
+                      borderRadius: '10px'
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: theme.palette.primary.light,
+                      borderRadius: '10px'
+                    }
+                  }}
+                >
+                  <Box sx={{ 
+                    display: 'flex',
+                    px: { xs: 2, md: 0 }, // Add padding for mobile to prevent button cuts
+                    minWidth: 'fit-content' // Ensure all buttons are visible
+                  }}>
+                    {['hero', 'features', 'how-it-works', 'pricing', 'faq'].map((page) => (
+                      <MotionButton
+                        key={page}
+                        color="inherit"
+                        onClick={() => setActivePage(page)}
+                        variant="text"
+                        sx={{ 
+                          mx: 0.5,
+                          py: 1,
+                          textTransform: 'capitalize',
+                          fontWeight: activePage === page ? 'bold' : 'normal',
+                          minWidth: 'auto',
+                          whiteSpace: 'nowrap' // Prevent button text wrapping
+                        }}
+                        variants={NavigationButtonVariants}
+                        initial="inactive"
+                        animate={activePage === page ? "active" : "inactive"}
+                        whileHover="hover"
+                        transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                      >
+                        {page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                      </MotionButton>
+                    ))}
+                  </Box>
+                </Box>
               </Box>
 
+              {/* Conditional rendering of sections based on active page */}
               <AnimatePresence mode="wait">
-                <motion.div
+                <MotionBox
                   key={activePage}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
                   {activePage === 'hero' && <HeroSection />}
                   {activePage === 'features' && <FeatureSection />}
                   {activePage === 'how-it-works' && <HowItWorksSection />}
                   {activePage === 'pricing' && <PricingSection />}
-                  {/* {activePage === 'testimonials' && <TestimonialsSection />} */}
                   {activePage === 'faq' && <FAQSection />}
-                </motion.div>
+                </MotionBox>
               </AnimatePresence>
 
-              {/* Add the CTA section to the bottom of specific pages if desired */}
-              {(activePage === 'hero' || activePage === 'features' || activePage === 'how-it-works') && (
-                <CallToActionSection />
-              )}
+              {/* Call to action section that's always visible */}
+              <CallToActionSection />
             </Box>
           </MotionPaper>
+
+          
         </Container>
         <Footer />
       </Box>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   AppBar, Box, Button, Card, CardContent, Container, Divider,
   Grid, IconButton, Paper, Tab, Tabs, Typography, List,
-  ListItem, ListItemIcon, ListItemText, Rating
+  ListItem, ListItemIcon, ListItemText, Rating, useMediaQuery
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -10,8 +10,9 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import CheckIcon from '@mui/icons-material/Check';
 import ShareIcon from '@mui/icons-material/Share';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import MenuIcon from '@mui/icons-material/Menu';
 import Header from '../../components/Header';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../../components/Footer';
 
@@ -47,8 +48,7 @@ const theme = createTheme({
       bounce: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
     }
   }
-  });
-
+});
 
 // Create motion components with enhanced color transitions
 const MotionBox = motion(Box);
@@ -60,6 +60,21 @@ const Tap2shareApp = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activePage, setActivePage] = useState('hero');
   const [hoverStates, setHoverStates] = useState({});
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  
+  // References to section elements for scrolling
+  const sectionRefs = {
+    hero: useRef(null),
+    features: useRef(null),
+    'how-it-works': useRef(null),
+    pricing: useRef(null),
+    faq: useRef(null),
+    cta: useRef(null)
+  };
+  
+  // Check if screen is mobile
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -70,6 +85,20 @@ const Tap2shareApp = () => {
       ...prev,
       [id]: isHovering
     }));
+  };
+  
+  // Function to handle navigation and scrolling
+  const handleNavigation = (page) => {
+    setActivePage(page);
+    setMobileNavOpen(false);
+    
+    // Smooth scroll to the section
+    if (sectionRefs[page] && sectionRefs[page].current) {
+      sectionRefs[page].current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start' 
+      });
+    }
   };
 
   const tabContents = {
@@ -116,16 +145,23 @@ const Tap2shareApp = () => {
   };
 
   const HeroSection = () => (
-    <Box sx={{ py: 4 }}>
+    <Box sx={{ py: 4 }} ref={sectionRefs.hero}>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
-          <Typography variant="h3" component="h1" fontWeight="bold" gutterBottom>
-            Boost Your Sales Through Tap2share  
+          <Typography 
+            variant={isMobile ? "h4" : "h3"} 
+            component="h1" 
+            fontWeight="bold" 
+            gutterBottom
+            sx={{ fontSize: { xs: '1.9rem', sm: '1.8rem', md: '3.4rem' } }} /* Custom font size scaling */
+
+          >
+            Boost Your Sales Through Tap2share
           </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 4 }}>
+          <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: isMobile ? 2 : 4 }}>
             Tap2share for Shopify makes it simple for your customers to share their favorite products on social media, driving traffic and increasing conversions for your Shopify store.
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+          <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 2, mb: 4 }}>
             <MotionButton
               variant="contained"
               color="primary"
@@ -156,10 +192,8 @@ const Tap2shareApp = () => {
                   ? `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`
                   : undefined
               }}
-              // disable buton
-
+              fullWidth={isMobile}
               disabled={true}
-              // fade button
               sx={{ opacity: 0.6 }}
             >
               Install App
@@ -176,6 +210,7 @@ const Tap2shareApp = () => {
                 transition: { duration: 0.3 }
               }}
               whileTap={{ scale: 0.95 }}
+              fullWidth={isMobile}
             >
               Watch Demo
             </MotionButton>
@@ -186,9 +221,14 @@ const Tap2shareApp = () => {
   );
 
   const FeatureSection = () => (
-    <Box sx={{ py: 4 }}>
+    <Box sx={{ py: 4 }} ref={sectionRefs.features}>
       <Box role="tabpanel" hidden={activeTab !== 0} id="tabpanel-0">
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom
+        >
           {tabContents[activeTab].title}
         </Typography>
         <Typography variant="body1" paragraph>
@@ -220,31 +260,37 @@ const Tap2shareApp = () => {
       hover: {
         backgroundColor: theme.palette.primary.main,
         scale: 1.1,
-        boxShadow: '0px 5px 15px rgba(220, 20, 60, 0.4)'
+        boxShadow: '0px 5px 15px rgba(0, 128, 128, 0.4)'
       }
     };
 
     return (
-      <Box sx={{ py: 4 }}>
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+      <Box sx={{ py: 4 }} ref={sectionRefs['how-it-works']}>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom 
+          sx={{ mb: 3 }}
+        >
           How Tap2share for Shopify Works
         </Typography>
         <Typography variant="body1" paragraph sx={{ mb: 4 }}>
           Get up and running in minutes with our simple installation process
         </Typography>
 
-        <Grid container spacing={6} justifyContent="center">
+        <Grid container spacing={isMobile ? 3 : 6} justifyContent="center">
           {[
             { icon: <ShoppingCartIcon fontSize="large" />, title: '1. Install the App', desc: 'Add Tap2share to your Shopify store with just one click' },
             { icon: <BoltIcon fontSize="large" />, title: '2. Customize Settings', desc: 'Choose which products can be shared and how they appear' },
             { icon: <RefreshIcon fontSize="large" />, title: '3. Increase Sales', desc: 'Watch as customers share products and drive new traffic to your store' }
           ].map((item, index) => (
-            <Grid key={index} item xs={12} md={4} sx={{ textAlign: 'center' }}>
+            <Grid key={index} item xs={12} sm={6} md={4} sx={{ textAlign: 'center' }}>
               <MotionPaper
                 elevation={0}
                 sx={{
-                  width: 80,
-                  height: 80,
+                  width: isMobile ? 60 : 80,
+                  height: isMobile ? 60 : 80,
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -258,7 +304,7 @@ const Tap2shareApp = () => {
                 animate={{
                   backgroundColor: [
                     theme.palette.primary.light,
-                    `rgba(255, 77, 109, 0.8)`,
+                    `linear-gradient(135deg, #0e3b39 0%,rgb(24, 193, 185) 50%,rgba(14, 59, 57, 0.47) 100%)`,
                     theme.palette.primary.light,
                   ],
                   transition: {
@@ -299,7 +345,7 @@ const Tap2shareApp = () => {
   };
 
   const PricingSection = () => (
-    <Box sx={{ py: 4 }}>
+    <Box sx={{ py: 4 }} ref={sectionRefs.pricing}>
       <Typography variant="h6" component="div" sx={{ mb: 1, mt: 2 }}>
         Get Started
       </Typography>
@@ -310,7 +356,9 @@ const Tap2shareApp = () => {
           borderRadius: 2,
           position: 'relative',
           overflow: 'visible',
-          mb: 4
+          mb: 4,
+          maxWidth: isMobile ? '100%' : '500px',
+          mx: 'auto'
         }}
         whileHover={{
           boxShadow: '0px 10px 30px rgba(220, 20, 60, 0.2)',
@@ -331,7 +379,7 @@ const Tap2shareApp = () => {
           }
         }}
       >
-        <CardContent sx={{ p: 4 }}>
+        <CardContent sx={{ p: isMobile ? 2 : 4 }}>
           <Typography variant="h5" component="div" fontWeight="bold" gutterBottom>
             Basic
           </Typography>
@@ -426,8 +474,14 @@ const Tap2shareApp = () => {
     ];
 
     return (
-      <Box sx={{ py: 4 }}>
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+      <Box sx={{ py: 4 }} ref={sectionRefs.faq}>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom 
+          sx={{ mb: isMobile ? 2 : 3 }}
+        >
           Frequently Asked Questions
         </Typography>
 
@@ -440,72 +494,24 @@ const Tap2shareApp = () => {
               whileHover={{
                 backgroundColor: 'rgba(220, 20, 60, 0.03)',
                 borderRadius: '8px',
-                padding: '16px',
-                marginLeft: '-16px',
-                marginRight: '-16px',
+                padding: isMobile ? '12px' : '16px',
+                marginLeft: isMobile ? '-12px' : '-16px',
+                marginRight: isMobile ? '-12px' : '-16px',
                 x: 0,
                 borderLeft: `3px solid ${theme.palette.primary.main}`
               }}
               transition={{ duration: 0.2 }}
             >
-              <Typography variant="h6" component="h3" fontWeight="bold" gutterBottom>
+              <Typography variant={isMobile ? "subtitle1" : "h6"} component="h3" fontWeight="bold" gutterBottom>
                 {faq.question}
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 {faq.answer}
               </Typography>
-              {index < faqs.length - 1 && <Divider sx={{ mt: 3 }} />}
+              {index < faqs.length - 1 && <Divider sx={{ mt: isMobile ? 2 : 3 }} />}
             </MotionBox>
           ))}
         </Box>
-
-        {/* <Box sx={{ mt: 4, textAlign: 'center' }}>
-          <Typography variant="body1" paragraph>
-            Still have questions? We're here to help.
-          </Typography>
-          <MotionButton
-            variant="outlined"
-            color="primary"
-            sx={{ mx: 1 }}
-            whileHover={{
-              borderColor: theme.palette.primary.dark,
-              color: theme.palette.primary.dark,
-              scale: 1.05
-            }}
-            whileTap={{ scale: 0.95 }}
-            animate={{
-              borderColor: [
-                theme.palette.primary.main,
-                theme.palette.primary.light,
-                theme.palette.primary.main
-              ],
-              color: [
-                theme.palette.primary.main,
-                theme.palette.primary.light,
-                theme.palette.primary.main
-              ],
-              transition: {
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }
-            }}
-          >
-            Contact Support
-          </MotionButton>
-          <MotionButton
-            variant="text"
-            color="primary"
-            sx={{ mx: 1 }}
-            whileHover={{
-              color: theme.palette.primary.dark,
-              scale: 1.05
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Read Documentation
-          </MotionButton>
-        </Box> */}
       </Box>
     );
   };
@@ -513,63 +519,49 @@ const Tap2shareApp = () => {
   const CallToActionSection = () => (
     <Box
       sx={{
-        py: 5,
+        py: isMobile ? 3 : 5,
         borderRadius: 2,
         mb: 4,
         bgcolor: theme.palette.primary.main,
         position: 'relative'
       }}
+      ref={sectionRefs.cta}
     >
       <Container>
-        <Grid container spacing={4} alignItems="center">
+        <Grid container spacing={isMobile ? 2 : 4} alignItems="center">
           <Grid item xs={12} md={8}>
-            <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom color="white">
+            <Typography 
+              variant={isMobile ? "h5" : "h4"} 
+              component="h2" 
+              fontWeight="bold" 
+              gutterBottom 
+              color="white"
+            >
               Ready to Boost Your Social Presence?
             </Typography>
             <Typography variant="body1" sx={{ mb: 3 }} color="white">
               Join thousands of successful merchants who use Tap2share for Shopify to drive traffic, increase engagement, and boost sales.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
-            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
-              <Button
-                variant="contained"
-                size="large"
-                // startIcon={<ShareIcon />}
-                sx={{
-                  bgcolor: 'white',
-                  color: 'primary.main',
-                  '&:hover': {
-                    bgcolor: 'grey.100',
-                  }
-                }}
-                href='https://youtu.be/916_bQB-xgI'
-              >
-                WATCH DEMO
-              </Button>
-              {/* <Button
-                variant="outlined"
-                color="inherit"
-                size="large"
-                sx={{
-                  borderColor: 'white',
-                  color: 'white',
-                  '&:hover': {
-                    borderColor: 'grey.300',
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                  }
-                }}
-                href='https://youtu.be/916_bQB-xgI'
-              >
-                Watch Demo
-              </Button> */}
-
-            </Box>
+          <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' } }}>
+            <Button
+              variant="contained"
+              size="large"
+              sx={{
+                bgcolor: 'white',
+                color: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'grey.100',
+                }
+              }}
+              href='https://youtu.be/916_bQB-xgI'
+            >
+              WATCH DEMO
+            </Button>
           </Grid>
         </Grid>
       </Container>
     </Box>
-
   );
 
   // Define navigation button animation
@@ -587,11 +579,215 @@ const Tap2shareApp = () => {
     }
   };
 
+  // Mobile Navigation Drawer Component
+  const MobileNavigation = () => (
+    <MotionBox
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ 
+        height: mobileNavOpen ? 'auto' : 0,
+        opacity: mobileNavOpen ? 1 : 0
+      }}
+      transition={{ duration: 0.3 }}
+      sx={{ 
+        overflow: 'hidden',
+        borderBottom: mobileNavOpen ? 1 : 0,
+        borderColor: 'divider',
+        mb: mobileNavOpen ? 2 : 0
+      }}
+    >
+      <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
+        {['hero', 'features', 'how-it-works', 'pricing', 'faq', 'cta'].map((page) => (
+          <MotionButton
+            key={page}
+            color="inherit"
+            onClick={() => handleNavigation(page)}
+            initial={activePage === page ? "active" : "inactive"}
+            animate={activePage === page ? "active" : "inactive"}
+            whileHover="hover"
+            variants={NavigationButtonVariants}
+            sx={{ py: 1, justifyContent: 'flex-start' }}
+          >
+            {page === 'hero' ? 'Home' :
+              page === 'features' ? 'Features' :
+                page === 'how-it-works' ? 'How It Works' :
+                  page === 'pricing' ? 'Pricing' :
+                    page === 'faq' ? 'FAQ' : 'Get Started'}
+          </MotionButton>
+        ))}
+      </Box>
+    </MotionBox>
+  );
+  
+  // Horizontal Scrolling Tab Navigation for Mobile
+  const MobileTabNavigation = () => (
+    <Box 
+      className="scroll-nav-container"
+      sx={{ 
+        overflowX: 'auto',
+        display: 'flex',
+        pb: 1.5,
+        mb: 2,
+        borderBottom: '1px solid rgba(0,0,0,0.05)',
+        px: 1
+      }}
+    >
+      {['hero', 'features', 'how-it-works', 'pricing', 'faq', 'cta'].map((page) => (
+        <Box
+          key={page}
+          sx={{ 
+            minWidth: 'auto',
+            px: 2,
+            py: 1,
+            mr: 1,
+            // borderRadius: '20px',
+            // backgroundColor: activePage === page ? theme.palette.primary.main : 'transparent',
+            color: activePage === page ? 'white' : 'text.primary',
+            fontWeight: activePage === page ? 'bold' : 'normal',
+            fontSize: '0.875rem',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            // border: activePage === page ? 'none' : '1px solid rgba(0,0,0,0.12)',
+            transition: 'all 0.3s ease'
+          }}
+          onClick={() => handleNavigation(page)}
+        >
+          {page === 'hero' ? 'Home' :
+            page === 'features' ? 'Features' :
+              page === 'how-it-works' ? 'How It Works' :
+                page === 'pricing' ? 'Pricing' :
+                  page === 'faq' ? 'FAQ' : 'Get Started'}
+        </Box>
+      ))}
+    </Box>
+  );
+
+  // Desktop Navigation Component
+  const DesktopNavigation = () => (
+    <Box 
+      className="scroll-nav-container"
+      sx={{ 
+        display: 'flex', 
+        justifyContent: 'flex-start',
+        mb: 2,
+        overflowX: 'auto',
+        pb: 1.5,
+        position: 'relative',
+        borderBottom: '1px solid rgba(0,0,0,0.05)',
+        px: 1
+      }}>
+      {['hero', 'features', 'how-it-works', 'pricing', 'faq', 'cta'].map((page) => (
+        <MotionButton
+          key={page}
+          color="inherit"
+          onClick={() => handleNavigation(page)}
+          initial={activePage === page ? "active" : "inactive"}
+          animate={activePage === page ? "active" : "inactive"}
+          whileHover="hover"
+          variants={NavigationButtonVariants}
+          sx={{ 
+            mx: isTablet ? 0.5 : 1,
+            whiteSpace: 'nowrap',
+            px: isTablet ? 1 : 2
+          }}
+        >
+          {page === 'hero' ? 'Home' :
+            page === 'features' ? 'Features' :
+              page === 'how-it-works' ? 'How It Works' :
+                page === 'pricing' ? 'Pricing' :
+                  page === 'faq' ? 'FAQ' : 'Get Started'}
+        </MotionButton>
+      ))}
+    </Box>
+  );
+
+  // Custom scrolling functionality
+  useEffect(() => {
+    // Add scroll indicators and handle scroll behavior
+    const handleScroll = () => {
+      const navContainers = document.querySelectorAll('.scroll-nav-container');
+      
+      navContainers.forEach(container => {
+        // Show shadows based on scroll position
+        const isScrollable = container.scrollWidth > container.clientWidth;
+        const isScrolledToEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+        const isScrolledFromStart = container.scrollLeft > 10;
+        
+        container.classList.toggle('show-right-shadow', isScrollable && !isScrolledToEnd);
+        container.classList.toggle('show-left-shadow', isScrolledFromStart);
+      });
+    };
+
+    // Initial call to set up shadows
+    setTimeout(handleScroll, 100);
+    
+    // Add scroll event listeners
+    const navContainers = document.querySelectorAll('.scroll-nav-container');
+    navContainers.forEach(container => {
+      container.addEventListener('scroll', handleScroll);
+    });
+
+    // Clean up
+    return () => {
+      navContainers.forEach(container => {
+        container.removeEventListener('scroll', handleScroll);
+      });
+    };
+  }, [activePage]);
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
         <Header />
-        <Container sx={{ py: 4 }}>
+        <Container sx={{ py: isMobile ? 2 : 4, px: isMobile ? 2 : 3 }}>
+          <style jsx global>{`
+            .scroll-nav-container {
+              position: relative;
+              scrollbar-width: thin;
+              -ms-overflow-style: -ms-autohiding-scrollbar;
+            }
+            
+            .scroll-nav-container::-webkit-scrollbar {
+              height: 8px;
+            }
+            
+            .scroll-nav-container::-webkit-scrollbar-track {
+              background: #f1f1f1;
+              border-radius: 10px;
+            }
+            
+            .scroll-nav-container::-webkit-scrollbar-thumb {
+              background: #0e3b39;
+              border-radius: 10px;
+            }
+            
+            .scroll-nav-container::-webkit-scrollbar-thumb:hover {
+              background: #082624;
+            }
+            
+            .show-right-shadow::after {
+              content: '';
+              position: absolute;
+              top: 0;
+              right: 0;
+              height: 100%;
+              width: 30px;
+              background: linear-gradient(to right, transparent, rgba(255,255,255,0.9));
+              pointer-events: none;
+            }
+            
+            .show-left-shadow::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              height: 100%;
+              width: 30px;
+              background: linear-gradient(to left, transparent, rgba(255,255,255,0.9));
+              pointer-events: none;
+              z-index: 1;
+            }
+          `}</style>
+          
           <MotionPaper
             sx={{ p: 0, overflow: 'hidden' }}
             initial={{ opacity: 0, y: 20 }}
@@ -603,7 +799,7 @@ const Tap2shareApp = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                px: 3,
+                px: isMobile ? 2 : 3,
                 py: 2,
                 borderBottom: 1,
                 borderColor: 'divider'
@@ -657,62 +853,27 @@ const Tap2shareApp = () => {
                     <ShareIcon />
                   </motion.div>
                 </MotionBox>
-                <Typography variant="h6" component="div">
+                <Typography variant={isMobile ? "subtitle1" : "h6"} component="div">
                   Tap2share for Shopify
                 </Typography>
               </Box>
-              {/* <MotionButton
-                variant="contained"
-                color="primary"
-                href='https://admin.shopify.com/store/demo-zen-store/apps/customizer-39?app_load_id=ea3ddb76-72ce-4436-82c1-f57b35cb2e68&link_source=search'
-                whileHover={{
-                  scale: 1.05,
-                  transition: { duration: 0.3 }
-                }}
-                whileTap={{ scale: 0.95 }}
-                animate={{
-                  backgroundImage: [
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`,
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`
-                  ],
-                  boxShadow: [
-                    '0px 3px 5px rgba(220, 20, 60, 0.2)',
-                    '0px 3px 10px rgba(220, 20, 60, 0.4)',
-                    '0px 3px 5px rgba(220, 20, 60, 0.2)'
-                  ],
-                  transition: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }
-                }}
-              >
-                Get the App
-              </MotionButton> */}
+              
+              {isMobile && (
+                <IconButton 
+                  onClick={() => setMobileNavOpen(!mobileNavOpen)}
+                  color="primary"
+                >
+                  <MenuIcon />
+                </IconButton>
+              )}
             </MotionBox>
 
-            <Box sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                {['hero', 'features', 'how-it-works', 'pricing', 'faq', 'cta'].map((page) => (
-                  <MotionButton
-                    key={page}
-                    color="inherit"
-                    onClick={() => setActivePage(page)}
-                    initial={activePage === page ? "active" : "inactive"}
-                    animate={activePage === page ? "active" : "inactive"}
-                    whileHover="hover"
-                    variants={NavigationButtonVariants}
-                    sx={{ mx: 1 }}
-                  >
-                    {page === 'hero' ? 'Hero' :
-                      page === 'features' ? 'Features' :
-                        page === 'how-it-works' ? 'How It Works' :
-                          page === 'pricing' ? 'Pricing' :
-                            page === 'faq' ? 'FAQ' : 'Get Started'}
-                  </MotionButton>
-                ))}
-              </Box>
+            {/* Mobile Navigation - Vertical Dropdown */}
+            {isMobile && mobileNavOpen && <MobileNavigation />}
+
+            <Box sx={{ p: isMobile ? 2 : 3 }}>
+              {/* Horizontal Scrolling Navigation */}
+              {isMobile ? <MobileTabNavigation /> : <DesktopNavigation />}
 
               <AnimatePresence mode="wait">
                 <motion.div

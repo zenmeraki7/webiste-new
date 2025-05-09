@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar, Box, Button, Card, CardContent, Container, Divider,
   Grid, IconButton, Paper, Tab, Tabs, Typography, List,
-  ListItem, ListItemIcon, ListItemText, Rating
+  ListItem, ListItemIcon, ListItemText, Rating, useMediaQuery
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StorefrontIcon from '@mui/icons-material/Storefront';
@@ -11,7 +11,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Header from '../../components/Header';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import Footer from '../../components/Footer';
 
@@ -47,7 +47,7 @@ const theme = createTheme({
       bounce: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
     }
   }
-  });
+});
 
 // Create motion components with enhanced color transitions
 const MotionBox = motion(Box);
@@ -59,6 +59,10 @@ const MultiVendorApp = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activePage, setActivePage] = useState('hero');
   const [hoverStates, setHoverStates] = useState({});
+  
+  // Add media query hooks for responsive design
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -69,6 +73,17 @@ const MultiVendorApp = () => {
       ...prev,
       [id]: isHovering
     }));
+  };
+
+  // Scroll to section when navigation item is clicked
+  const handleNavClick = (page) => {
+    setActivePage(page);
+    
+    // Scroll into view if element exists
+    const element = document.getElementById(page);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const tabContents = {
@@ -115,83 +130,44 @@ const MultiVendorApp = () => {
   };
 
   const HeroSection = () => (
-    <Box sx={{ py: 4 }}>
-      <Grid container spacing={4}>
+    <Box id="hero" sx={{ py: isMobile ? 2 : 4 }}>
+      <Grid container spacing={isMobile ? 2 : 4}>
         <Grid item xs={12} md={6}>
-          <Typography variant="h3" component="h1" fontWeight="bold" gutterBottom>
+          <Typography 
+            variant={isMobile ? "h4" : "h3"} 
+            component="h1" 
+            fontWeight="bold" 
+            gutterBottom
+            sx={{ fontSize: { xs: '1.9rem', sm: '1.8rem', md: '3.4rem' } }} /* Custom font size scaling */
+          >
             Launch Your Own Marketplace with MultiVendor
           </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 4 }}>
+          <Typography 
+            variant="body1" 
+            color="text.secondary" 
+            paragraph 
+            sx={{ mb: isMobile ? 2 : 4 }}
+          >
             Transform your Shopify store into a thriving marketplace where multiple vendors can sell their products, while you earn commission on every sale without handling inventory.
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-            {/* <MotionButton
-              variant="contained"
-              color="primary"
-              size="large"
-              startIcon={<StorefrontIcon />}
-              whileHover={{
-                scale: 1.05,
-                transition: { duration: 0.3 }
-              }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ backgroundColor: theme.palette.primary.main }}
-              animate={{
-                backgroundColor: [
-                  theme.palette.primary.main,
-                  theme.palette.primary.light,
-                  theme.palette.primary.main
-                ],
-                transition: {
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-              onMouseEnter={() => handleHover('installBtn', true)}
-              onMouseLeave={() => handleHover('installBtn', false)}
-              style={{
-                background: hoverStates['installBtn']
-                  ? `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`
-                  : undefined
-              }}
-            >
-              Install App
-            </MotionButton> */}
-            {/* <MotionButton
-              variant="outlined"
-              color="primary"
-              size="large"
-              whileHover={{
-                borderColor: theme.palette.primary.dark,
-                color: theme.palette.primary.dark,
-                scale: 1.05,
-                transition: { duration: 0.3 }
-              }}
-              whileTap={{ scale: 0.95 }}
-
-            >
-              Watch Demo
-            </MotionButton> */}
+          <Box sx={{ display: 'flex', gap: 2, mb: isMobile ? 2 : 4 }}>
+            {/* Buttons removed as in original */}
           </Box>
-          {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Rating value={4.8} precision={0.1} readOnly />
-            <Typography variant="body2" color="text.secondary">
-              4.8/5 from over 500 merchants
-            </Typography>
-          </Box> */}
         </Grid>
       </Grid>
     </Box>
   );
 
   const FeatureSection = () => (
-    <Box sx={{ py: 4 }}>
-      <Paper sx={{ p: 3, mb: 4 }}>
-       
-        
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom>
+    <Box id="features" sx={{ py: isMobile ? 2 : 4 }}>
+      <Paper sx={{ p: isMobile ? 2 : 3, mb: isMobile ? 2 : 4 }}>
+        <Box sx={{ mt: isMobile ? 2 : 3 }}>
+          <Typography 
+            variant={isMobile ? "h5" : "h4"} 
+            component="h2" 
+            fontWeight="bold" 
+            gutterBottom
+          >
             {tabContents[activeTab].title}
           </Typography>
           <Typography variant="body1" paragraph>
@@ -200,16 +176,21 @@ const MultiVendorApp = () => {
           <List>
             {tabContents[activeTab].benefits.map((benefit, index) => (
               <ListItem key={index} disableGutters>
-                <ListItemIcon sx={{ minWidth: 36 }}>
+                <ListItemIcon sx={{ minWidth: isMobile ? 30 : 36 }}>
                   <motion.div
                     initial={{ scale: 1 }}
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <CheckIcon color="success" />
+                    <CheckIcon color="success" fontSize={isMobile ? "small" : "medium"} />
                   </motion.div>
                 </ListItemIcon>
-                <ListItemText primary={benefit} />
+                <ListItemText 
+                  primary={benefit} 
+                  primaryTypographyProps={{ 
+                    fontSize: isMobile ? '0.9rem' : undefined 
+                  }}
+                />
               </ListItem>
             ))}
           </List>
@@ -229,31 +210,41 @@ const MultiVendorApp = () => {
     };
 
     return (
-      <Box sx={{ py: 4 }}>
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+      <Box id="how-it-works" sx={{ py: isMobile ? 2 : 4 }}>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom 
+          sx={{ mb: isMobile ? 2 : 3 }}
+        >
           How MultiVendor Works
         </Typography>
-        <Typography variant="body1" paragraph sx={{ mb: 4 }}>
+        <Typography 
+          variant="body1" 
+          paragraph 
+          sx={{ mb: isMobile ? 2 : 4 }}
+        >
           Setting up your marketplace is simple with our guided installation process
         </Typography>
 
-        <Grid container spacing={6} justifyContent="center">
+        <Grid container spacing={isMobile ? 3 : 6} justifyContent="center">
           {[
-            { icon: <StorefrontIcon fontSize="large" />, title: '1. Install the App', desc: 'Add MultiVendor to your Shopify store with our easy installation wizard' },
-            { icon: <GroupIcon fontSize="large" />, title: '2. Invite Vendors', desc: 'Set up your vendor application form and start approving sellers' },
-            { icon: <MonetizationOnIcon fontSize="large" />, title: '3. Start Earning', desc: 'Set commission rates and watch your marketplace grow' }
+            { icon: <StorefrontIcon fontSize={isMobile ? "medium" : "large"} />, title: '1. Install the App', desc: 'Add MultiVendor to your Shopify store with our easy installation wizard' },
+            { icon: <GroupIcon fontSize={isMobile ? "medium" : "large"} />, title: '2. Invite Vendors', desc: 'Set up your vendor application form and start approving sellers' },
+            { icon: <MonetizationOnIcon fontSize={isMobile ? "medium" : "large"} />, title: '3. Start Earning', desc: 'Set commission rates and watch your marketplace grow' }
           ].map((item, index) => (
-            <Grid key={index} item xs={12} md={4} sx={{ textAlign: 'center' }}>
+            <Grid key={index} item xs={12} sm={6} md={4} sx={{ textAlign: 'center' }}>
               <MotionPaper
                 elevation={0}
                 sx={{
-                  width: 80,
-                  height: 80,
+                  width: isMobile ? 60 : 80,
+                  height: isMobile ? 60 : 80,
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  mb: 2,
+                  mb: isMobile ? 1 : 2,
                   mx: 'auto',
                 }}
                 variants={circleVariants}
@@ -289,10 +280,15 @@ const MultiVendorApp = () => {
                   {item.icon}
                 </motion.div>
               </MotionPaper>
-              <Typography variant="h6" component="h3" fontWeight="bold" gutterBottom>
+              <Typography 
+                variant={isMobile ? "subtitle1" : "h6"} 
+                component="h3" 
+                fontWeight="bold" 
+                gutterBottom
+              >
                 {item.title}
               </Typography>
-              <Typography variant="body2">
+              <Typography variant={isMobile ? "body2" : "body1"}>
                 {item.desc}
               </Typography>
             </Grid>
@@ -301,176 +297,6 @@ const MultiVendorApp = () => {
       </Box>
     );
   };
-
-  
-  //   <Box sx={{ py: 4 }}>
-  //     <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
-  //       Pricing Plans
-  //     </Typography>
-  //     <Typography variant="body1" paragraph sx={{ mb: 4 }}>
-  //       Choose the plan that fits your marketplace needs
-  //     </Typography>
-
-  //     <Grid container spacing={3}>
-  //       {[
-  //         {
-  //           title: "Starter",
-  //           price: "$3",
-  //           features: [
-  //             "Up to 25 vendors",
-  //             "5% commission on sales",
-  //             "Basic vendor dashboard",
-  //             "Manual payouts",
-  //             "Email support"
-  //           ]
-  //         },
-  //       //   {
-  //       //     title: "Growth",
-  //       //     price: "$99",
-  //       //     features: [
-  //       //       "Up to 100 vendors",
-  //       //       "3% commission on sales",
-  //       //       "Advanced vendor dashboard",
-  //       //       "Automated weekly payouts",
-  //       //       "Priority support",
-  //       //       "Vendor rating system"
-  //       //     ],
-  //       //     highlighted: true
-  //       //   },
-  //       //   {
-  //       //     title: "Enterprise",
-  //       //     price: "$199",
-  //       //     features: [
-  //       //       "Unlimited vendors",
-  //       //       "2% commission on sales",
-  //       //       "White-labeled vendor portal",
-  //       //       "Custom payout schedules",
-  //       //       "Dedicated account manager",
-  //       //       "API access",
-  //       //       "Custom commission tiers"
-  //       //     ]
-  //       //   }
-  //       ].map((plan, index) => (
-  //         <Grid item xs={12} md={4} key={index}>
-  //           <MotionCard
-  //             variant="outlined"
-  //             sx={{
-  //               height: '100%',
-  //               borderRadius: 2,
-  //               position: 'relative',
-  //               overflow: 'visible',
-  //               borderColor: plan.highlighted ? theme.palette.primary.main : 'inherit',
-  //               boxShadow: plan.highlighted ? `0px 0px 20px rgba(0, 128, 128, 0.15)` : 'none',
-  //             }}
-  //             whileHover={{
-  //               boxShadow: '0px 10px 30px rgba(0, 128, 128, 0.2)',
-  //               borderColor: theme.palette.primary.main,
-  //               y: -5
-  //             }}
-  //             transition={{ type: "spring", stiffness: 300, damping: 15 }}
-  //             animate={plan.highlighted ? {
-  //               borderColor: [
-  //                 theme.palette.primary.main,
-  //                 theme.palette.primary.light,
-  //                 theme.palette.primary.main
-  //               ],
-  //               boxShadow: [
-  //                 `0px 0px 20px rgba(0, 128, 128, 0.15)`,
-  //                 `0px 0px 20px rgba(0, 128, 128, 0.25)`,
-  //                 `0px 0px 20px rgba(0, 128, 128, 0.15)`
-  //               ],
-  //               transition: {
-  //                 duration: 5,
-  //                 repeat: Infinity,
-  //                 ease: "easeInOut"
-  //               }
-  //             } : {}}
-  //           >
-  //             {plan.highlighted && (
-  //               <Box
-  //                 sx={{
-  //                   position: 'absolute',
-  //                   top: -12,
-  //                   left: '50%',
-  //                   transform: 'translateX(-50%)',
-  //                   bgcolor: theme.palette.secondary.main,
-  //                   color: 'white',
-  //                   py: 0.5,
-  //                   px: 2,
-  //                   borderRadius: 10,
-  //                   fontSize: '0.75rem',
-  //                   fontWeight: 'bold',
-  //                   textTransform: 'uppercase',
-  //                   letterSpacing: 1,
-  //                 }}
-  //               >
-  //                 Most Popular
-  //               </Box>
-  //             )}
-  //             <CardContent sx={{ p: 4 }}>
-  //               <Typography variant="h5" component="div" fontWeight="bold" gutterBottom>
-  //                 {plan.title}
-  //               </Typography>
-
-  //               <Box sx={{ my: 3 }}>
-  //                 <Typography component="span" variant="h4" fontWeight="bold">
-  //                   {plan.price}
-  //                 </Typography>
-  //                 <Typography component="span" variant="subtitle1" color="text.secondary">
-  //                   /month
-  //                 </Typography>
-  //               </Box>
-
-  //               <List disablePadding>
-  //                 {plan.features.map((feature, idx) => (
-  //                   <ListItem key={idx} disablePadding disableGutters sx={{ py: 0.5 }}>
-  //                     <ListItemIcon sx={{ minWidth: 36 }}>
-  //                       <motion.div
-  //                         initial={{ scale: 1 }}
-  //                         whileHover={{ scale: 1.2, color: theme.palette.primary.main }}
-  //                       >
-  //                         <CheckIcon color="success" fontSize="small" />
-  //                       </motion.div>
-  //                     </ListItemIcon>
-  //                     <ListItemText primary={feature} />
-  //                   </ListItem>
-  //                 ))}
-  //               </List>
-
-  //               <MotionButton
-  //                 variant={plan.highlighted ? "contained" : "outlined"}
-  //                 color="primary"
-  //                 fullWidth
-  //                 size="large"
-  //                 sx={{ mt: 4 }}
-  //                 whileHover={{
-  //                   scale: 1.02,
-  //                   transition: { duration: 0.3 }
-  //                 }}
-  //                 whileTap={{ scale: 0.98 }}
-  //                 animate={plan.highlighted ? {
-  //                   backgroundImage: [
-  //                     `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`,
-  //                     `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-  //                     `linear-gradient(90deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
-  //                     `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`
-  //                   ],
-  //                   transition: {
-  //                     duration: 8,
-  //                     repeat: Infinity,
-  //                     ease: "easeInOut"
-  //                   }
-  //                 } : {}}
-  //               >
-  //                 Get Started
-  //               </MotionButton>
-  //             </CardContent>
-  //           </MotionCard>
-  //         </Grid>
-  //       ))}
-  //     </Grid>
-  //   </Box>
-  // );
 
   const FAQSection = () => {
     const faqs = [
@@ -497,8 +323,14 @@ const MultiVendorApp = () => {
     ];
 
     return (
-      <Box sx={{ py: 4 }}>
-        <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+      <Box id="faq" sx={{ py: isMobile ? 2 : 4 }}>
+        <Typography 
+          variant={isMobile ? "h5" : "h4"} 
+          component="h2" 
+          fontWeight="bold" 
+          gutterBottom 
+          sx={{ mb: isMobile ? 2 : 3 }}
+        >
           Frequently Asked Questions
         </Typography>
 
@@ -506,114 +338,122 @@ const MultiVendorApp = () => {
           {faqs.map((faq, index) => (
             <MotionBox
               key={index}
-              sx={{ mb: 3 }}
+              sx={{ mb: isMobile ? 2 : 3 }}
               initial={{ opacity: 0.9 }}
               whileHover={{
                 backgroundColor: 'rgba(0, 128, 128, 0.03)',
                 borderRadius: '8px',
-                padding: '16px',
-                marginLeft: '-16px',
-                marginRight: '-16px',
+                padding: isMobile ? '12px' : '16px',
+                marginLeft: isMobile ? '-12px' : '-16px',
+                marginRight: isMobile ? '-12px' : '-16px',
                 x: 0,
                 borderLeft: `3px solid ${theme.palette.primary.main}`
               }}
               transition={{ duration: 0.2 }}
             >
-              <Typography variant="h6" component="h3" fontWeight="bold" gutterBottom>
+              <Typography 
+                variant={isMobile ? "subtitle1" : "h6"} 
+                component="h3" 
+                fontWeight="bold" 
+                gutterBottom
+              >
                 {faq.question}
               </Typography>
-              <Typography variant="body1" color="text.secondary">
+              <Typography 
+                variant="body1" 
+                color="text.secondary"
+                sx={{ fontSize: isMobile ? '0.9rem' : undefined }}
+              >
                 {faq.answer}
               </Typography>
-              {index < faqs.length - 1 && <Divider sx={{ mt: 3 }} />}
+              {index < faqs.length - 1 && <Divider sx={{ mt: isMobile ? 2 : 3 }} />}
             </MotionBox>
           ))}
         </Box>
-
-        
       </Box>
     );
   };
 
-
   const CallToActionSection = () => (
     <Box
       sx={{
-        py: 5,
+        py: isMobile ? 3 : 5,
         borderRadius: 2,
-        mb: 4,
+        mb: isMobile ? 2 : 4,
         bgcolor: theme.palette.primary.main,
         position: 'relative'
       }}
     >
-      <Container>
-  <Grid container spacing={4} alignItems="center">
-    <Grid item xs={12} md={8}>
-      <Typography variant="h4" component="h2" fontWeight="bold" gutterBottom color="white">
-        Ready to Launch Your Marketplace?
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 3 }} color="white">
-        Join thousands of successful merchants who use MultiVendor to create thriving marketplaces without inventory hassles.
-      </Typography>
-    </Grid>
-    <Grid item xs={12} md={4}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '12px',
-          padding: 3,
-          border: '1px solid rgba(255, 255, 255, 0.2)'
-        }}
-      >
-        <Typography 
-          variant="h6" 
-          component="span" 
-          fontWeight="600" 
-          color="white" 
-          sx={{ 
-            mb: 1,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1
-          }}
-        >
-          <Box 
-            component="span" 
-            sx={{ 
-              width: 10, 
-              height: 10, 
-              borderRadius: '50%', 
-              backgroundColor: '#4caf50',
-              display: 'inline-block',
-              animation: 'pulse 1.5s infinite'
-            }} 
-          />
-          Coming Soon
-        </Typography>
-        <Typography variant="body2" color="white" align="center" sx={{ mb: 2 }}>
-          Our advanced marketplace builder is in final testing
-        </Typography>
-        {/* <Button 
-          variant="outlined" 
-          sx={{ 
-            borderColor: 'white', 
-            color: 'white',
-            '&:hover': {
-              borderColor: 'white',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)'
-            }
-          }}
-        >
-          Join Waitlist
-        </Button> */}
-      </Box>
-    </Grid>
-  </Grid>
-</Container>
+      <Container maxWidth="lg" sx={{ px: isMobile ? 2 : 3 }}>
+        <Grid container spacing={isMobile ? 2 : 4} alignItems="center">
+          <Grid item xs={12} md={8}>
+            <Typography 
+              variant={isMobile ? "h5" : "h4"} 
+              component="h2" 
+              fontWeight="bold" 
+              gutterBottom 
+              color="white"
+            >
+              Ready to Launch Your Marketplace?
+            </Typography>
+            <Typography 
+              variant={isMobile ? "body2" : "body1"} 
+              sx={{ mb: isMobile ? 2 : 3 }} 
+              color="white"
+            >
+              Join thousands of successful merchants who use MultiVendor to create thriving marketplaces without inventory hassles.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+                padding: isMobile ? 2 : 3,
+                border: '1px solid rgba(255, 255, 255, 0.2)'
+              }}
+            >
+              <Typography 
+                variant={isMobile ? "subtitle1" : "h6"} 
+                component="span" 
+                fontWeight="600" 
+                color="white" 
+                sx={{ 
+                  mb: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1
+                }}
+              >
+                <Box 
+                  component="span" 
+                  sx={{ 
+                    width: isMobile ? 8 : 10, 
+                    height: isMobile ? 8 : 10, 
+                    borderRadius: '50%', 
+                    backgroundColor: '#4caf50',
+                    display: 'inline-block',
+                    animation: 'pulse 1.5s infinite'
+                  }} 
+                />
+                Coming Soon
+              </Typography>
+              <Typography 
+                variant={isMobile ? "caption" : "body2"} 
+                color="white" 
+                align="center" 
+                sx={{ mb: 2 }}
+              >
+                Our advanced marketplace builder is in final testing
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
     </Box>
   );
 
@@ -636,7 +476,7 @@ const MultiVendorApp = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
         <Header />
-        <Container sx={{ py: 4 }}>
+        <Container sx={{ py: isMobile ? 2 : 4, px: isMobile ? 1 : 3 }}>
           <MotionPaper
             sx={{ p: 0, overflow: 'hidden' }}
             initial={{ opacity: 0, y: 20 }}
@@ -648,8 +488,8 @@ const MultiVendorApp = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                px: 3,
-                py: 2,
+                px: isMobile ? 2 : 3,
+                py: isMobile ? 1.5 : 2,
                 borderBottom: 1,
                 borderColor: 'divider'
               }}
@@ -662,10 +502,10 @@ const MultiVendorApp = () => {
                   sx={{
                     bgcolor: 'primary.main',
                     color: 'white',
-                    p: 1,
+                    p: isMobile ? 0.5 : 1,
                     borderRadius: 1,
                     display: 'flex',
-                    mr: 2
+                    mr: isMobile ? 1 : 2
                   }}
                   whileHover={{
                     rotate: [0, -10, 10, -10, 0],
@@ -699,67 +539,92 @@ const MultiVendorApp = () => {
                       }
                     }}
                   >
-                    <StorefrontIcon />
+                    <StorefrontIcon fontSize={isMobile ? "small" : "medium"} />
                   </motion.div>
                 </MotionBox>
-                <Typography variant="h6" component="div">
+                <Typography 
+                  variant={isMobile ? "subtitle1" : "h6"} 
+                  component="div"
+                  sx={{ fontSize: isMobile ? '1rem' : undefined }}
+                >
                   MultiVendor
                 </Typography>
               </Box>
-              {/* <MotionButton
-                variant="contained"
-                color="primary"
-                whileHover={{
-                  scale: 1.05,
-                  transition: { duration: 0.3 }
-                }}
-                whileTap={{ scale: 0.95 }}
-                animate={{
-                  backgroundImage: [
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`,
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.main})`
-                  ],
-                  boxShadow: [
-                    '0px 3px 5px rgba(0, 128, 128, 0.2)',
-                    '0px 3px 10px rgba(0, 128, 128, 0.4)',
-                    '0px 3px 5px rgba(0, 128, 128, 0.2)'
-                  ],
-                  transition: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }
-                }}
-              >
-                Get the App
-              </MotionButton> */}
             </MotionBox>
 
-            <Box sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                {['hero', 'features', 'how-it-works', 'faq'].map((page) => (
-                  <MotionButton
-                    key={page}
-                    color="inherit"
-                    onClick={() => setActivePage(page)}
-                    initial={activePage === page ? "active" : "inactive"}
-                    animate={activePage === page ? "active" : "inactive"}
-                    whileHover="hover"
-                    variants={NavigationButtonVariants}
-                    sx={{ mx: 1 }}
-                  >
-                    {page === 'hero' ? 'HERO' :
-                      page === 'features' ? 'Features' :
-                        page === 'how-it-works' ? 'How It Works' :
-                          // page === 'pricing' ? 'Pricing' :
-                          
-                        //   page === 'testimonials' ? 'Testimonials' :
-                          page === 'faq' ? 'FAQ' : 'GET STARTED'}
-
-                           
-                  </MotionButton>
-                ))}
+            <Box sx={{ p: isMobile ? 2 : 3 }}>
+              {/* Scrollable Navigation Bar - Key Change */}
+              <Box 
+                sx={{ 
+                  display: 'flex',
+                  mb: 2,
+                  overflowX: 'auto',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                  '&::-webkit-scrollbar': {
+                    display: 'none'
+                  },
+                  px: 1,
+                  pb: 1, // Add padding at bottom for shadow
+                  mx: -1, // Negative margin to counteract padding
+                  position: 'relative'
+                }}
+              >
+                {/* Shadow indicators on sides when scrollable */}
+                <Box 
+                  sx={{ 
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 20,
+                    backgroundImage: 'linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))',
+                    pointerEvents: 'none',
+                    zIndex: 1,
+                    display: { xs: 'block', md: 'none' }
+                  }}
+                />
+                <Box 
+                  sx={{ 
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 20,
+                    backgroundImage: 'linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))',
+                    pointerEvents: 'none',
+                    zIndex: 1,
+                    display: { xs: 'block', md: 'none' }
+                  }}
+                />
+                
+                {/* Navigation items */}
+                <Box sx={{ display: 'flex', minWidth: 'max-content' }}>
+                  {['hero', 'features', 'how-it-works', 'faq'].map((page) => (
+                    <MotionButton
+                      key={page}
+                      color="inherit"
+                      onClick={() => handleNavClick(page)}
+                      initial={activePage === page ? "active" : "inactive"}
+                      animate={activePage === page ? "active" : "inactive"}
+                      whileHover="hover"
+                      variants={NavigationButtonVariants}
+                      sx={{ 
+                        mx: 0.5,
+                        whiteSpace: 'nowrap',
+                        minWidth: isMobile ? 'auto' : undefined,
+                        px: isMobile ? 1.5 : 2,
+                        fontSize: isMobile ? '0.8rem' : undefined
+                      }}
+                    >
+                      {page === 'hero' ? 'HERO' :
+                        page === 'features' ? 'Features' :
+                          page === 'how-it-works' ? 'How It Works' :
+                            page === 'faq' ? 'FAQ' : 'GET STARTED'}
+                    </MotionButton>
+                  ))}
+                </Box>
               </Box>
 
               <AnimatePresence mode="wait">
@@ -773,8 +638,6 @@ const MultiVendorApp = () => {
                   {activePage === 'hero' && <HeroSection />}
                   {activePage === 'features' && <FeatureSection />}
                   {activePage === 'how-it-works' && <HowItWorksSection />}
-                  {/* {activePage === 'pricing' && <PricingSection />} */}
-                 
                   {activePage === 'faq' && <FAQSection />}
                 </motion.div>
               </AnimatePresence>
