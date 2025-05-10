@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Box,
     Button,
@@ -6,16 +6,10 @@ import {
     Grid,
     IconButton,
     Link,
-    List,
-    ListItem,
     Stack,
     Typography,
     useMediaQuery,
     useTheme,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
@@ -26,7 +20,6 @@ import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneIcon from '@mui/icons-material/Phone';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import zenmeraki from "../assets/images/zenlogo.png";
 
@@ -72,47 +65,10 @@ const GreenButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-// Custom styled section for mobile column
-const MobileColumn = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    '& .MuiTypography-subtitle1': {
-        fontSize: '0.85rem',
-        marginBottom: '0.35rem',
-        fontWeight: 'bold',
-        position: 'relative',
-        paddingBottom: '0.35rem',
-    },
-    '& .MuiTypography-subtitle1::after': {
-        content: '""',
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
-        width: 25,
-        height: 2,
-        backgroundColor: '#00B8A9',
-    },
-    '& .MuiListItem-root': {
-        paddingTop: 0.5,
-        paddingBottom: 0.5,
-    },
-    '& .MuiTypography-body2': {
-        fontSize: '0.75rem',
-    },
-    '& .MuiSvgIcon-root': {
-        fontSize: '0.9rem',
-    },
-}));
-
 function Footer() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const isVerySmall = useMediaQuery('(max-width:380px)');
-    const [expandedSection, setExpandedSection] = useState(null);
-
-    const handleSectionToggle = (section) => {
-        setExpandedSection(expandedSection === section ? null : section);
-    };
+    const isExtraSmall = useMediaQuery('(max-width:350px)');
 
     const navigationItems = [
         { label: 'About Us', link: '/about-us' },
@@ -121,27 +77,27 @@ function Footer() {
     ];
 
     const servicesItems = [
-        { label: isVerySmall ? 'Shopify Apps' : 'Shopify Apps', link: '/shopify-app' },
-        { label: isVerySmall ? 'Custom Shop' : 'Custom Shopify', link: '/custom-store' },
-        { label: isVerySmall ? 'Web Dev' : 'Web Development', link: '/website-management' },
-        { label: isVerySmall ? 'Digital Mktg' : 'Digital Marketing', link: '/digital-marketing' },
-        { label: isVerySmall ? 'E-comm Mgmt' : 'E-comm Management', link: '/e-commerce-management' },
+        { label: isExtraSmall ? 'Apps' : 'Shopify Apps', link: '/shopify-app' },
+        { label: isExtraSmall ? 'Store' : 'Custom Store', link: '/custom-store' },
+        { label: isExtraSmall ? 'Web' : 'Web Dev', link: '/website-management' },
+        { label: isExtraSmall ? 'Marketing' : 'Digital Mktg', link: '/digital-marketing' },
+        { label: isExtraSmall ? 'E-comm' : 'E-comm Mgmt', link: '/e-commerce-management' },
     ];
 
     const contactInfo = [
         {
             icon: 'location',
-            text: isVerySmall ? 'Thrissur, Kerala' : 'Thrissur, Kerala',
+            text: isExtraSmall ? 'Thrissur' : 'Thrissur, Kerala',
             link: '#'
         },
         {
             icon: 'email',
-            text: isVerySmall ? 'Email' : 'official@zenmeraki.com',
+            text: isExtraSmall ? 'Email' : 'official@zenmeraki.com',
             link: 'mailto:official@zenmeraki.com'
         },
         {
             icon: 'phone',
-            text: isVerySmall ? 'Call' : '+91 6282346108',
+            text: isExtraSmall ? 'Call' : '+91 6282346108',
             link: 'tel:+916282346108'
         },
     ];
@@ -172,11 +128,11 @@ function Footer() {
             {/* Main content section */}
             <ContentSection>
                 <Container maxWidth="lg">
-                    <Grid container spacing={isMobile ? 1 : 4}>
-                        {/* Logo and description */}
+                    <Grid container spacing={isMobile ? 2 : 4}>
+                        {/* Logo and description - Full width on mobile */}
                         <Grid item xs={12} md={3}>
-                            <Box sx={{ mb: 1 }}>
-                                <Typography variant="h6" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                            <Box sx={{ mb: 1, textAlign: isMobile ? 'center' : 'left' }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start' }}>
                                     <img
                                         src={zenmeraki}
                                         alt="ZEN MERAKI"
@@ -190,12 +146,15 @@ function Footer() {
                                     ZENMERAKI
                                 </Typography>
                             </Box>
-                            <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}>
+                            <Typography variant="body2" color="text.secondary" paragraph sx={{ 
+                                fontSize: isMobile ? '0.8rem' : '0.9rem',
+                                textAlign: isMobile ? 'center' : 'left' 
+                            }}>
                                 We specialize in transforming ideas into impactful solutions. <br />
                                 From cutting-edge applications to intuitive designs,<br />
                                 our work reflects a commitment to excellence and innovation in all we deliver.
                             </Typography>
-                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                            <Stack direction="row" spacing={1} sx={{ mt: 1, justifyContent: isMobile ? 'center' : 'flex-start' }}>
                                 <IconButton size="small" aria-label="Twitter" sx={{ color: '#0A2725' }}>
                                     <TwitterIcon fontSize="small" />
                                 </IconButton>
@@ -208,203 +167,286 @@ function Footer() {
                             </Stack>
                         </Grid>
 
-                        {isMobile ? (
-                            // Mobile layout - alternative implementation with more space
-                            <Grid item xs={12}>
-                                <Box sx={{ mt: 2 }}>
-                                    {/* Sections with section title */}
-                                    <Box sx={{ mb: 2 }}>
-                                        <Grid container spacing={2}>
-                                            <Grid item xs={4}>
-                                                <Typography 
-                                                    variant="subtitle1" 
-                                                    sx={{ 
-                                                        fontWeight: 'bold', 
-                                                        fontSize: '0.9rem',
-                                                        pb: 1,
-                                                        borderBottom: '2px solid #00B8A9',
-                                                        pl: 2
-                                                    }}
-                                                >
-                                                    Navigation
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={4}>
-                                                <Typography 
-                                                    variant="subtitle1" 
-                                                    sx={{ 
-                                                        fontWeight: 'bold', 
-                                                        fontSize: '0.9rem',
-                                                        pb: 1,
-                                                        borderBottom: '2px solid #00B8A9',
-                                                        pl: 2
-                                                    }}
-                                                >
-                                                    Services
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={4}>
-                                                <Typography 
-                                                    variant="subtitle1" 
-                                                    sx={{ 
-                                                        fontWeight: 'bold', 
-                                                        fontSize: '0.9rem',
-                                                        pb: 1,
-                                                        borderBottom: '2px solid #00B8A9',
-                                                        pl: 2
-                                                    }}
-                                                >
-                                                    Contact
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Box>
-                                    
-                                    {/* Content section */}
-                                    <Box>
-                                        <Grid container spacing={1}>
-                                            {/* Navigation column */}
-                                            <Grid item xs={4}>
-                                                <List dense disablePadding>
-                                                    {navigationItems.map((item) => (
-                                                        <ListItem key={item.label} disablePadding sx={{ py: 0.7, display: 'flex', justifyContent: 'flex-start', pl: 2 }}>
-                                                            <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
-                                                                <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>{item.label}</Typography>
-                                                            </Link>
-                                                        </ListItem>
-                                                    ))}
-                                                </List>
-                                            </Grid>
-
-                                            {/* Services column */}
-                                            <Grid item xs={4}>
-                                                <List dense disablePadding>
-                                                    {servicesItems.map((item) => (
-                                                        <ListItem key={item.label} disablePadding sx={{ py: 0.7, display: 'flex', justifyContent: 'flex-start', pl: 2 }}>
-                                                            <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
-                                                                <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>{item.label}</Typography>
-                                                            </Link>
-                                                        </ListItem>
-                                                    ))}
-                                                </List>
-                                            </Grid>
-
-                                            {/* Contact column */}
-                                            <Grid item xs={4}>
-                                                <List dense disablePadding>
-                                                    {contactInfo.map((item, index) => (
-                                                        <ListItem key={index} disablePadding sx={{ py: 0.7, display: 'flex', justifyContent: 'flex-start', pl: 2 }}>
-                                                            <Link href={item.link} color="inherit" underline="hover" sx={{ display: 'flex', alignItems: 'center' }}>
-                                                                <Box sx={{ color: '#00B8A9', mr: 1.5, display: 'flex', alignItems: 'center' }}>
-                                                                    {item.icon === 'location' && <LocationOnIcon fontSize="small" />}
-                                                                    {item.icon === 'email' && <MailOutlineIcon fontSize="small" />}
-                                                                    {item.icon === 'phone' && <PhoneIcon fontSize="small" />}
-                                                                </Box>
-                                                                <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>{item.text}</Typography>
-                                                            </Link>
-                                                        </ListItem>
-                                                    ))}
-                                                </List>
-                                            </Grid>
-                                        </Grid>
-                                    </Box>
-                                </Box>
-                            </Grid>
-                        ) : (
-                            // Desktop layout
-                            <>
-                                {/* Navigation */}
-                                <Grid item xs={6} md={2}>
-                                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
-                                        position: 'relative',
-                                        paddingBottom: 0.5,
-                                        fontSize: '1rem',
-                                        '&::after': {
-                                            content: '""',
-                                            position: 'absolute',
-                                            left: 0,
-                                            bottom: 0,
-                                            width: 30,
-                                            height: 2,
-                                            backgroundColor: '#00B8A9',
-                                        }
-                                    }}>
+                        {/* NEW ROW for links on mobile view */}
+                        {isMobile && (
+                            <Grid item xs={12} container justifyContent="center" sx={{ mt: 2 }}>
+                                {/* Navigation Column */}
+                                <Grid item xs={4} sx={{ textAlign: 'center' }}>
+                                    {/* Header with green underline - centered */}
+                                    <Typography 
+                                        variant="subtitle1" 
+                                        sx={{ 
+                                            fontWeight: 'bold',
+                                            fontSize: isExtraSmall ? '0.75rem' : '0.85rem',
+                                            pb: 0.5,
+                                            borderBottom: '2px solid #00B8A9',
+                                            mb: 1.5,
+                                            textAlign: 'center',
+                                            mx: 'auto',
+                                            width: 'fit-content'
+                                        }}
+                                    >
                                         Navigation
                                     </Typography>
-                                    <List dense disablePadding>
+                                    
+                                    {/* Navigation links - centered */}
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         {navigationItems.map((item) => (
-                                            <ListItem key={item.label} disablePadding sx={{ py: 0.25 }}>
-                                                <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
-                                                    <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>{item.label}</Typography>
-                                                </Link>
-                                            </ListItem>
+                                            <Link 
+                                                key={item.label}
+                                                component={RouterLink} 
+                                                to={item.link} 
+                                                color="inherit" 
+                                                underline="hover"
+                                                sx={{ mb: 1.5, textAlign: 'center' }}
+                                            >
+                                                <Typography 
+                                                    variant="body2" 
+                                                    sx={{ fontSize: isExtraSmall ? '0.7rem' : '0.8rem' }}
+                                                >
+                                                    {item.label}
+                                                </Typography>
+                                            </Link>
                                         ))}
-                                    </List>
+                                    </Box>
                                 </Grid>
-
-                                {/* Services */}
-                                <Grid item xs={6} md={2}>
-                                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
-                                        position: 'relative',
-                                        paddingBottom: 0.5,
-                                        fontSize: '1rem',
-                                        '&::after': {
-                                            content: '""',
-                                            position: 'absolute',
-                                            left: 0,
-                                            bottom: 0,
-                                            width: 30,
-                                            height: 2,
-                                            backgroundColor: '#00B8A9',
-                                        }
-                                    }}>
+                                
+                                {/* Services Column */}
+                                <Grid item xs={4} sx={{ textAlign: 'center' }}>
+                                    {/* Header with green underline - centered */}
+                                    <Typography 
+                                        variant="subtitle1" 
+                                        sx={{ 
+                                            fontWeight: 'bold',
+                                            fontSize: isExtraSmall ? '0.75rem' : '0.85rem',
+                                            pb: 0.5,
+                                            borderBottom: '2px solid #00B8A9',
+                                            mb: 1.5,
+                                            textAlign: 'center',
+                                            mx: 'auto',
+                                            width: 'fit-content'
+                                        }}
+                                    >
                                         Services
                                     </Typography>
-                                    <List dense disablePadding>
+                                    
+                                    {/* Services links - centered */}
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         {servicesItems.map((item) => (
-                                            <ListItem key={item.label} disablePadding sx={{ py: 0.25 }}>
-                                                <Link component={RouterLink} to={item.link} color="inherit" underline="hover">
-                                                    <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>{item.label}</Typography>
-                                                </Link>
-                                            </ListItem>
+                                            <Link 
+                                                key={item.label}
+                                                component={RouterLink} 
+                                                to={item.link} 
+                                                color="inherit" 
+                                                underline="hover"
+                                                sx={{ mb: 1.5, textAlign: 'center' }}
+                                            >
+                                                <Typography 
+                                                    variant="body2" 
+                                                    sx={{ fontSize: isExtraSmall ? '0.7rem' : '0.8rem' }}
+                                                >
+                                                    {item.label}
+                                                </Typography>
+                                            </Link>
                                         ))}
-                                    </List>
+                                    </Box>
                                 </Grid>
-
-                                {/* Contact Info */}
-                                <Grid item xs={12} md={3}>
-                                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
-                                        position: 'relative',
-                                        paddingBottom: 0.5,
-                                        fontSize: '1rem',
-                                        '&::after': {
-                                            content: '""',
-                                            position: 'absolute',
-                                            left: 0,
-                                            bottom: 0,
-                                            width: 30,
-                                            height: 2,
-                                            backgroundColor: '#00B8A9',
-                                        }
-                                    }}>
+                                
+                                {/* Contact Column */}
+                                <Grid item xs={4} sx={{ textAlign: 'center' }}>
+                                    {/* Header with green underline - centered */}
+                                    <Typography 
+                                        variant="subtitle1" 
+                                        sx={{ 
+                                            fontWeight: 'bold',
+                                            fontSize: isExtraSmall ? '0.75rem' : '0.85rem',
+                                            pb: 0.5,
+                                            borderBottom: '2px solid #00B8A9',
+                                            mb: 1.5,
+                                            textAlign: 'center',
+                                            mx: 'auto',
+                                            width: 'fit-content'
+                                        }}
+                                    >
                                         Contact
                                     </Typography>
-                                    <List dense disablePadding>
+                                    
+                                    {/* Contact links - centered with icons */}
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         {contactInfo.map((item, index) => (
-                                            <ListItem key={index} disablePadding sx={{ py: 0.25 }}>
-                                                <Box sx={{ color: '#00B8A9', mr: 1, display: 'flex', alignItems: 'center' }}>
-                                                    {item.icon === 'location' && <LocationOnIcon fontSize="small" />}
-                                                    {item.icon === 'email' && <MailOutlineIcon fontSize="small" />}
-                                                    {item.icon === 'phone' && <PhoneIcon fontSize="small" />}
+                                            <Link 
+                                                key={index}
+                                                href={item.link} 
+                                                color="inherit" 
+                                                underline="hover" 
+                                                sx={{ 
+                                                    display: 'flex', 
+                                                    alignItems: 'center',
+                                                    mb: 1.5,
+                                                    justifyContent: 'center'
+                                                }}
+                                            >
+                                                <Box sx={{ 
+                                                    color: '#00B8A9', 
+                                                    mr: 0.5, 
+                                                    display: 'flex', 
+                                                    alignItems: 'center' 
+                                                }}>
+                                                    {item.icon === 'location' && <LocationOnIcon sx={{ fontSize: isExtraSmall ? '0.8rem' : '1rem' }} />}
+                                                    {item.icon === 'email' && <MailOutlineIcon sx={{ fontSize: isExtraSmall ? '0.8rem' : '1rem' }} />}
+                                                    {item.icon === 'phone' && <PhoneIcon sx={{ fontSize: isExtraSmall ? '0.8rem' : '1rem' }} />}
                                                 </Box>
-                                                <Link href={item.link} color="inherit" underline="hover">
-                                                    <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>{item.text}</Typography>
-                                                </Link>
-                                            </ListItem>
+                                                <Typography 
+                                                    variant="body2" 
+                                                    sx={{ 
+                                                        fontSize: isExtraSmall ? '0.65rem' : '0.75rem',
+                                                        wordBreak: 'break-word'
+                                                    }}
+                                                >
+                                                    {item.text}
+                                                </Typography>
+                                            </Link>
                                         ))}
-                                    </List>
+                                    </Box>
                                 </Grid>
-                            </>
+                            </Grid>
+                        )}
+
+                        {/* Desktop layout - unchanged */}
+                        {!isMobile && (
+                            <Grid item xs={12} md={9}>
+                                <Grid container spacing={2}>
+                                    {/* Navigation */}
+                                    <Grid item xs={4} md={3}>
+                                        <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
+                                            position: 'relative',
+                                            paddingBottom: 0.5,
+                                            fontSize: '1rem',
+                                            '&::after': {
+                                                content: '""',
+                                                position: 'absolute',
+                                                left: 0,
+                                                bottom: 0,
+                                                width: 30,
+                                                height: 2,
+                                                backgroundColor: '#00B8A9',
+                                            }
+                                        }}>
+                                            Navigation
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            {navigationItems.map((item) => (
+                                                <Link 
+                                                    key={item.label}
+                                                    component={RouterLink} 
+                                                    to={item.link} 
+                                                    color="inherit" 
+                                                    underline="hover"
+                                                    sx={{ mb: 1 }}
+                                                >
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        sx={{ fontSize: '0.9rem' }}
+                                                    >
+                                                        {item.label}
+                                                    </Typography>
+                                                </Link>
+                                            ))}
+                                        </Box>
+                                    </Grid>
+
+                                    {/* Services */}
+                                    <Grid item xs={4} md={3}>
+                                        <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
+                                            position: 'relative',
+                                            paddingBottom: 0.5,
+                                            fontSize: '1rem',
+                                            '&::after': {
+                                                content: '""',
+                                                position: 'absolute',
+                                                left: 0,
+                                                bottom: 0,
+                                                width: 30,
+                                                height: 2,
+                                                backgroundColor: '#00B8A9',
+                                            }
+                                        }}>
+                                            Services
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            {servicesItems.map((item) => (
+                                                <Link 
+                                                    key={item.label}
+                                                    component={RouterLink} 
+                                                    to={item.link} 
+                                                    color="inherit" 
+                                                    underline="hover"
+                                                    sx={{ mb: 1 }}
+                                                >
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        sx={{ fontSize: '0.9rem' }}
+                                                    >
+                                                        {item.label}
+                                                    </Typography>
+                                                </Link>
+                                            ))}
+                                        </Box>
+                                    </Grid>
+
+                                    {/* Contact Info */}
+                                    <Grid item xs={4} md={3}>
+                                        <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
+                                            position: 'relative',
+                                            paddingBottom: 0.5,
+                                            fontSize: '1rem',
+                                            '&::after': {
+                                                content: '""',
+                                                position: 'absolute',
+                                                left: 0,
+                                                bottom: 0,
+                                                width: 30,
+                                                height: 2,
+                                                backgroundColor: '#00B8A9',
+                                            }
+                                        }}>
+                                            Contact
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            {contactInfo.map((item, index) => (
+                                                <Link 
+                                                    key={index}
+                                                    href={item.link} 
+                                                    color="inherit" 
+                                                    underline="hover" 
+                                                    sx={{ 
+                                                        display: 'flex', 
+                                                        alignItems: 'center',
+                                                        mb: 1 
+                                                    }}
+                                                >
+                                                    <Box sx={{ 
+                                                        color: '#00B8A9', 
+                                                        mr: 1, 
+                                                        display: 'flex', 
+                                                        alignItems: 'center' 
+                                                    }}>
+                                                        {item.icon === 'location' && <LocationOnIcon fontSize="small" />}
+                                                        {item.icon === 'email' && <MailOutlineIcon fontSize="small" />}
+                                                        {item.icon === 'phone' && <PhoneIcon fontSize="small" />}
+                                                    </Box>
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        sx={{ fontSize: '0.9rem' }}
+                                                    >
+                                                        {item.text}
+                                                    </Typography>
+                                                </Link>
+                                            ))}
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                         )}
                     </Grid>
                 </Container>
