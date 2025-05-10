@@ -70,20 +70,6 @@ function Footer() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const isExtraSmall = useMediaQuery('(max-width:350px)');
 
-    const navigationItems = [
-        { label: 'About Us', link: '/about-us' },
-        { label: 'Careers', link: '/careers' },
-        { label: 'Contact Us', link: '/contact' },
-    ];
-
-    const servicesItems = [
-        { label: isExtraSmall ? 'Apps' : 'Shopify Apps', link: '/shopify-app' },
-        { label: isExtraSmall ? 'Store' : 'Custom Store', link: '/custom-store' },
-        { label: isExtraSmall ? 'Web' : 'Web Dev', link: '/website-management' },
-        { label: isExtraSmall ? 'Marketing' : 'Digital Mktg', link: '/digital-marketing' },
-        { label: isExtraSmall ? 'E-comm' : 'E-comm Mgmt', link: '/e-commerce-management' },
-    ];
-
     const contactInfo = [
         {
             icon: 'location',
@@ -128,11 +114,12 @@ function Footer() {
             {/* Main content section */}
             <ContentSection>
                 <Container maxWidth="lg">
-                    <Grid container spacing={isMobile ? 2 : 4}>
-                        {/* Logo and description - Full width on mobile */}
-                        <Grid item xs={12} md={3}>
-                            <Box sx={{ mb: 1, textAlign: isMobile ? 'center' : 'left' }}>
-                                <Typography variant="h6" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+                    {/* Desktop layout - Company info on left, Contact on right */}
+                    <Grid container spacing={4} justifyContent="space-between">
+                        {/* Logo and description */}
+                        <Grid item xs={12} md={7} lg={8}>
+                            <Box sx={{ mb: 2 }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
                                     <img
                                         src={zenmeraki}
                                         alt="ZEN MERAKI"
@@ -146,15 +133,12 @@ function Footer() {
                                     ZENMERAKI
                                 </Typography>
                             </Box>
-                            <Typography variant="body2" color="text.secondary" paragraph sx={{ 
-                                fontSize: isMobile ? '0.8rem' : '0.9rem',
-                                textAlign: isMobile ? 'center' : 'left' 
-                            }}>
+                            <Typography variant="body2" color="text.secondary" paragraph sx={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}>
                                 We specialize in transforming ideas into impactful solutions. <br />
                                 From cutting-edge applications to intuitive designs,<br />
                                 our work reflects a commitment to excellence and innovation in all we deliver.
                             </Typography>
-                            <Stack direction="row" spacing={1} sx={{ mt: 1, justifyContent: isMobile ? 'center' : 'flex-start' }}>
+                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                                 <IconButton size="small" aria-label="Twitter" sx={{ color: '#0A2725' }}>
                                     <TwitterIcon fontSize="small" />
                                 </IconButton>
@@ -167,287 +151,66 @@ function Footer() {
                             </Stack>
                         </Grid>
 
-                        {/* NEW ROW for links on mobile view */}
-                        {isMobile && (
-                            <Grid item xs={12} container justifyContent="center" sx={{ mt: 2 }}>
-                                {/* Navigation Column */}
-                                <Grid item xs={4} sx={{ textAlign: 'center' }}>
-                                    {/* Header with green underline - centered */}
-                                    <Typography 
-                                        variant="subtitle1" 
+                        {/* Contact Info - Right aligned on desktop */}
+                        <Grid item xs={12} md={5} lg={4}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom 
+                                sx={{
+                                    position: 'relative',
+                                    paddingBottom: 0.5,
+                                    fontSize: '1rem',
+                                    textAlign: isMobile ? 'left' : 'right',
+                                    '&::after': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        right: isMobile ? 'auto' : 0,
+                                        left: isMobile ? 0 : 'auto',
+                                        bottom: 0,
+                                        width: 30,
+                                        height: 2,
+                                        backgroundColor: '#00B8A9',
+                                    }
+                                }}
+                            >
+                                Contact
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'flex-start' : 'flex-end' }}>
+                                {contactInfo.map((item, index) => (
+                                    <Link 
+                                        key={index}
+                                        href={item.link} 
+                                        color="inherit" 
+                                        underline="hover" 
                                         sx={{ 
-                                            fontWeight: 'bold',
-                                            fontSize: isExtraSmall ? '0.75rem' : '0.85rem',
-                                            pb: 0.5,
-                                            borderBottom: '2px solid #00B8A9',
-                                            mb: 1.5,
-                                            textAlign: 'center',
-                                            mx: 'auto',
-                                            width: 'fit-content'
+                                            display: 'flex', 
+                                            alignItems: 'center',
+                                            flexDirection: isMobile ? 'row' : 'row-reverse',
+                                            mb: 1.5 
                                         }}
                                     >
-                                        Navigation
-                                    </Typography>
-                                    
-                                    {/* Navigation links - centered */}
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        {navigationItems.map((item) => (
-                                            <Link 
-                                                key={item.label}
-                                                component={RouterLink} 
-                                                to={item.link} 
-                                                color="inherit" 
-                                                underline="hover"
-                                                sx={{ mb: 1.5, textAlign: 'center' }}
-                                            >
-                                                <Typography 
-                                                    variant="body2" 
-                                                    sx={{ fontSize: isExtraSmall ? '0.7rem' : '0.8rem' }}
-                                                >
-                                                    {item.label}
-                                                </Typography>
-                                            </Link>
-                                        ))}
-                                    </Box>
-                                </Grid>
-                                
-                                {/* Services Column */}
-                                <Grid item xs={4} sx={{ textAlign: 'center' }}>
-                                    {/* Header with green underline - centered */}
-                                    <Typography 
-                                        variant="subtitle1" 
-                                        sx={{ 
-                                            fontWeight: 'bold',
-                                            fontSize: isExtraSmall ? '0.75rem' : '0.85rem',
-                                            pb: 0.5,
-                                            borderBottom: '2px solid #00B8A9',
-                                            mb: 1.5,
-                                            textAlign: 'center',
-                                            mx: 'auto',
-                                            width: 'fit-content'
-                                        }}
-                                    >
-                                        Services
-                                    </Typography>
-                                    
-                                    {/* Services links - centered */}
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        {servicesItems.map((item) => (
-                                            <Link 
-                                                key={item.label}
-                                                component={RouterLink} 
-                                                to={item.link} 
-                                                color="inherit" 
-                                                underline="hover"
-                                                sx={{ mb: 1.5, textAlign: 'center' }}
-                                            >
-                                                <Typography 
-                                                    variant="body2" 
-                                                    sx={{ fontSize: isExtraSmall ? '0.7rem' : '0.8rem' }}
-                                                >
-                                                    {item.label}
-                                                </Typography>
-                                            </Link>
-                                        ))}
-                                    </Box>
-                                </Grid>
-                                
-                                {/* Contact Column */}
-                                <Grid item xs={4} sx={{ textAlign: 'center' }}>
-                                    {/* Header with green underline - centered */}
-                                    <Typography 
-                                        variant="subtitle1" 
-                                        sx={{ 
-                                            fontWeight: 'bold',
-                                            fontSize: isExtraSmall ? '0.75rem' : '0.85rem',
-                                            pb: 0.5,
-                                            borderBottom: '2px solid #00B8A9',
-                                            mb: 1.5,
-                                            textAlign: 'center',
-                                            mx: 'auto',
-                                            width: 'fit-content'
-                                        }}
-                                    >
-                                        Contact
-                                    </Typography>
-                                    
-                                    {/* Contact links - centered with icons */}
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        {contactInfo.map((item, index) => (
-                                            <Link 
-                                                key={index}
-                                                href={item.link} 
-                                                color="inherit" 
-                                                underline="hover" 
-                                                sx={{ 
-                                                    display: 'flex', 
-                                                    alignItems: 'center',
-                                                    mb: 1.5,
-                                                    justifyContent: 'center'
-                                                }}
-                                            >
-                                                <Box sx={{ 
-                                                    color: '#00B8A9', 
-                                                    mr: 0.5, 
-                                                    display: 'flex', 
-                                                    alignItems: 'center' 
-                                                }}>
-                                                    {item.icon === 'location' && <LocationOnIcon sx={{ fontSize: isExtraSmall ? '0.8rem' : '1rem' }} />}
-                                                    {item.icon === 'email' && <MailOutlineIcon sx={{ fontSize: isExtraSmall ? '0.8rem' : '1rem' }} />}
-                                                    {item.icon === 'phone' && <PhoneIcon sx={{ fontSize: isExtraSmall ? '0.8rem' : '1rem' }} />}
-                                                </Box>
-                                                <Typography 
-                                                    variant="body2" 
-                                                    sx={{ 
-                                                        fontSize: isExtraSmall ? '0.65rem' : '0.75rem',
-                                                        wordBreak: 'break-word'
-                                                    }}
-                                                >
-                                                    {item.text}
-                                                </Typography>
-                                            </Link>
-                                        ))}
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        )}
-
-                        {/* Desktop layout - unchanged */}
-                        {!isMobile && (
-                            <Grid item xs={12} md={9}>
-                                <Grid container spacing={2}>
-                                    {/* Navigation */}
-                                    <Grid item xs={4} md={3}>
-                                        <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
-                                            position: 'relative',
-                                            paddingBottom: 0.5,
-                                            fontSize: '1rem',
-                                            '&::after': {
-                                                content: '""',
-                                                position: 'absolute',
-                                                left: 0,
-                                                bottom: 0,
-                                                width: 30,
-                                                height: 2,
-                                                backgroundColor: '#00B8A9',
-                                            }
+                                        <Box sx={{ 
+                                            color: '#00B8A9', 
+                                            ml: isMobile ? 0 : 1,
+                                            mr: isMobile ? 1 : 0,
+                                            display: 'flex', 
+                                            alignItems: 'center' 
                                         }}>
-                                            Navigation
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                            {navigationItems.map((item) => (
-                                                <Link 
-                                                    key={item.label}
-                                                    component={RouterLink} 
-                                                    to={item.link} 
-                                                    color="inherit" 
-                                                    underline="hover"
-                                                    sx={{ mb: 1 }}
-                                                >
-                                                    <Typography 
-                                                        variant="body2" 
-                                                        sx={{ fontSize: '0.9rem' }}
-                                                    >
-                                                        {item.label}
-                                                    </Typography>
-                                                </Link>
-                                            ))}
+                                            {item.icon === 'location' && <LocationOnIcon fontSize="small" />}
+                                            {item.icon === 'email' && <MailOutlineIcon fontSize="small" />}
+                                            {item.icon === 'phone' && <PhoneIcon fontSize="small" />}
                                         </Box>
-                                    </Grid>
-
-                                    {/* Services */}
-                                    <Grid item xs={4} md={3}>
-                                        <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
-                                            position: 'relative',
-                                            paddingBottom: 0.5,
-                                            fontSize: '1rem',
-                                            '&::after': {
-                                                content: '""',
-                                                position: 'absolute',
-                                                left: 0,
-                                                bottom: 0,
-                                                width: 30,
-                                                height: 2,
-                                                backgroundColor: '#00B8A9',
-                                            }
-                                        }}>
-                                            Services
+                                        <Typography 
+                                            variant="body2" 
+                                            sx={{ 
+                                                fontSize: isExtraSmall ? '0.75rem' : '0.9rem',
+                                                textAlign: isMobile ? 'left' : 'right'
+                                            }}
+                                        >
+                                            {item.text}
                                         </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                            {servicesItems.map((item) => (
-                                                <Link 
-                                                    key={item.label}
-                                                    component={RouterLink} 
-                                                    to={item.link} 
-                                                    color="inherit" 
-                                                    underline="hover"
-                                                    sx={{ mb: 1 }}
-                                                >
-                                                    <Typography 
-                                                        variant="body2" 
-                                                        sx={{ fontSize: '0.9rem' }}
-                                                    >
-                                                        {item.label}
-                                                    </Typography>
-                                                </Link>
-                                            ))}
-                                        </Box>
-                                    </Grid>
-
-                                    {/* Contact Info */}
-                                    <Grid item xs={4} md={3}>
-                                        <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{
-                                            position: 'relative',
-                                            paddingBottom: 0.5,
-                                            fontSize: '1rem',
-                                            '&::after': {
-                                                content: '""',
-                                                position: 'absolute',
-                                                left: 0,
-                                                bottom: 0,
-                                                width: 30,
-                                                height: 2,
-                                                backgroundColor: '#00B8A9',
-                                            }
-                                        }}>
-                                            Contact
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                            {contactInfo.map((item, index) => (
-                                                <Link 
-                                                    key={index}
-                                                    href={item.link} 
-                                                    color="inherit" 
-                                                    underline="hover" 
-                                                    sx={{ 
-                                                        display: 'flex', 
-                                                        alignItems: 'center',
-                                                        mb: 1 
-                                                    }}
-                                                >
-                                                    <Box sx={{ 
-                                                        color: '#00B8A9', 
-                                                        mr: 1, 
-                                                        display: 'flex', 
-                                                        alignItems: 'center' 
-                                                    }}>
-                                                        {item.icon === 'location' && <LocationOnIcon fontSize="small" />}
-                                                        {item.icon === 'email' && <MailOutlineIcon fontSize="small" />}
-                                                        {item.icon === 'phone' && <PhoneIcon fontSize="small" />}
-                                                    </Box>
-                                                    <Typography 
-                                                        variant="body2" 
-                                                        sx={{ fontSize: '0.9rem' }}
-                                                    >
-                                                        {item.text}
-                                                    </Typography>
-                                                </Link>
-                                            ))}
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        )}
+                                    </Link>
+                                ))}
+                            </Box>
+                        </Grid>
                     </Grid>
                 </Container>
             </ContentSection>
