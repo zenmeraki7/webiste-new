@@ -17,6 +17,7 @@ import Tap2shareApp from './pages/Apps/Tap2share'
 import EmailAssistant from './pages/Projects/EmailAssistant'
 import Metamatrix from './pages/Projects/Metamatrix'
 import Multivendor from './pages/Projects/Multivendor'
+import VisualSearchPage from './pages/Apps/VisualSearchApp'
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
         <Route path="/metamatrix-app" element={<MetaMatrixApp />} />
         <Route path="/multivendor-app" element={<MultiVendorApp />} />
         <Route path="/tap2share-app" element={<Tap2shareApp />} />
+        <Route path="/visual-search-app" element={<VisualSearchPage />} />
 
         {/* projects */}
         <Route path="/email-assitant" element={<EmailAssistant />} />

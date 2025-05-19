@@ -22,6 +22,7 @@ import {
   NavigateNext,
 } from '@mui/icons-material';
 import { motion, useAnimation, useInView } from 'framer-motion';
+import { SearchIcon } from 'lucide-react';
 
 // Theme and AnimatedBackground component remain unchanged...
 // Create custom theme with your primary color #0A2725
@@ -273,6 +274,16 @@ const apps = [
   },
   {
     id: 4,
+    name: "Visual Search",
+    description: "AI-powered image recognition and search",
+    icon: <SearchIcon
+     sx={{ fontSize: 40 }} />,
+    bgColor: '#0A2725',
+    featured: true,
+    link: '/visual-search-app'
+  },
+  {
+    id: 5,
     name: "Virtual Photoshoot",
     description: "Create professional-grade images instantly",
     icon: <CameraAlt sx={{ fontSize: 40 }} />,
@@ -281,7 +292,7 @@ const apps = [
     link: ''
   },
   {
-    id: 5,
+    id: 6,
     name: "Chatbot",
     description: "Intelligent conversational AI assistant",
     icon: <ChatBubbleOutline sx={{ fontSize: 40 }} />,
