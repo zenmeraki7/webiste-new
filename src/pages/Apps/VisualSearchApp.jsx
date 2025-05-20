@@ -138,152 +138,101 @@ const VisualSearchApp = () => {
                     Transform your marketplace with cutting-edge visual search technology. Let customers find products by simply uploading an image, enhancing discovery across all your vendors.
                 </Typography>
                 
-                {/* New Banner Section - Light Yellow Ribbon Style */}
+                {/* Pure Image Banner */}
                 <MotionBox
                     sx={{
                         mb: isMobile ? 3 : 4,
+                        borderRadius: 2,
+                        overflow: 'hidden',
                         position: 'relative',
-                        overflow: 'visible',
-                        borderRadius: 0,
-                        background: 'transparent',
-                        maxWidth: isMobile ? '100%' : '95%',
+                        height: isMobile ? 180 : 240,
+                        width: '100%',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
                     }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3, duration: 0.5 }}
                 >
-                    {/* Main banner content with asymmetric shape */}
-                    <Box
+                    {/* Full image placeholder */}
+                    <Box 
+                        component="img"
+                        src="https://cdn1.vectorstock.com/i/1000x1000/79/65/special-offer-50-off-banner-design-vector-22827965.jpg"
+                        alt="Visual Search Technology"
                         sx={{
-                            position: 'relative',
-                            backgroundColor: '#FFF9C4', // Light yellow color
-                            color: '#000',
-                            p: isMobile ? 2 : 3,
-                            borderRadius: '4px 4px 4px 0',
-                            clipPath: 'polygon(0 0, 100% 0, 97% 100%, 0 100%, 3% 50%)',
-                            boxShadow: '0 6px 16px rgba(255, 249, 196, 0.4)',
-                            zIndex: 2,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexWrap: { xs: 'wrap', sm: 'nowrap' },
-                            gap: 2,
-                            border: '1px solid #FFF176' // Slightly darker yellow border
-                        }}
-                    >
-                        <Box sx={{ flex: '1 1 auto' }}>
-                            <Typography 
-                                variant={isMobile ? "h6" : "h5"} 
-                                component="div" 
-                                color="rgba(0, 0, 0, 0.87)"
-                                fontWeight="bold"
-                                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                            >
-                                <ImageSearchIcon sx={{ animation: 'pulse 2s infinite', color: theme.palette.primary.main }} />
-                                NEW: Visual Product Discovery
-                            </Typography>
-                            <Typography 
-                                variant={isMobile ? "body2" : "body1"} 
-                                sx={{ mt: 1, fontWeight: 500 }}
-                            >
-                                Boost your marketplace conversions by <Box component="span" sx={{ fontWeight: 'bold', color: theme.palette.primary.dark }}>35%</Box> with our AI-powered search technology.
-                            </Typography>
-                        </Box>
-                        
-                        <MotionButton
-                            variant="contained"
-                            sx={{ 
-                                backgroundColor: theme.palette.primary.main,
-                                color: 'white',
-                                px: isMobile ? 2 : 3,
-                                py: isMobile ? 1 : 1.5,
-                                borderRadius: 1,
-                                fontWeight: 'bold',
-                                whiteSpace: 'nowrap',
-                                flex: { xs: '1 1 100%', sm: '0 0 auto' },
-                                mt: { xs: 1, sm: 0 },
-                                position: 'relative',
-                                overflow: 'hidden',
-                                '&::after': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: '-100%',
-                                    width: '100%',
-                                    height: '100%',
-                                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                                    animation: 'shine 3s infinite',
-                                }
-                            }}
-                            whileHover={{ 
-                                scale: 1.05,
-                                backgroundColor: theme.palette.primary.light,
-                                transition: { duration: 0.2 }
-                            }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            Try Now
-                        </MotionButton>
-                    </Box>
-                    
-                    {/* Ribbon tail */}
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            left: 0,
-                            bottom: '-10px',
-                            width: '15px',
-                            height: '10px',
-                            backgroundColor: '#FBC02D', // Darker yellow for shadow
-                            clipPath: 'polygon(0 0, 100% 0, 100% 100%)',
-                            zIndex: 1
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
                         }}
                     />
                     
-                    {/* Animated dots/sparkles */}
-                    {[...Array(3)].map((_, i) => (
-                        <Box
-                            key={i}
-                            sx={{
-                                position: 'absolute',
-                                top: 10 + (i * 15),
-                                right: 10 + (i * 7),
-                                width: 4 + (i * 2),
-                                height: 4 + (i * 2),
-                                borderRadius: '50%',
-                                backgroundColor: theme.palette.primary.main,
-                                zIndex: 3
-                            }}
-                            component={motion.div}
-                            animate={{
-                                opacity: [0, 1, 0],
-                                scale: [0.8, 1.2, 0.8],
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                delay: i * 0.3,
-                                ease: "easeInOut"
-                            }}
-                        />
-                    ))}
+                    {/* Visual search indicator animations */}
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            pointerEvents: 'none',
+                        }}
+                    >
+                        {/* Animated search indicators */}
+                        {[...Array(5)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                style={{
+                                    position: 'absolute',
+                                    top: `${15 + (i * 15)}%`,
+                                    left: `${10 + (i * 18)}%`,
+                                    width: isMobile ? 30 : 50,
+                                    height: isMobile ? 30 : 50,
+                                    borderRadius: '50%',
+                                    border: '2px solid rgba(255, 255, 255, 0.8)',
+                                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.6)',
+                                    zIndex: 5
+                                }}
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.7, 1, 0.7],
+                                    boxShadow: [
+                                        '0 0 5px rgba(255, 255, 255, 0.3)',
+                                        '0 0 15px rgba(255, 255, 255, 0.7)',
+                                        '0 0 5px rgba(255, 255, 255, 0.3)'
+                                    ]
+                                }}
+                                transition={{
+                                    duration: 2 + (i * 0.5),
+                                    repeat: Infinity,
+                                    ease: "easeInOut",
+                                    delay: i * 0.4
+                                }}
+                            >
+                                {/* Inner circle */}
+                                <motion.div
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        width: isMobile ? 8 : 12,
+                                        height: isMobile ? 8 : 12,
+                                        borderRadius: '50%',
+                                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    }}
+                                    animate={{
+                                        scale: [0.8, 1.5, 0.8],
+                                    }}
+                                    transition={{
+                                        duration: 1.5 + (i * 0.3),
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                        delay: i * 0.4 + 0.2
+                                    }}
+                                />
+                            </motion.div>
+                        ))}
+                    </Box>
                 </MotionBox>
-                
-                {/* Add keyframes for shine effect */}
-                <Box
-                    sx={{
-                        '@keyframes shine': {
-                            '0%': { left: '-100%' },
-                            '20%': { left: '100%' },
-                            '100%': { left: '100%' }
-                        },
-                        '@keyframes pulse': {
-                            '0%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(1.2)' },
-                            '100%': { transform: 'scale(1)' }
-                        }
-                    }}
-                />
                 
                 <Box sx={{ display: 'flex', gap: 2, mb: isMobile ? 2 : 4 }}>
                     {/* Buttons removed as in original */}

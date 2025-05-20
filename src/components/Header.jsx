@@ -311,15 +311,7 @@ const GrowioHeader = () => {
                 </div>
               );
             })}
-            <Box sx={{ borderTop: 1, borderColor: 'divider', mt: 1, pt: 1 }}>
-              <MenuItem onClick={handleMobileMenuClose}>Log In</MenuItem>
-              <MenuItem
-                onClick={handleMobileMenuClose}
-                sx={{ color: 'primary.main', fontWeight: 500 }}
-              >
-                Get Started
-              </MenuItem>
-            </Box>
+            
           </Menu>
         </Toolbar>
       </Container>
