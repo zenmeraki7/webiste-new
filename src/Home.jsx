@@ -7,6 +7,7 @@ import VisionPage from './pages/Home/VisionPage'
 import OurAppsPage from './pages/Home/OurApps'
 import ProjectsPage from './pages/Home/Projectpage'
 import ContactFormSection from './pages/Home/Contactform'
+import ErrorBoundary from './components/Error/Errorboundary'
 
 export default function Home() {
   return (
@@ -38,8 +39,9 @@ export default function Home() {
         <ContactFormSection />
       </section>
 
-
-      <Footer />
+     <ErrorBoundary>    
+    <Footer />
+    </ErrorBoundary>
     </div>
   )
 }
