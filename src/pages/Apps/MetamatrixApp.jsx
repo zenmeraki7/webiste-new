@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {
   AppBar, Box, Button, Card, CardContent, Container, Divider,
   Grid, IconButton, Paper, Tab, Tabs, Typography, List,
-  ListItem, ListItemIcon, ListItemText, Rating, useMediaQuery
+  ListItem, ListItemIcon, ListItemText, Rating, useMediaQuery,
+  Modal, TextField, Alert, CircularProgress
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
@@ -10,10 +11,16 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import CheckIcon from '@mui/icons-material/Check';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import LinkIcon from '@mui/icons-material/Link';
+import CloseIcon from '@mui/icons-material/Close';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import ReferralModal from '../../components/ReferralModal'; // Import the separated ReferralModal
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
-import Footer from '../../components/Footer';
 
 // Create a custom theme with blue as the primary color
 const theme = createTheme({
@@ -59,6 +66,7 @@ const MetaMatrixApp = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activePage, setActivePage] = useState('hero');
   const [hoverStates, setHoverStates] = useState({});
+  const [referralModalOpen, setReferralModalOpen] = useState(false);
   
   // Use MUI's useMediaQuery hook to detect mobile view
   const muiTheme = useTheme();
@@ -74,6 +82,14 @@ const MetaMatrixApp = () => {
       ...prev,
       [id]: isHovering
     }));
+  };
+
+  const handleReferralModalOpen = () => {
+    setReferralModalOpen(true);
+  };
+
+  const handleReferralModalClose = () => {
+    setReferralModalOpen(false);
   };
 
   const tabContents = {
@@ -194,6 +210,7 @@ const MetaMatrixApp = () => {
               color="primary"
               size={isMobile ? "medium" : "large"} /* Smaller button on mobile */
               fullWidth={isMobile}
+              startIcon={<LinkIcon fontSize={isMobile ? "small" : "medium"} />}
               whileHover={{
                 borderColor: theme.palette.primary.dark,
                 color: theme.palette.primary.dark,
@@ -201,14 +218,14 @@ const MetaMatrixApp = () => {
                 transition: { duration: 0.3 }
               }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => window.open('https://youtu.be/1UMtbQG5Z1M', '_blank')}
+              onClick={handleReferralModalOpen}
               sx={{
                 fontSize: { xs: '0.8rem', md: '0.875rem' }, /* Smaller font on mobile */
                 height: { xs: '36px', md: '48px' }, /* Reduced height on mobile */
                 mt: { xs: 0.5, sm: 0 } /* Small margin top only on extra small screens */
               }}
             >
-              Watch Demo
+             Generate Referral Link
             </MotionButton>
           </Box>
         </Grid>
@@ -896,7 +913,13 @@ const MetaMatrixApp = () => {
             </Box>
           </MotionPaper>
 
-          
+          {/* Referral Modal */}
+          <ReferralModal
+            open={referralModalOpen}
+            onClose={handleReferralModalClose}
+            theme={theme}
+            isMobile={isMobile}
+          />
         </Container>
         <Footer />
       </Box>
