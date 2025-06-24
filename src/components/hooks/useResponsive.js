@@ -1,3 +1,4 @@
+//src/components/hooks/useResponsive.js
 import { useTheme, useMediaQuery } from '@mui/material';
 
 export const useResponsive = () => {

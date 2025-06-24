@@ -1,4 +1,4 @@
-// src/constants/contactInfo.js
+// src/components/constants/contactInfo.js
 export const contactInfo = {
   location: 'Thrissur, Kerala',
   email: 'official@zenmeraki.com',
