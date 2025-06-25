@@ -428,7 +428,7 @@ function AboutUs() {
                     { year: '2020', content: 'Founded with focus on mobile app development and startup solutions' },
                     { year: '2022', content: 'Expanded to full-stack web development and enterprise solutions' },
                     { year: '2024', content: 'Pioneered AI/ML integration and cloud-native architecture solutions' },
-                    { year: '2025', content: 'Global expansion with 500+ projects delivered across 15+ countries' }
+                    { year: '2025', content: 'Global expansion with 100+ projects delivered across 5+ countries' }
                   ].map((item, index) => (
                     <div key={index} className="timeline-item">
                       <div className="timeline-dot" />
