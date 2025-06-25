@@ -80,29 +80,42 @@ function Contact() {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      // Form validation passed
-      console.log("Form data:", formData);
-      
-      // Show success message
-      setIsSubmitted(true);
-      
-      // Reset form after submission
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          subject: "",
-          message: "",
-        });
-        setIsSubmitted(false);
-      }, 3000);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (validateForm()) {
+    try {
+      const response = await fetch("https://getform.io/f/bmddevga", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        console.log("Form data:", formData);
+        setIsSubmitted(true); // Show success message
+
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          setFormData({
+            name: "",
+            email: "",
+            subject: "",
+            message: "",
+          });
+          setIsSubmitted(false);
+        }, 3000);
+      } else {
+        alert("There was an error submitting the form. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+      alert("Network error. Please try again.");
     }
-  };
+  }
+};
+
+
 
   return (
     <div className="contact-page">

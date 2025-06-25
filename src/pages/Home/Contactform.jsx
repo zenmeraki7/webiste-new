@@ -136,26 +136,38 @@ const ContactFormSection = () => {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        
-        // Simulate form submission
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Reset form after submission
-        setFormData({
-            fullName: '',
-            email: '',
-            phone: '',
-            message: ''
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+        const response = await fetch("https://getform.io/f/bmddevga", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
         });
-        
+
+        if (response.ok) {
+            console.log('Form submitted:', formData);
+            // Reset form
+            setFormData({
+                fullName: '',
+                email: '',
+                phone: '',
+                message: ''
+            });
+            alert('Your message has been sent successfully!');
+        } else {
+            alert('There was an error submitting the form. Please try again.');
+        }
+    } catch (error) {
+        console.error("Error submitting the form:", error);
+        alert('Network error. Please try again.');
+    } finally {
         setIsSubmitting(false);
-        
-        // Here you would normally handle the form submission to your backend
-        console.log('Form submitted:', formData);
-    };
+    }
+};
+
 
     return (
         <Container maxWidth="lg" sx={{ py: 8 }}>
