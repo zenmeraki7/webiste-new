@@ -756,7 +756,9 @@
     font-size: clamp(1.5rem, 5vw, 2rem);
     margin-bottom: 1rem;
   }
-  
+  h2.section-title::after {
+  display: none !important;
+}
   .section-description {
     font-size: 1rem;
   }

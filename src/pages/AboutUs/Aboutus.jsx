@@ -19,6 +19,7 @@ import {TESTIMONIALS} from './hooks/variants';
 import {useScrollAnimation, useIntersectionObserver, useTypewriter, useAnimatedCounter} from './hooks/Abouthooks';
 import {ErrorBoundary} from '../AboutUs/hooks/ErrorBoundary';
 import './About.css';
+import Header from '../../components/Header';
 
 // Component Implementations
 const LoadingSpinner = () => (
@@ -283,7 +284,7 @@ function AboutUs() {
   return (
     <ErrorBoundary>
       <div className="about-us-container" role="main">
-
+<Header/>
         {/* Enhanced Hero Section */}
         <section 
           className="hero-section"
