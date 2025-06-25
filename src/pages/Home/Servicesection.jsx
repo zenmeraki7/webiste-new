@@ -449,7 +449,7 @@ const ServicesPage = () => {
                                             {services[0].description}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
+                                    {/* <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
                                         <Button
                                             size="small"
                                             color="primary"
@@ -467,7 +467,7 @@ const ServicesPage = () => {
                                         >
                                             Read more
                                         </Button>
-                                    </CardActions>
+                                    </CardActions> */}
                                 </Card>
                             </AnimatedCard>
                         </Box>
@@ -510,7 +510,7 @@ const ServicesPage = () => {
                                                 {services[1].description.split('.')[0] + '.'}
                                             </Typography>
                                         </CardContent>
-                                        <CardActions sx={{ p: 0 }}>
+                                        {/* <CardActions sx={{ p: 0 }}>
                                             <Button
                                                 size="small"
                                                 color="primary"
@@ -528,7 +528,7 @@ const ServicesPage = () => {
                                             >
                                                 Read more
                                             </Button>
-                                        </CardActions>
+                                        </CardActions> */}
                                     </Box>
                                     <CardMedia
                                         component="img"
@@ -575,7 +575,7 @@ const ServicesPage = () => {
                                             {services[2].title}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
+                                    {/* <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
                                         <Button
                                             size="small"
                                             color="primary"
@@ -593,7 +593,7 @@ const ServicesPage = () => {
                                         >
                                             Read more
                                         </Button>
-                                    </CardActions>
+                                    </CardActions> */}
                                 </Card>
                             </AnimatedCard>
                         </Box>
@@ -628,7 +628,7 @@ const ServicesPage = () => {
                                             {services[3].title}
                                         </Typography>
                                     </CardContent>
-                                    <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
+                                    {/* <CardActions sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
                                         <Button
                                             size="small"
                                             color="primary"
@@ -646,7 +646,7 @@ const ServicesPage = () => {
                                         >
                                             Read more
                                         </Button>
-                                    </CardActions>
+                                    </CardActions> */}
                                 </Card>
                             </AnimatedCard>
                         </Box>
@@ -698,7 +698,7 @@ const ServicesPage = () => {
                                                 {services[4].description.split('.')[0] + '.'}
                                             </Typography>
                                         </CardContent>
-                                        <CardActions sx={{ p: 0 }}>
+                                        {/* <CardActions sx={{ p: 0 }}>
                                             <Button
                                                 size="small"
                                                 color="primary"
@@ -716,7 +716,7 @@ const ServicesPage = () => {
                                             >
                                                 Read more
                                             </Button>
-                                        </CardActions>
+                                        </CardActions> */}
                                     </Box>
                                     <CardMedia
                                         component="img"
@@ -770,7 +770,7 @@ const ServicesPage = () => {
                                                 {services[5].description.split('.')[0] + '.'}
                                             </Typography>
                                         </CardContent>
-                                        <CardActions sx={{ p: 0 }}>
+                                        {/* <CardActions sx={{ p: 0 }}>
                                             <Button
                                                 size="small"
                                                 color="primary"
@@ -788,7 +788,7 @@ const ServicesPage = () => {
                                             >
                                                 Read more
                                             </Button>
-                                        </CardActions>
+                                        </CardActions> */}
                                     </Box>
                                     <CardMedia
                                         component="img"

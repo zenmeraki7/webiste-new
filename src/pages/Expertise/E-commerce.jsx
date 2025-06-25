@@ -101,7 +101,8 @@ function Ecommerce() {
         <div className={`hero-content ${isVisible ? 'is-visible' : ''}`}>
           <h1>E-COMMERCE ACCOUNT MANAGEMENT</h1>
           <p>Effortless Management, Maximum Profitability</p>
-          <button className="btn-primary">
+          <button className="btn-primary"
+           onClick={() => window.location.href = '/contact'}>
             Get Started <FiChevronRight className="icon-right" />
           </button>
         </div>
