@@ -1,352 +1,536 @@
-import React from 'react';
-import Header from '../../components/Header';
-import { FaRobot, FaAccessibleIcon, FaLightbulb, FaWifi } from "react-icons/fa";
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { 
+  FaRocket, 
+  FaArrowRight,
+  FaChevronDown,
+  FaLinkedin,
+  FaGithub,
+  FaQuoteLeft,
+  FaStar
+} from "react-icons/fa";
+import {useNavigate} from 'react-router-dom';
+import Footer from '../../components/Footer';
+import {ANIMATION_VARIANTS} from './hooks/variants';
+import {CORE_VALUES} from './hooks/variants';
+import {SERVICES} from './hooks/variants';
+import {TEAM_MEMBERS} from './hooks/variants';
+import {TESTIMONIALS} from './hooks/variants';
+import {useScrollAnimation, useIntersectionObserver, useTypewriter, useAnimatedCounter} from './hooks/Abouthooks';
+import {ErrorBoundary} from '../AboutUs/hooks/ErrorBoundary';
 import './About.css';
 
-// Import images
-import vision from '../../assets/images/vision.jpg';
-import working from '../../assets/images/working.jpg';
-import wfh from '../../assets/images/wfh.jpg';
-import meeting from '../../assets/images/meeting.jpg';
-import handshake from '../../assets/images/handshake.jpg';
-import Footer from '../../components/Footer';
+// Component Implementations
+const LoadingSpinner = () => (
+  <div className="loading-spinner">
+    <FaRocket className="loading-icon" />
+  </div>
+);
 
+// Enhanced Metric Card with Animation
+const MetricCard = React.memo(({ number, label, suffix = '', inView }) => {
+  const animatedNumber = useAnimatedCounter(number, 2000, inView);
+  
+  return (
+    <div className="metric-card">
+      <span className="metric-number">
+        {animatedNumber}{suffix}
+      </span>
+      <span className="metric-label">
+        {label}
+      </span>
+    </div>
+  );
+});
+
+// Value Card Component
+const ValueCard = React.memo(({ value, index }) => {
+  const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
+  const IconComponent = value.icon;
+  
+  return (
+    <motion.div
+      ref={ref}
+      className="value-card-wrapper"
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: value.delay }}
+    >
+      <motion.div 
+        className="value-card"
+        {...ANIMATION_VARIANTS.scaleOnHover}
+        whileTap={{ scale: 0.98 }}
+      >
+        <div className="value-icon-container">
+          <motion.div 
+            className="value-icon"
+            whileHover={{ rotate: 360 }}
+            transition={{ duration: 0.6 }}
+          >
+            <IconComponent size={32} />
+          </motion.div>
+        </div>
+        <h5 className="value-title">
+          {value.title}
+        </h5>
+        <p className="value-description">
+          {value.description}
+        </p>
+      </motion.div>
+    </motion.div>
+  );
+});
+
+// Enhanced Service Card
+const ServiceCard = React.memo(({ service, index }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
+  const IconComponent = service.icon;
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 60 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: index * 0.1 }}
+    >
+      <motion.div 
+        className="service-card"
+        {...ANIMATION_VARIANTS.scaleOnHover}
+        layout
+      >
+        <div className="service-header">
+          <div className="service-icon">
+            <IconComponent />
+          </div>
+          <h4 className="service-title">
+            {service.title}
+          </h4>
+        </div>
+        
+        <p className="service-description">
+          {service.description}
+        </p>
+        
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="service-features"
+            >
+              {service.features.map((feature, idx) => (
+                <motion.div
+                  key={feature}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="service-feature"
+                >
+                  {feature}
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <button 
+          className="service-expand-btn"
+          onClick={() => setIsExpanded(!isExpanded)}
+          aria-label={isExpanded ? 'Show less' : 'Show more features'}
+        >
+          <FaChevronDown 
+            className={`expand-icon ${isExpanded ? 'expanded' : ''}`}
+          />
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+});
+
+// Team Member Card
+const TeamCard = React.memo(({ member, index }) => {
+  const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="team-card"
+    >
+      <div className="team-avatar">
+        <span>{member.avatar}</span>
+      </div>
+      <h4 className="team-name">
+        {member.name}
+      </h4>
+      <div className="team-role">
+        {member.role}
+      </div>
+      <p className="team-bio">
+        {member.bio}
+      </p>
+      <div className="team-social">
+        <a 
+          href={member.social.linkedin} 
+          className="social-link"
+          aria-label="LinkedIn"
+        >
+          <FaLinkedin />
+        </a>
+        <a 
+          href={member.social.github} 
+          className="social-link"
+          aria-label="GitHub"
+        >
+          <FaGithub />
+        </a>
+      </div>
+    </motion.div>
+  );
+});
+
+// Testimonial Card
+const TestimonialCard = React.memo(({ testimonial, index }) => {
+  const [ref, inView] = useIntersectionObserver({ threshold: 0.1 });
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="testimonial-card"
+    >
+      <div className="testimonial-quote-icon">
+        <FaQuoteLeft />
+      </div>
+      <p className="testimonial-text">
+        "{testimonial.text}"
+      </p>
+      <div className="testimonial-author">
+        <div className="author-info">
+          <div className="author-name">
+            {testimonial.author}
+          </div>
+          <div className="author-role">
+            {testimonial.role}
+          </div>
+        </div>
+        <div className="testimonial-rating">
+          {[...Array(testimonial.rating)].map((_, i) => (
+            <FaStar key={i} />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+});
+
+// Main Component
 function AboutUs() {
-    const navigate = useNavigate();
-    const handleAbout = () => {
-        navigate("/contact");
-    };
+  const navigate = useNavigate();
+  const { y1, opacity } = useScrollAnimation();
+  const [mounted, setMounted] = useState(false);
+  const [metricsRef, metricsInView] = useIntersectionObserver({ threshold: 0.3 });
+  
+  const heroText = useTypewriter(
+    "In a World of Possibilities, We Create Limitless Digital Experiences",
+    { delay: 1000, speed: 50 }
+  );
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    return (
-        <>
-            <Header />
+  const handleContactClick = useCallback(() => {
+    navigate('/contact');
+  }, [navigate]);
 
-            {/* Hero Section */}
-            <section className="hero-section">
-                <div className="hero-pattern"></div>
-                <motion.div
-                    className="container text-center"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
+  const scrollToSection = useCallback((sectionId) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  const memoizedValues = useMemo(() => 
+    CORE_VALUES.map((value, index) => (
+      <ValueCard key={value.id} value={value} index={index} />
+    )), []
+  );
+
+  const memoizedServices = useMemo(() =>
+    SERVICES.map((service, index) => (
+      <ServiceCard key={service.id} service={service} index={index} />
+    )), []
+  );
+
+  const memoizedTeam = useMemo(() =>
+    TEAM_MEMBERS.map((member, index) => (
+      <TeamCard key={member.id} member={member} index={index} />
+    )), []
+  );
+
+  const memoizedTestimonials = useMemo(() =>
+    TESTIMONIALS.map((testimonial, index) => (
+      <TestimonialCard key={testimonial.id} testimonial={testimonial} index={index} />
+    )), []
+  );
+
+  if (!mounted) return <LoadingSpinner />;
+
+  return (
+    <ErrorBoundary>
+      <div className="about-us-container" role="main">
+
+        {/* Enhanced Hero Section */}
+        <section 
+          className="hero-section"
+          aria-labelledby="hero-title"
+        >
+          <motion.div 
+            className="hero-background"
+            style={{ y: y1, opacity }}
+          />
+          
+          <motion.div
+            className="hero-content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.3 }}
+          >
+            <motion.h1 
+              id="hero-title"
+              className="hero-title"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              {heroText}
+            </motion.h1>
+            
+            <div className="hero-text-container">
+              <motion.p 
+                className="hero-description"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+              >
+                Welcome to <span className="brand-gradient">Zen Meraki</span>, where innovative 
+                technology meets exceptional craftsmanship. We architect digital solutions 
+                that transform businesses and delight users worldwide.
+              </motion.p>
+              
+              <motion.div
+                className="hero-buttons"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.9 }}
+              >
+                <button 
+                  className="btn btn-primary"
+                  onClick={handleContactClick}
+                  aria-label="Start your project with us"
                 >
-                    <h1 className="hero-title">
-                        In a World of Possibilities, <br /> We Create Limitless Opportunities
-                    </h1>
-                    <div className="row justify-content-center">
-                        <div className="col-lg-8">
-                            <p className="hero-subtitle">
-                                Welcome to <span className="accent-text">Zen Meraki</span>, where passion meets purpose, and innovation ignites success.
-                                We are more than a team – we are dreamers, doers, and creators, forging the path to
-                                extraordinary growth. With every project, we craft stories of transformation, turning
-                                visions into vibrant realities.
-                            </p>
-                        </div>
-                    </div>
-                </motion.div>
-            </section>
-
-            {/* Vision Card - Now overlapping with hero section */}
-            <div className="container">
-                <motion.div
-                    className="vision-card"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.3 }}
+                  Start Your Journey <FaArrowRight />
+                </button>
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => scrollToSection('our-story')}
+                  aria-label="Learn more about our story"
                 >
-                    <div className="row align-items-center">
-                        <div className="col-md-6">
-                            <h2 className="section-title">
-                                OUR VISION
-                                <div className="title-underline"></div>
-                            </h2>
-                            <p className="vision-text">
-                                To create a world where businesses are not limited by
-                                convention but inspired by possibility.
-                            </p>
-                        </div>
-                        {/* <div className="col-md-6">
-              <img 
-                src={meeting} 
-                alt="Team meeting" 
-                className="img-fluid rounded vision-image" 
-              />
-            </div> */}
-                    </div>
-                </motion.div>
+                  Our Story
+                </button>
+              </motion.div>
             </div>
+          </motion.div>
+          
+          <motion.div 
+            className="scroll-indicator"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            onClick={() => scrollToSection('vision')}
+          >
+            <FaChevronDown />
+          </motion.div>
+        </section>
 
-            {/* Images section with enhanced layout */}
-            <section className="story-section">
-                <div className="container">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: false, amount: 0.1 }}
-                        transition={{ duration: 1 }}
-                    >
-                        <div className="row align-items-center g-4">
-                            <div className="col-lg-6">
-                                <h2 className="section-title with-line">
-                                    Our Story
-                                    <div className="title-underline left"></div>
-                                </h2>
-                                <p className="story-text">
-                                    A small team with big dreams, fueled by relentless drive and an unshakable belief in the power of innovation. From humble beginnings, we've grown into a force that empowers businesses to break boundaries and achieve the impossible.
-                                </p>
+        {/* Enhanced Vision Card */}
+        <div className="container">
+          <motion.div
+            id="vision"
+            className="vision-card"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="vision-content">
+              <div className="vision-text">
+                <h2 className="section-title">
+                  OUR VISION
+                  <div className="section-underline" />
+                </h2>
+                <p className="vision-description">
+                  To democratize cutting-edge technology and empower businesses 
+                  of all sizes to compete in the digital-first economy through 
+                  innovative, scalable, and user-centric solutions that drive measurable growth.
+                </p>
+              </div>
+              <div className="metrics-grid" ref={metricsRef}>
+                <MetricCard number={500} label="Projects Delivered" suffix="+" inView={metricsInView} />
+                <MetricCard number={98} label="Client Satisfaction" suffix="%" inView={metricsInView} />
+                <MetricCard number={15} label="Countries Served" suffix="+" inView={metricsInView} />
+                <MetricCard number={24} label="Support Hours" suffix="/7" inView={metricsInView} />
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
-                            </div>
-
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Core Values section */}
-            <section className="values-section">
-                <div className="container">
-                    <div className="text-center mb-5">
-                        <h2 className="section-title centered">
-                            Our Core Values
-                            <div className="title-underline center"></div>
-                        </h2>
-                        <p className="section-subtitle">
-                            These principles guide everything we do, from how we design solutions to how we interact with our clients.
-                        </p>
+        {/* Enhanced Story Section */}
+        <section id="our-story" className="story-section">
+          <div className="container">
+            <motion.div
+              className="story-content"
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={ANIMATION_VARIANTS.staggerContainer}
+            >
+              <div className="story-text">
+                <motion.div variants={ANIMATION_VARIANTS.fadeInUp}>
+                  <h2 className="section-title">
+                    Our Story
+                    <div className="section-underline" />
+                  </h2>
+                  <p className="story-description">
+                    Founded by passionate engineers and designers, Zen Meraki emerged 
+                    from a simple belief: technology should empower, not complicate. 
+                    What started as a small team's vision has evolved into a full-service 
+                    digital agency trusted by startups and Fortune 500 companies alike.
+                  </p>
+                  <p className="story-description">
+                    Today, we combine deep technical expertise with human-centered design 
+                    to create digital experiences that drive real business value and 
+                    deliver measurable ROI for our clients.
+                  </p>
+                </motion.div>
+              </div>
+              <div className="timeline-container">
+                <motion.div 
+                  className="timeline"
+                  variants={ANIMATION_VARIANTS.fadeInUp}
+                >
+                  <div className="timeline-line" />
+                  {[
+                    { year: '2020', content: 'Founded with focus on mobile app development and startup solutions' },
+                    { year: '2022', content: 'Expanded to full-stack web development and enterprise solutions' },
+                    { year: '2024', content: 'Pioneered AI/ML integration and cloud-native architecture solutions' },
+                    { year: '2025', content: 'Global expansion with 500+ projects delivered across 15+ countries' }
+                  ].map((item, index) => (
+                    <div key={index} className="timeline-item">
+                      <div className="timeline-dot" />
+                      <div className="timeline-year">
+                        {item.year}
+                      </div>
+                      <div className="timeline-content">
+                        {item.content}
+                      </div>
                     </div>
+                  ))}
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
 
-                    <div className="row g-4 justify-content-center">
-                        {/* Value Card 1 */}
-                        <div className="col-md-6 col-lg-3">
-                            <div className="value-card">
-                                <div className="value-icon">
-                                    <FaRobot size={28} />
-                                </div>
-                                <h5 className="value-title">
-                                    Passion
-                                </h5>
-                                <p className="value-description">
-                                    The fire that drives us to go above and beyond, weaving creativity into every solution
-                                </p>
-                            </div>
-                        </div>
+        {/* Enhanced Core Values */}
+        <section className="values-section">
+          <div className="container">
+            <motion.div 
+              className="section-header"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="section-title">
+                What Drives Us
+                <div className="section-underline centered" />
+              </h2>
+              <p className="section-description">
+                Our core principles shape every decision, every line of code, 
+                and every client interaction to deliver exceptional results.
+              </p>
+            </motion.div>
 
-                        {/* Value Card 2 */}
-                        <div className="col-md-6 col-lg-3">
-                            <div className="value-card">
-                                <div className="value-icon">
-                                    <FaAccessibleIcon size={28} />
-                                </div>
-                                <h5 className="value-title">
-                                    Dedication
-                                </h5>
-                                <p className="value-description">
-                                    The backbone of our success, ensuring no detail is too small and no challenge too great.
-                                </p>
-                            </div>
-                        </div>
+            <div className="values-grid">
+              {memoizedValues}
+            </div>
+          </div>
+        </section>
 
-                        {/* Value Card 3 */}
-                        <div className="col-md-6 col-lg-3">
-                            <div className="value-card">
-                                <div className="value-icon">
-                                    <FaLightbulb size={28} />
-                                </div>
-                                <h5 className="value-title">
-                                    Professionalism
-                                </h5>
-                                <p className="value-description">
-                                    The promise we make to uphold excellence, integrity, and quality at every turn.
-                                </p>
-                            </div>
-                        </div>
+        {/* Enhanced Services Section */}
+        <section className="services-section">
+          <div className="services-background" />
+          
+          <div className="container">
+            <motion.div
+              className="section-header"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="section-title white">
+                OUR EXPERTISE
+                <div className="section-underline centered" />
+              </h2>
+              <p className="section-description white">
+                From concept to deployment, we deliver comprehensive digital solutions 
+                that scale with your business and exceed user expectations.
+              </p>
+            </motion.div>
 
-                        {/* Value Card 4 */}
-                        <div className="col-md-6 col-lg-3">
-                            <div className="value-card">
-                                <div className="value-icon">
-                                    <FaWifi size={28} />
-                                </div>
-                                <h5 className="value-title">
-                                    Collaboration
-                                </h5>
-                                <p className="value-description">
-                                    We believe that the best results are born from the synergy of diverse teams working together.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <div className="services-grid">
+              {memoizedServices}
+            </div>
+          </div>
+        </section>
 
-            {/* Why We Exist section */}
-            <section className="why-section">
-                <div className="background-circle"></div>
+        {/* Client Testimonials */}
+        <section className="testimonials-section">
+          <div className="container">
+            <motion.div 
+              className="section-header"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="section-title">
+                What Our Clients Say
+                <div className="section-underline centered" />
+              </h2>
+              <p className="section-description">
+                Don't just take our word for it. Here's what industry leaders 
+                say about working with Zen Meraki.
+              </p>
+            </motion.div>
 
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-6">
-                            <motion.div
-                                className="why-content"
-                                initial={{ opacity: 0, x: -30 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: false, amount: 0.1 }}
-                                transition={{ duration: 0.7 }}
-                            >
-                                <h2 className="section-title with-line">
-                                    Why We Exist
-                                    <div className="title-underline left"></div>
-                                </h2>
-                                <p className="why-text">
-                                    Because we believe in the power of stories. Your business has one, and we are here to help you tell it – boldly, beautifully, and brilliantly.
-                                </p>
-                                <p className="why-text">
-                                    We exist to push the boundaries of what's possible and to reimagine success with you. Every business deserves a chance to shine in its unique way, and our purpose is to illuminate that path.
-                                </p>
-                            </motion.div>
-                        </div>
+            <div className="testimonials-grid">
+              {memoizedTestimonials}
+            </div>
+          </div>
+        </section>
 
-                        <div className="col-lg-6">
-                            <motion.div
-                                className="approach-card"
-                                initial={{ opacity: 0, x: 30 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: false, amount: 0.1 }}
-                                transition={{ duration: 0.7, delay: 0.2 }}
-                            >
-                                <h3 className="approach-title">
-                                    Our Approach
-                                </h3>
-                                <ul className="approach-list">
-                                    <motion.li
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: false }}
-                                        transition={{ duration: 0.3, delay: 0.3 }}
-                                    >
-                                        <strong>Listen</strong>: We begin by understanding your unique challenges and aspirations.
-                                    </motion.li>
-                                    <motion.li
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: false }}
-                                        transition={{ duration: 0.3, delay: 0.4 }}
-                                    >
-                                        <strong>Design</strong>: We craft solutions that align with your vision and exceed expectations.
-                                    </motion.li>
-                                    <motion.li
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: false }}
-                                        transition={{ duration: 0.3, delay: 0.5 }}
-                                    >
-                                        <strong>Develop</strong>: We bring ideas to life with precision, passion, and technical excellence.
-                                    </motion.li>
-                                    <motion.li
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: false }}
-                                        transition={{ duration: 0.3, delay: 0.6 }}
-                                    >
-                                        <strong>Deliver</strong>: We ensure flawless implementation and support every step of the way.
-                                    </motion.li>
-                                </ul>
-                            </motion.div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Services Section */}
-            <section className="services-section">
-                <div className="service-pattern"></div>
-
-                <div className="container">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, amount: 0.1 }}
-                        transition={{ duration: 0.7 }}
-                        className="text-center mb-5"
-                    >
-                        <h2 className="section-title light centered">
-                            WHAT WE DO
-                            <div className="title-underline center"></div>
-                        </h2>
-                        <p className="section-subtitle light">
-                            We transform visions into reality through innovative solutions and strategic execution.
-                        </p>
-                    </motion.div>
-
-                    <div className="services-container">
-                        {/* Service Card 1 */}
-                        <motion.div
-                            whileHover={{ y: -10, boxShadow: "0 15px 30px rgba(0, 0, 0, 0.2)" }}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: false, amount: 0.1 }}
-                            transition={{ duration: 0.7, delay: 0.1 }}
-                            className="service-card"
-                        >
-                            <div className="service-icon">
-                                <span>✨</span>
-                            </div>
-                            <h4 className="service-title">
-                                We Design Dreams
-                            </h4>
-                            <p className="service-description">
-                                Crafting bespoke apps and digital solutions that elevate businesses to the next level.
-                            </p>
-                        </motion.div>
-
-                        {/* Service Card 2 */}
-                        <motion.div
-                            whileHover={{ y: -10, boxShadow: "0 15px 30px rgba(0, 0, 0, 0.2)" }}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: false, amount: 0.1 }}
-                            transition={{ duration: 0.7, delay: 0.2 }}
-                            className="service-card"
-                        >
-                            <div className="service-icon">
-                                <span>🏆</span>
-                            </div>
-                            <h4 className="service-title">
-                                We Build Legacies
-                            </h4>
-                            <p className="service-description">
-                                Creating strategies that leave a mark, driving growth that stands the test of time.
-                            </p>
-                        </motion.div>
-
-                        {/* Service Card 3 */}
-                        <motion.div
-                            whileHover={{ y: -10, boxShadow: "0 15px 30px rgba(0, 0, 0, 0.2)" }}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: false, amount: 0.1 }}
-                            transition={{ duration: 0.7, delay: 0.3 }}
-                            className="service-card"
-                        >
-                            <div className="service-icon">
-                                <span>🚀</span>
-                            </div>
-                            <h4 className="service-title">
-                                We Empower Visionaries
-                            </h4>
-                            <p className="service-description">
-                                Equipping businesses with tools, insights, and innovation to lead in a competitive world.
-                            </p>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-           <Footer/>
-        </>
-    );
+        <section>
+          <Footer/>
+        </section>
+      </div>
+    </ErrorBoundary>
+  );
 }
 
-export default AboutUs;
+export default React.memo(AboutUs);

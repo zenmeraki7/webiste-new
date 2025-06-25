@@ -9,6 +9,7 @@ import VisionPage from './pages/Home/VisionPage'
 import OurAppsPage from './pages/Home/OurApps'
 import ProjectsPage from './pages/Home/Projectpage'
 import ContactFormSection from './pages/Home/Contactform'
+import ErrorBoundary from './components/Error/Errorboundary'
 
 // Create theme for your app
 const theme = createTheme({
@@ -90,5 +91,6 @@ export default function Home() {
         <Footer />
       </div>
     </ThemeProvider>
+
   )
 }
