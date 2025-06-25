@@ -412,7 +412,7 @@ const MetaMatrixApp = () => {
           },
           {
             title: "Advanced(Monthly)",
-            price: "$40",
+            price: "$50",
             features: [
               "90-Day Bulk Edit History",
               "Scheduled exports for seamless reporting",
@@ -421,22 +421,14 @@ const MetaMatrixApp = () => {
           },
           {
             title: "Pro(Monthly)",
-            price: "$50",
+            price: "$100",
             features: [
               "180-Day Bulk Edit History",
               "10 inventory syncs for comprehensive",
               "Dedicated Account Manager",
             ]
           },
-          {
-            title: "Advanced(Yearly)",
-            price: "$100",
-            features: [
-              "90-Day Bulk Edit History",
-              "Scheduled exports for seamless reporting",
-              "5 product rules",
-            ]
-          }
+          
         ].map((plan, index) => (
           <Grid item xs={12} sm={6} md={4} key={index} sx={{ display: 'flex' }}>
             <MotionCard

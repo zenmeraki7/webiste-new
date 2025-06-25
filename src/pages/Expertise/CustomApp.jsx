@@ -7,23 +7,24 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 // Using the same CSS file from ShopifyApp component
 import './Style.css';
+import { Button } from '@mui/material';
 
 function CustomApp() {
   const [isVisible, setIsVisible] = useState(false);
-  
+
   useEffect(() => {
     // Show initial animations
     setIsVisible(true);
-    
+
     // Animate elements on scroll
     const handleScroll = () => {
       const elements = document.querySelectorAll('.animate-on-scroll');
-      
+
       elements.forEach(element => {
         const position = element.getBoundingClientRect();
-        
+
         // If element is in viewport
-        if(position.top < window.innerHeight - 100) {
+        if (position.top < window.innerHeight - 100) {
           element.classList.add('is-visible');
         }
       });
@@ -31,10 +32,10 @@ function CustomApp() {
 
     // Add scroll event listener
     window.addEventListener('scroll', handleScroll);
-    
+
     // Run once to check initial elements in view
     handleScroll();
-    
+
     // Cleanup
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -91,8 +92,8 @@ function CustomApp() {
 
   return (
     <div className="shopify-app">
-        <Header />
-      
+      <Header />
+
       <section className="hero">
         <div className="hero-background">
           <div className="bg-shape shape1"></div>
@@ -102,7 +103,10 @@ function CustomApp() {
         <div className={`hero-content ${isVisible ? 'is-visible' : ''}`}>
           <h1>CUSTOM APP DEVELOPMENT</h1>
           <p>Bespoke Apps for Seamless Business Growth</p>
-          <button className="btn-primary">
+          <button
+            className="btn-primary"
+            onClick={() => window.location.href = '/contact'}
+          >
             Get Started <FiChevronRight className="icon-right" />
           </button>
         </div>
@@ -118,10 +122,10 @@ function CustomApp() {
               <p className="section-description animate-on-scroll">
                 Our expertise in custom app development ensures your business stands out with unique capabilities:
               </p>
-              
+
               <div className="features-list">
                 {features.map((feature, index) => (
-                  <div key={index} className="feature-card animate-on-scroll" style={{animationDelay: `${index * 0.1}s`}}>
+                  <div key={index} className="feature-card animate-on-scroll" style={{ animationDelay: `${index * 0.1}s` }}>
                     <div className="feature-icon">
                       {feature.icon}
                     </div>
@@ -132,7 +136,7 @@ function CustomApp() {
                 ))}
               </div>
             </div>
-            
+
             <div className="visual-column animate-on-scroll">
               <div className="app-mockup">
                 <div className="mockup-header">
@@ -152,11 +156,11 @@ function CustomApp() {
                   </div>
                   <div className="mockup-content">
                     <div className="mockup-chart">
-                      <div className="chart-bar" style={{height: '65%'}}></div>
-                      <div className="chart-bar" style={{height: '85%'}}></div>
-                      <div className="chart-bar" style={{height: '50%'}}></div>
-                      <div className="chart-bar" style={{height: '70%'}}></div>
-                      <div className="chart-bar" style={{height: '90%'}}></div>
+                      <div className="chart-bar" style={{ height: '65%' }}></div>
+                      <div className="chart-bar" style={{ height: '85%' }}></div>
+                      <div className="chart-bar" style={{ height: '50%' }}></div>
+                      <div className="chart-bar" style={{ height: '70%' }}></div>
+                      <div className="chart-bar" style={{ height: '90%' }}></div>
                     </div>
                     <div className="mockup-stats">
                       <div className="stat-box"></div>
@@ -187,7 +191,7 @@ function CustomApp() {
 
           <div className="process-cards">
             {processSteps.map((step, index) => (
-              <div key={index} className="process-card animate-on-scroll" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={index} className="process-card animate-on-scroll" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="process-number">{index + 1}</div>
                 <div className="process-label">{step.phase}</div>
                 <h3>{step.title}</h3>
@@ -202,7 +206,7 @@ function CustomApp() {
         </div>
       </section>
 
-     
+
       <Footer />
     </div>
   );

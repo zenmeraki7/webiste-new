@@ -90,5 +90,6 @@ export default function Home() {
         <Footer />
       </div>
     </ThemeProvider>
+
   )
 }
