@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import {
   AppBar, Box, Button, Card, CardContent, Container, Divider,
   Grid, IconButton, Paper, Tab, Tabs, Typography, List,
-  ListItem, ListItemIcon, ListItemText, Rating, useMediaQuery
+  ListItem, ListItemIcon, ListItemText, Rating, useMediaQuery,
+  Modal, TextField, Alert, CircularProgress,
+  Avatar
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
@@ -10,10 +12,18 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import CheckIcon from '@mui/icons-material/Check';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import LinkIcon from '@mui/icons-material/Link';
+import CloseIcon from '@mui/icons-material/Close';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import ReferralModal from '../../components/ReferralModal'; // Import the separated ReferralModal
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
-import Footer from '../../components/Footer';
+import ShopifyStoreModal from '../../components/ShopifyStoreModal';
+import { useLocation } from 'react-router-dom';
 
 // Create a custom theme with blue as the primary color
 const theme = createTheme({
@@ -55,11 +65,20 @@ const MotionPaper = motion(Paper);
 const MotionButton = motion(Button);
 const MotionCard = motion(Card);
 
+
 const MetaMatrixApp = () => {
+
+   // Extract ?ref=... from URL
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const referralCode = queryParams.get('ref'); // null if not present
   const [activeTab, setActiveTab] = useState(0);
   const [activePage, setActivePage] = useState('hero');
   const [hoverStates, setHoverStates] = useState({});
+  const [referralModalOpen, setReferralModalOpen] = useState(false);
+  const [open, setOpen] = useState(referralCode ? true : false); // Open modal if referral code is present
   
+
   // Use MUI's useMediaQuery hook to detect mobile view
   const muiTheme = useTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
@@ -75,6 +94,16 @@ const MetaMatrixApp = () => {
       [id]: isHovering
     }));
   };
+
+  const handleReferralModalOpen = () => {
+    setReferralModalOpen(true);
+  };
+
+  const handleReferralModalClose = () => {
+    setReferralModalOpen(false);
+  };
+
+  
 
   const tabContents = {
     0: {
@@ -181,7 +210,7 @@ const MetaMatrixApp = () => {
                   : undefined,
                 padding: isMobile ? '6px 16px' : undefined /* Custom padding for mobile */
               }}
-              onClick={() => window.open('https://apps.shopify.com/metamatrix', '_blank')}
+             onClick={() => setOpen(true)}
               sx={{
                 fontSize: { xs: '0.8rem', md: '0.875rem' }, /* Smaller font on mobile */
                 height: { xs: '36px', md: '48px' } /* Reduced height on mobile */
@@ -194,6 +223,7 @@ const MetaMatrixApp = () => {
               color="primary"
               size={isMobile ? "medium" : "large"} /* Smaller button on mobile */
               fullWidth={isMobile}
+              startIcon={<LinkIcon fontSize={isMobile ? "small" : "medium"} />}
               whileHover={{
                 borderColor: theme.palette.primary.dark,
                 color: theme.palette.primary.dark,
@@ -201,14 +231,14 @@ const MetaMatrixApp = () => {
                 transition: { duration: 0.3 }
               }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => window.open('https://youtu.be/1UMtbQG5Z1M', '_blank')}
+              onClick={handleReferralModalOpen}
               sx={{
                 fontSize: { xs: '0.8rem', md: '0.875rem' }, /* Smaller font on mobile */
                 height: { xs: '36px', md: '48px' }, /* Reduced height on mobile */
                 mt: { xs: 0.5, sm: 0 } /* Small margin top only on extra small screens */
               }}
             >
-              Watch Demo
+             Generate Referral Link
             </MotionButton>
           </Box>
         </Grid>
@@ -701,206 +731,198 @@ const MetaMatrixApp = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
-        <Header />
-        <Container 
-          sx={{ 
-            py: { xs: 2, md: 4 },
-            px: { xs: 1, md: 3 }
+  <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+    <Header />
+    <Container 
+      sx={{ 
+        py: { xs: 2, md: 4 },
+        px: { xs: 1, md: 3 }
+      }}
+      maxWidth={isMobile ? "xs" : "lg"}
+    >
+      <MotionPaper
+        sx={{ p: 0, overflow: 'hidden' }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            px: { xs: 2, md: 3 },
+            py: { xs: 1.5, md: 2.5 },
+            borderBottom: 1,
+            borderColor: 'divider'
           }}
-          maxWidth={isMobile ? "xs" : "lg"}
         >
-          <MotionPaper
-            sx={{ p: 0, overflow: 'hidden' }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <MotionBox
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box
               sx={{
+                color: 'white',
+                p: isMobile ? 0.5 : 1,
+                borderRadius: 1,
                 display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                px: { xs: 2, md: 3 },
-                py: { xs: 1, md: 2 },
-                borderBottom: 1,
-                borderColor: 'divider'
+                mr: { xs: 1, md: 2 }
               }}
-              initial={{ backgroundColor: 'white' }}
-              whileHover={{ backgroundColor: 'rgba(25, 118, 210, 0.02)' }}
-              transition={{ duration: 0.3 }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <MotionBox
-                  sx={{
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                    p: isMobile ? 0.5 : 1,
-                    borderRadius: 1,
-                    display: 'flex',
-                    mr: { xs: 1, md: 2 }
-                  }}
-                  whileHover={{
-                    rotate: [0, -10, 10, -10, 0],
-                    scale: 1.1,
-                    transition: {
-                      duration: 0.5,
-                      repeat: 1,
-                      repeatType: "reverse"
-                    }
-                  }}
-                  animate={{
-                    backgroundColor: [
-                      theme.palette.primary.main,
-                      theme.palette.primary.light,
-                      theme.palette.primary.main
-                    ],
-                    transition: {
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }
-                  }}
-                >
-                  <motion.div
-                    animate={{
-                      rotate: [0, 360],
-                      transition: {
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }
-                    }}
-                  >
-                    <BarChartIcon fontSize={isMobile ? "small" : "medium"} />
-                  </motion.div>
-                </MotionBox>
-                <Typography 
-                  variant={isMobile ? "subtitle1" : "h6"} 
-                  component="div"
-                >
-                  MetaMatrix
-                </Typography>
-              </Box>
-            </MotionBox>
+              <Avatar 
+                variant='rounded' 
+                src='https://cdn.shopify.com/app-store/listing_images/0d2faed5eadc2b3043d4da7d9dc6e290/icon/CL_ziN7d8YkDEAE=.png'
+                sx={{
+                  width: isMobile ? 24 : 32,
+                  height: isMobile ? 24 : 32
+                }}
+              />
+            </Box>
+            <Typography 
+              variant={isMobile ? "subtitle1" : "h6"} 
+              component="div"
+              sx={{ 
+                fontWeight: 600,
+                color: 'text.primary'
+              }}
+            >
+              MetaMatrix
+            </Typography>
+          </Box>
+        </Box>
 
-            <Box sx={{ p: { xs: 2, md: 3 } }}>
-              {/* Navigation tabs - improved scrollable navigation */}
-              <Box sx={{ 
-                position: 'relative',
-                mb: 4,
-                width: '100%'
-              }}>
-                {/* Fade indicator for horizontal scroll on small screens */}
-                {isMobile && (
-                  <>
-                    <Box 
-                      sx={{ 
-                        position: 'absolute',
-                        left: 0,
-                        top: 0,
-                        bottom: 0,
-                        width: '20px',
-                        background: 'linear-gradient(to right, white, transparent)',
-                        zIndex: 1,
-                        pointerEvents: 'none'
-                      }}
-                    />
-                    <Box 
-                      sx={{ 
-                        position: 'absolute',
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        width: '20px',
-                        background: 'linear-gradient(to left, white, transparent)',
-                        zIndex: 1,
-                        pointerEvents: 'none'
-                      }}
-                    />
-                  </>
-                )}
-                
-                {/* Scrollable container with visual indicator */}
+        <Box sx={{ p: { xs: 2, md: 3 } }}>
+          {/* Navigation tabs - improved scrollable navigation */}
+          <Box sx={{ 
+            position: 'relative',
+            mb: 4,
+            width: '100%'
+          }}>
+            {/* Fade indicator for horizontal scroll on small screens */}
+            {isMobile && (
+              <>
                 <Box 
                   sx={{ 
-                    display: 'flex',
-                    width: '100%',
-                    justifyContent: { xs: 'flex-start', md: 'center' },
-                    overflowX: 'auto',
-                    pb: 1, // Add padding bottom for scrollbar space
-                    '&::-webkit-scrollbar': { 
-                      height: '4px'
-                    },
-                    '&::-webkit-scrollbar-track': {
-                      backgroundColor: '#f1f1f1',
-                      borderRadius: '10px'
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                      backgroundColor: theme.palette.primary.light,
-                      borderRadius: '10px'
-                    }
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: '20px',
+                    background: 'linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))',
+                    zIndex: 1,
+                    pointerEvents: 'none'
                   }}
-                >
-                  <Box sx={{ 
-                    display: 'flex',
-                    px: { xs: 2, md: 0 }, // Add padding for mobile to prevent button cuts
-                    minWidth: 'fit-content' // Ensure all buttons are visible
-                  }}>
-                    {['hero', 'features', 'how-it-works', 'pricing', 'faq'].map((page) => (
-                      <MotionButton
-                        key={page}
-                        color="inherit"
-                        onClick={() => setActivePage(page)}
-                        variant="text"
-                        sx={{ 
-                          mx: 0.5,
-                          py: 1,
-                          textTransform: 'capitalize',
-                          fontWeight: activePage === page ? 'bold' : 'normal',
-                          minWidth: 'auto',
-                          whiteSpace: 'nowrap' // Prevent button text wrapping
-                        }}
-                        variants={NavigationButtonVariants}
-                        initial="inactive"
-                        animate={activePage === page ? "active" : "inactive"}
-                        whileHover="hover"
-                        transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                      >
-                        {page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                      </MotionButton>
-                    ))}
-                  </Box>
-                </Box>
+                />
+                <Box 
+                  sx={{ 
+                    position: 'absolute',
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: '20px',
+                    background: 'linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))',
+                    zIndex: 1,
+                    pointerEvents: 'none'
+                  }}
+                />
+              </>
+            )}
+            
+            {/* Scrollable container with visual indicator */}
+            <Box 
+              sx={{ 
+                display: 'flex',
+                width: '100%',
+                justifyContent: { xs: 'flex-start', md: 'center' },
+                overflowX: 'auto',
+                pb: 1,
+                '&::-webkit-scrollbar': { 
+                  height: '4px'
+                },
+                '&::-webkit-scrollbar-track': {
+                  backgroundColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: '10px'
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  backgroundColor: 'primary.light',
+                  borderRadius: '10px'
+                }
+              }}
+            >
+              <Box sx={{ 
+                display: 'flex',
+                px: { xs: 2, md: 0 },
+                minWidth: 'fit-content'
+              }}>
+                {['hero', 'features', 'how-it-works', 'pricing', 'faq'].map((page) => (
+                  <MotionButton
+                    key={page}
+                    color="inherit"
+                    onClick={() => setActivePage(page)}
+                    variant="text"
+                    sx={{ 
+                      mx: 0.5,
+                      py: 1,
+                      px: 2,
+                      textTransform: 'capitalize',
+                      fontWeight: activePage === page ? 600 : 400,
+                      minWidth: 'auto',
+                      whiteSpace: 'nowrap',
+                      color: activePage === page ? 'primary.main' : 'text.secondary',
+                      borderRadius: 2,
+                      '&:hover': {
+                        backgroundColor: 'action.hover'
+                      }
+                    }}
+                    variants={NavigationButtonVariants}
+                    initial="inactive"
+                    animate={activePage === page ? "active" : "inactive"}
+                    whileHover="hover"
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                  >
+                    {page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                  </MotionButton>
+                ))}
               </Box>
-
-              {/* Conditional rendering of sections based on active page */}
-              <AnimatePresence mode="wait">
-                <MotionBox
-                  key={activePage}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {activePage === 'hero' && <HeroSection />}
-                  {activePage === 'features' && <FeatureSection />}
-                  {activePage === 'how-it-works' && <HowItWorksSection />}
-                  {activePage === 'pricing' && <PricingSection />}
-                  {activePage === 'faq' && <FAQSection />}
-                </MotionBox>
-              </AnimatePresence>
-
-              {/* Call to action section that's always visible */}
-              <CallToActionSection />
             </Box>
-          </MotionPaper>
+          </Box>
 
-          
-        </Container>
-        <Footer />
-      </Box>
-    </ThemeProvider>
+          {/* Conditional rendering of sections based on active page */}
+          <AnimatePresence mode="wait">
+            <MotionBox
+              key={activePage}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {activePage === 'hero' && <HeroSection />}
+              {activePage === 'features' && <FeatureSection />}
+              {activePage === 'how-it-works' && <HowItWorksSection />}
+              {activePage === 'pricing' && <PricingSection />}
+              {activePage === 'faq' && <FAQSection />}
+            </MotionBox>
+          </AnimatePresence>
+
+          {/* Call to action section that's always visible */}
+          <CallToActionSection />
+        </Box>
+      </MotionPaper>
+       <ShopifyStoreModal
+        open={open}
+        handleClose={() => setOpen(false)}
+        referralCode={referralCode}
+        isMobile={isMobile}/>
+
+      {/* Referral Modal */}
+      <ReferralModal
+        open={referralModalOpen}
+        onClose={handleReferralModalClose}
+        theme={theme}
+        isMobile={isMobile}
+      />
+    </Container>
+    <Footer />
+  </Box>
+</ThemeProvider>
   );
 };
 

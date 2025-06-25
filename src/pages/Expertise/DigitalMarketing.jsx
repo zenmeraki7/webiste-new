@@ -103,7 +103,9 @@ function DigitalMarketing() {
         <div className={`hero-content ${isVisible ? 'is-visible' : ''}`}>
           <h1>DIGITAL MARKETING</h1>
           <p>Data-Driven Strategies for Maximum Impact</p>
-          <button className="btn-primary">
+          <button className="btn-primary"
+           onClick={() => window.location.href = '/contact'}
+           >
             Get Started <FiChevronRight className="icon-right" />
           </button>
         </div>

@@ -102,7 +102,8 @@ function ShopifyApp() {
         <div className={`hero-content ${isVisible ? 'is-visible' : ''}`}>
           <h1>SHOPIFY APP DEVELOPMENT</h1>
           <p>Transform your e-commerce business with custom Shopify solutions</p>
-          <button className="btn-primary">
+          <button className="btn-primary"
+           onClick={() => window.location.href = '/contact'}>
             Get Started <FiChevronRight className="icon-right" />
           </button>
         </div>

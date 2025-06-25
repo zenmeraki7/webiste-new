@@ -261,11 +261,7 @@ const AnimatedSection = ({ children, variants, delay = 0, threshold = 0.1 }) => 
     );
 };
 
-// Animation variants
-const fadeInUp = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-};
+
 
 const fadeIn = {
     hidden: { opacity: 0 },
@@ -403,7 +399,7 @@ const ProjectsPage = () => {
                     }}
                 >
                     <Container maxWidth={isMobile ? 'sm' : 'lg'}>
-                        <AnimatedSection variants={fadeInUp}>
+                        <AnimatedSection variants={fadeIn}>
                             <Typography 
                                 variant="h1" 
                                 component="h1" 
@@ -424,7 +420,7 @@ const ProjectsPage = () => {
                             </Typography>
                         </AnimatedSection>
                         
-                        <AnimatedSection variants={fadeInUp} delay={0.2}>
+                        <AnimatedSection variants={fadeIn} delay={0.2}>
                             <Typography 
                                 variant="subtitle1" 
                                 color="text.secondary" 

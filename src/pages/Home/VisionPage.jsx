@@ -467,6 +467,7 @@ const VisionPage = () => {
                       py: 0.5,
                       fontSize: '0.85rem'
                     }}
+                     onClick={() => window.location.href = '/contact'}
                   >
                     Let's Create Together
                   </Button>
