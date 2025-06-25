@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   FaTwitter, 
   FaLinkedin, 
@@ -881,7 +882,8 @@ const footerStyles = `
 
 const Footer = () => {
   const [hoveredService, setHoveredService] = useState(null);
-
+const navigate = useNavigate(); 
+  const location = useLocation(); 
   const services = [
     { icon: FaMobile, text: 'Mobile App Development' },
     { icon: FaCode, text: 'Web Development' },
@@ -890,10 +892,8 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    { text: 'About Us', href: '/about' },
-    { text: 'Services', href: '/services' },
-    { text: 'Portfolio', href: '/portfolio' },
-    { text: 'Blog', href: '/blog' },
+    { text: 'About Us', href: '/about-us' },
+    { text: 'Services', href: '#services' },
     { text: 'Careers', href: '/careers' },
     { text: 'Contact', href: '/contact' },
   ];
@@ -1009,10 +1009,28 @@ const Footer = () => {
             <div>
               <h3 className="section-title">Quick Links</h3>
               {quickLinks.map((link, index) => (
-                <a key={index} href={link.href} className="quick-link">
-                  {link.text}
-                  <FaChevronRight className="arrow-icon" />
-                </a>
+                <a
+  key={index}
+  href={link.href}
+  className="quick-link"
+  onClick={(e) => {
+    if (link.href.startsWith("#")) {
+      e.preventDefault();
+      if (location.pathname !== "/") {
+        navigate("/", { state: { scrollTo: link.href } });
+      } else {
+        const target = document.querySelector(link.href);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
+  }}
+>
+  {link.text}
+  <FaChevronRight className="arrow-icon" />
+</a>
+
               ))}
             </div>
 

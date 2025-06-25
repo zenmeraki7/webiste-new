@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
 import Header from './components/Header'
@@ -9,6 +9,9 @@ import VisionPage from './pages/Home/VisionPage'
 import OurAppsPage from './pages/Home/OurApps'
 import ProjectsPage from './pages/Home/Projectpage'
 import ContactFormSection from './pages/Home/Contactform'
+import ErrorBoundary from './components/Error/Errorboundary'
+import { useLocation } from 'react-router-dom'
+
 
 // Create theme for your app
 const theme = createTheme({
@@ -59,6 +62,18 @@ const theme = createTheme({
 });
 
 export default function Home() {
+  const location = useLocation();
+   useEffect(() => {
+    const scrollTo = location.state?.scrollTo;
+    if (scrollTo) {
+      const element = document.querySelector(scrollTo);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+        }, 100); // slight delay ensures page renders
+      }
+    }
+  }, [location]);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

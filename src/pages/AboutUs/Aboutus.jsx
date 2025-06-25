@@ -19,6 +19,7 @@ import {TESTIMONIALS} from './hooks/variants';
 import {useScrollAnimation, useIntersectionObserver, useTypewriter, useAnimatedCounter} from './hooks/Abouthooks';
 import {ErrorBoundary} from '../AboutUs/hooks/ErrorBoundary';
 import './About.css';
+import Header from '../../components/Header';
 
 // Component Implementations
 const LoadingSpinner = () => (
@@ -283,7 +284,7 @@ function AboutUs() {
   return (
     <ErrorBoundary>
       <div className="about-us-container" role="main">
-
+<Header/>
         {/* Enhanced Hero Section */}
         <section 
           className="hero-section"
@@ -379,9 +380,9 @@ function AboutUs() {
                 </p>
               </div>
               <div className="metrics-grid" ref={metricsRef}>
-                <MetricCard number={500} label="Projects Delivered" suffix="+" inView={metricsInView} />
-                <MetricCard number={98} label="Client Satisfaction" suffix="%" inView={metricsInView} />
-                <MetricCard number={15} label="Countries Served" suffix="+" inView={metricsInView} />
+                <MetricCard number={100} label="Projects Delivered" suffix="+" inView={metricsInView} />
+                <MetricCard number={100} label="Client Satisfaction" suffix="%" inView={metricsInView} />
+                <MetricCard number={5} label="Countries Served" suffix="+" inView={metricsInView} />
                 <MetricCard number={24} label="Support Hours" suffix="/7" inView={metricsInView} />
               </div>
             </div>
@@ -500,7 +501,7 @@ function AboutUs() {
         </section>
 
         {/* Client Testimonials */}
-        <section className="testimonials-section">
+        {/* <section className="testimonials-section">
           <div className="container">
             <motion.div 
               className="section-header"
@@ -523,7 +524,7 @@ function AboutUs() {
               {memoizedTestimonials}
             </div>
           </div>
-        </section>
+        </section> */}
 
         <section>
           <Footer/>
