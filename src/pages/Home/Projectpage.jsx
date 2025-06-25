@@ -403,7 +403,7 @@ const ProjectsPage = () => {
                     }}
                 >
                     <Container maxWidth={isMobile ? 'sm' : 'lg'}>
-                        <AnimatedSection variants={fadeInUp}>
+                        <AnimatedSection variants={fadeIn}>
                             <Typography 
                                 variant="h1" 
                                 component="h1" 
