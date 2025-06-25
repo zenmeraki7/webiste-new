@@ -844,7 +844,7 @@ const MetaMatrixApp = () => {
                 px: { xs: 2, md: 0 },
                 minWidth: 'fit-content'
               }}>
-                {['hero', 'features', 'how-it-works', 'pricing', 'faq'].map((page) => (
+                {['hero', 'features', 'how-it-works', 'pricing', 'FAQ'].map((page) => (
                   <MotionButton
                     key={page}
                     color="inherit"
@@ -890,7 +890,7 @@ const MetaMatrixApp = () => {
               {activePage === 'features' && <FeatureSection />}
               {activePage === 'how-it-works' && <HowItWorksSection />}
               {activePage === 'pricing' && <PricingSection />}
-              {activePage === 'faq' && <FAQSection />}
+              {activePage === 'FAQ' && <FAQSection />}
             </MotionBox>
           </AnimatePresence>
 
